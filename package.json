@@ -1,7 +1,7 @@
 {
-  "name": "orpheus",
+  "name": "commentary-api",
   "version": "0.0.1",
-  "description": "React application for Orphe.us digital collections",
+  "description": "GraphQL API server for the CHS Commentaries and Community",
   "main": "server.js",
   "dependencies": {
     "apollo-errors": "^1.4.0",

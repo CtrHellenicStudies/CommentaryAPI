@@ -1,3 +1,1 @@
-# Orphe.us GraphQL Server
-
-The server portion of the Orphe.us applications.
+# CHS Commentaries and Community GraphQL Server 
