@@ -1,6 +1,7 @@
 import { GraphQLObjectType } from 'graphql';
 
 import projectQueryFields from './projects';
+import commenterQueryFields from './commenters';
 import userQueryFields from './users';
 import miradorQueryFields from './miradorManifests';
 
@@ -14,7 +15,8 @@ const RootQuery = new GraphQLObjectType({
 	fields: {
 		...projectQueryFields,
 		...userQueryFields,
-		...miradorQueryFields
+		...miradorQueryFields,
+		...commenterQueryFields
 	},
 });
 
