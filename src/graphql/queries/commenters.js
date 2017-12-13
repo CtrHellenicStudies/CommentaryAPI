@@ -19,9 +19,11 @@ const commenterQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve: (parent, { tenantId }, {token}) => {
-			CommentersService.commentersQuery(tenantId, function(){}).then(function(commenters){console.log(commenters);});
-		},
+		resolve: (parent, { tenantId }, {token}) =>
+			CommentersService.commentersQuery(tenantId).then(function(commenters) {
+				console.log(commenters);
+				return commenters;
+			})
 	},
 };
 

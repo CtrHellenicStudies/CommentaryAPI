@@ -13,16 +13,14 @@ export default class CommentService extends PermissionsService {
 	 * @param {string} tenantId - id for current tenant
 	 * @returns {Object[]} array of commenters
 	 */
-	static async commentersQuery(tenantId, callback) {
+	static commentersQuery(tenantId, callback) {
 		const args = {};
 
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
-		const x = Commenters.find(args, '', function(err, commenters) {
-			console.log('First inside');
-			return commenters;
-		});
+		const promise = Commenters.find(args).exec();
+		return promise;
 		// return Commenters.find(args, {
 		// 	sort: {
 		// 		slug: 1
