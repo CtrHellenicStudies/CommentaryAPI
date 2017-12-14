@@ -15,17 +15,11 @@ export default class CommentService extends PermissionsService {
 	 */
 	static commentersQuery(tenantId, callback) {
 		const args = {};
-
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
-		const promise = Commenters.find(args).exec();
+		const promise = Commenters.find(args).sort({slug: 1}).exec();
 		return promise;
-		// return Commenters.find(args, {
-		// 	sort: {
-		// 		slug: 1
-		// 	},
-		// });
 	}
 
 	/**
@@ -36,7 +30,8 @@ export default class CommentService extends PermissionsService {
 	 */
 	commenterUpdate(_id, commenter) {
 		if (this.userIsAdmin) {
-			return Commenters.update(_id, {$set: commenter});
+			const promise = Commenters.update(_id, {$set: commenter}).exec();
+			return promise;
 		}
 		throw AuthenticationError();
 	}
@@ -48,7 +43,8 @@ export default class CommentService extends PermissionsService {
 	 */
 	commenterRemove(commenterId) {
 		if (this.userIsAdmin) {
-			return Commenters.remove({_id: commenterId});
+			const promise = Commenters.remove({_id: commenterId});
+			return promise;
 		}
 		throw AuthenticationError();
 	}
@@ -61,7 +57,8 @@ export default class CommentService extends PermissionsService {
 	commenterInsert(commenter) {
 		if (this.userIsAdmin) {
 			const commenterId = Commenters.insert({...commenter});
-			return Commenters.findOne(commenterId);
+			const promise = Commenters.findOne(commenterId);
+			return promise;
 		}
 		throw AuthenticationError();
 	}

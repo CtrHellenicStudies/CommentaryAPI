@@ -43,8 +43,10 @@
     "react-autocomplete": "^1.5.10",
     "react-s3-uploader": "^4.2.0",
     "request": "^2.81.0",
+    "slugify": "^1.2.6",
     "subscriptions-transport-ws": "^0.8.1",
     "twitter": "^1.7.1",
+    "underscore": "^1.8.3",
     "uuid": "^3.1.0",
     "zxcvbn": "^4.4.2"
   },
