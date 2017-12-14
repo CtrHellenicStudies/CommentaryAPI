@@ -19,7 +19,7 @@ export default class TenantsService extends PermissionsService {
 			args._id = _id;
 		}
 
-		return Tenants.find(args).fetch();
+		return Tenants.find(args).exec();
 	}
 
 	/**
@@ -30,7 +30,7 @@ export default class TenantsService extends PermissionsService {
 	static tenantBySubdomainGet(subdomain) {
 		return Tenants.findOne({
 			subdomain,
-		});
+		}).exec();
 	}
 
 	/**

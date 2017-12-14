@@ -71,11 +71,8 @@ export default class WorksService extends PermissionsService {
 		if (_id) {
 			args._id = _id;
 		}
-		return Works.find(args, {
-			sort: {
-				slug: 1
-			}
-		}).fetch();
+		const promise = Works.find(args).sort({slug: 1}).exec();
+		return promise;
 	}
 
 	/**

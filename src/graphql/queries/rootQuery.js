@@ -9,6 +9,9 @@ import bookQueryFields from './books';
 import pagesQueryFields from './pages';
 import editionsQueryFields from './editions';
 import settingsQueryFields from './settings';
+import workQueryFields from './works';
+import tenantsQueryFields from './tenants';
+import keywordQueryFields from './keywords';
 
 /**
  * Root Queries
@@ -26,7 +29,10 @@ const RootQuery = new GraphQLObjectType({
 		...bookQueryFields,
 		...pagesQueryFields,
 		...editionsQueryFields,
-		...settingsQueryFields
+		...settingsQueryFields,
+		...workQueryFields,
+		...tenantsQueryFields,
+		...keywordQueryFields
 	},
 });
 

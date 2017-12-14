@@ -23,11 +23,7 @@ export default class KeywordsService extends PermissionsService {
 		if (id) {
 			args._id = id;
 		}
-		return Keywords.find(args, {
-			sort: {
-				title: 1,
-			}
-		}).fetch();
+		return Keywords.find(args).sort({title: 1}).exec();
 	}
 
 	/**
