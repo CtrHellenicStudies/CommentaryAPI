@@ -21,7 +21,6 @@ const annotationQueryFields = {
 		},
 		resolve: (parent, { bookChapterUrl }, {token}) => {
 			AnnotationService.annotationsGet(bookChapterUrl).then(function(annotations) {
-				console.log(annotations);
 				return annotations;
 			});
 		}

@@ -1,4 +1,4 @@
-import Pages from '/imports/models/pages';
+import Pages from '../../models/pages';
 import PermissionsService from './PermissionsService';
 
 /**
@@ -20,7 +20,8 @@ export default class PageService extends PermissionsService {
 		if (_id) {
 			args._id = _id;
 		}
-		return Pages.find(args).fetch();
+		const promise = Pages.find(args).exec();
+		return promise;
 	}
 
 	/**

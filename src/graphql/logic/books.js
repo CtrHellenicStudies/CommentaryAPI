@@ -85,12 +85,8 @@ export default class BookService extends PermissionsService {
 		const args = {
 			'chapters.url': chapterUrl,
 		};
-
-		return Books.findOne(args, {
-			sort: {
-				slug: 1,
-			},
-		});
+		const promise = Books.findOne(args).sort({slug: 1}).exec();
+		return promise;
 	}
 
 	/**
@@ -109,12 +105,7 @@ export default class BookService extends PermissionsService {
 		if (chapterUrl) {
 			args['chapters.url'] = chapterUrl;
 		}
-
-		return Books.find(args, {
-			sort: {
-				slug: 1,
-				title: 1
-			},
-		}).fetch();
+		const promise = Books.find(args).sort({slug: 1, title: 1}).exec();
+		return promise;
 	}
 }

@@ -136,6 +136,6 @@ const SettingsModel = new mongoose.Schema({
 	},
 
 });
-const Settings = mongoose.model('Settings', SetingsModel);
+const Settings = mongoose.model('Settings', SettingsModel);
 
 export default Settings;

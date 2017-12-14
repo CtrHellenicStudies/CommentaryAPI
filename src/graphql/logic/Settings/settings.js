@@ -24,8 +24,8 @@ export default class SettingsService extends PermissionsService {
 		if (_id) {
 			args._id = _id;
 		}
-
-		return Settings.find(args).fetch();
+		const promise = Settings.find(args).exec();
+		return promise;
 	}
 
 	/**
@@ -64,21 +64,5 @@ export default class SettingsService extends PermissionsService {
 			return Settings.findOne(settingsId);
 		}
 		return new Error('Not authorized');
-	}
-
-	/**
-	 * Get only the public settings for the current tenant
-	 * @param {string} tenantId - id of current tenant
-	 * @returns {Object} found settings record
-	 */
-	settingGetPublic(tenantId) {
-		const args = { tenantId };
-
-		// Ensure webhooks token is not public
-		return Settings.findOne(args, {
-			fields: {
-				webhooksToken: 0,
-			}
-		});
 	}
 }

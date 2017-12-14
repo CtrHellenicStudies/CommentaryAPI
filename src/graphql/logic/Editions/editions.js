@@ -1,10 +1,10 @@
-import Comments from '../../../models/editions';
+import Editions from '../../../models/editions';
 import PermissionsService from '../PermissionsService';
 
 /**
  * Logic-layer service for dealing with editions
  */
-export default class EditionsService extends GraphQLService {
+export default class EditionsService extends PermissionsService {
 
 	/**
 	 * Get editions
@@ -17,8 +17,8 @@ export default class EditionsService extends GraphQLService {
 		if (editionId) {
 			args._id = tenantId;
 		}
-
-		return Editions.find(args).fetch();
+		const promise = Editions.find(args).exec();
+		return promise;
 	}
 	/**
 	 * Insert edition
