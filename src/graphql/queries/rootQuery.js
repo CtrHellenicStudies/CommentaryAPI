@@ -2,6 +2,7 @@ import { GraphQLObjectType } from 'graphql';
 
 import projectQueryFields from './projects';
 import commenterQueryFields from './commenters';
+import commentQueryFields from './comments';
 import userQueryFields from './users';
 import miradorQueryFields from './miradorManifests';
 import annotationQueryFields from './annotations';
@@ -12,6 +13,8 @@ import settingsQueryFields from './settings';
 import workQueryFields from './works';
 import tenantsQueryFields from './tenants';
 import keywordQueryFields from './keywords';
+import referenceWorkQueryFields from './referenceWorks';
+import discussionCommentQueryFields from './discussionComments';
 
 /**
  * Root Queries
@@ -32,7 +35,10 @@ const RootQuery = new GraphQLObjectType({
 		...settingsQueryFields,
 		...workQueryFields,
 		...tenantsQueryFields,
-		...keywordQueryFields
+		...keywordQueryFields,
+		...referenceWorkQueryFields,
+		...discussionCommentQueryFields,
+		...commentQueryFields
 	},
 });
 

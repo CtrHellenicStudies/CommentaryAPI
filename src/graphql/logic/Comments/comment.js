@@ -50,8 +50,8 @@ export default class CommentService extends PermissionsService {
 	 * @param {String} id 
 	 * @param {object} comment 
 	 */
-	static commentUpdate(id, comment) {
-		if (user.userIsNobody) { // TODO editor or admin
+	commentUpdate(id, comment) {
+		if (this.user.userIsNobody) { // TODO editor or admin
 			throw AuthenticationError();
 		}
 		try {

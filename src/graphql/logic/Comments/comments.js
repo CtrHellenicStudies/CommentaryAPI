@@ -9,8 +9,9 @@ import { prepareGetCommentsOptions, getURN } from './helper';
 /**
  * Logic-layer service for dealing with comments
  */
-export default class CommentService extends GraphQLService {
+export default class CommentService extends PermissionsService {
 
+	// TODO resolve options
 	/**
 	 * Get comments for admin interface
 	 * @param {string} queryParam - query describing comments to get
@@ -22,14 +23,14 @@ export default class CommentService extends GraphQLService {
 	static commentsGet(queryParam, limit, skip, sortRecent) {
 
 		const options = prepareGetCommentsOptions(limit, skip);
-		let query = JSON.parse(queryParam);
-		console.log(query);
-		if (queryParam === null) {
+		let query;
+		if (queryParam === null || queryParam === undefined) {
 			query = {};
+		} else {
+			query = JSON.parse(queryParam);
 		}
 		query.isAnnotation = {$ne: true};
-		const comments = Comments.find(query, options).fetch();
-		return comments;
+		return Comments.find(query).limit(options.limit).sort(options.sort).exec();
 	}
 		/**
 	 * Get comments for admin interface
@@ -50,8 +51,8 @@ export default class CommentService extends GraphQLService {
 			if (queryParam === null) {
 				query = {};
 			}
-			const comments = Comments.find(query, options).fetch();
-			return comments.length > limit;
+			// TODO
+			return true;
 		} catch (e) {
 			console.log(e);
 		}
@@ -69,15 +70,7 @@ export default class CommentService extends GraphQLService {
 		const args = {};
 		const options = prepareGetCommentsOptions(skip, limit);
 
-		const comments = Comments.find(args, options).fetch();
-		comments.map((comment) => {
-			try {
-				comment.urn = JSON.parse(comment.urn);
-			} catch (e) {
-				console.log(e);
-			}
-		});
-		return comments;
+		return Comments.find(args).limit(options.limit).sort(options.sort).exec();
 	}
 
 	/**

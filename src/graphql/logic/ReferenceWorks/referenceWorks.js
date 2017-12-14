@@ -23,11 +23,7 @@ export default class ReferenceWorksService extends PermissionsService {
 			args._id = id;
 		}
 
-		return ReferenceWorks.find(args, {
-			sort: {
-				slug: 1
-			}
-		}).fetch();
+		return ReferenceWorks.find(args).sort({slug: 1}).exec();
 	}
 
 

@@ -41,7 +41,8 @@ const DiscussionCommentsModel = new mongoose.Schema({
 		type: String,
 		optional: true,
 	},
-});
+},
+{collection: 'discussionComments'});
 const DiscussionComments = mongoose.model('DiscussionComments', DiscussionCommentsModel);
 
 export default DiscussionComments;

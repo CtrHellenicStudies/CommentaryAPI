@@ -51,8 +51,9 @@ const ReferenceWorksModel = new mongoose.Schema({
 		type: String,
 		optional: true,
 	},
-});
-const ReferenceWorks = mongoose.model('ReferenceWorks', ReferenceWorksModel);
+},
+{collection: 'referenceWorks'});
+const ReferenceWorks = mongoose.model('referenceWorks', ReferenceWorksModel);
 
 
 export default ReferenceWorks;

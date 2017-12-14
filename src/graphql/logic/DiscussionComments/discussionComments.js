@@ -25,7 +25,7 @@ export default class DiscussionCommentService extends PermissionsService {
 			args.tenantId = tenantId;
 		}
 
-		return DiscussionComments.find(args).fetch();
+		return DiscussionComments.find(args).exec();
 	}
 	/**
 	 * Update the status of a given discussion comment
