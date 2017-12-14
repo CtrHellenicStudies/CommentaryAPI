@@ -38,13 +38,5 @@ const WorksModel = new mongoose.Schema({
 	},
 });
 const Works = mongoose.model('Works', WorksModel);
-Works.friendlySlugs('title');
-
-Works.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	createdBy: 'createdBy',
-	updatedAt: 'updated',
-	updatedBy: 'updatedBy'
-});
 
 export default Works;

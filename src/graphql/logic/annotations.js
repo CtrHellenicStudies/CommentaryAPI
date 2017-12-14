@@ -19,13 +19,8 @@ export default class AnnotationService extends PermissionsService {
 			isAnnotation: true,
 		};
 
-		const options = {
-			sort: {
-				paragraphN: 1,
-			},
-		};
-
-		return Comments.find(args, options).fetch();
+		const promise = Comments.find(args).sort({paragraphN: 1}).exec();
+		return promise;
 	}
 
 	/**

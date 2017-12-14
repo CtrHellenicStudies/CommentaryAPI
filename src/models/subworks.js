@@ -35,13 +35,5 @@ const SubworksModel = new mongoose.Schema({
 	},
 });
 const Subworks = mongoose.model('Subworks', SubworksModel);
-Subworks.friendlySlugs('title');
-
-Subworks.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	createdBy: 'createdBy',
-	updatedAt: 'updated',
-	updatedBy: 'updatedBy'
-});
 
 export default Subworks;

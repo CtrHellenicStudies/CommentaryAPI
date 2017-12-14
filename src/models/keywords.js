@@ -142,13 +142,5 @@ const KeywordsModel = new mongoose.Schema({
 });
 
 const Keywords = mongoose.model('Keywords', KeywordsModel);
-Keywords.friendlySlugs('title');
-
-Keywords.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	createdBy: 'createdBy',
-	updatedAt: 'updated',
-	updatedBy: 'updatedBy'
-});
 
 export default Keywords;

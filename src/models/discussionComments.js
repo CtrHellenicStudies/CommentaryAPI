@@ -44,11 +44,4 @@ const DiscussionCommentsModel = new mongoose.Schema({
 });
 const DiscussionComments = mongoose.model('DiscussionComments', DiscussionCommentsModel);
 
-DiscussionComments.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	createdBy: 'createdBy',
-	updatedAt: 'updated',
-	updatedBy: 'updatedBy'
-});
-
 export default DiscussionComments;

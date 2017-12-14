@@ -54,11 +54,5 @@ const ReferenceWorksModel = new mongoose.Schema({
 });
 const ReferenceWorks = mongoose.model('ReferenceWorks', ReferenceWorksModel);
 
-ReferenceWorks.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	createdBy: 'createdBy',
-	updatedAt: 'updated',
-	updatedBy: 'updatedBy'
-});
 
 export default ReferenceWorks;

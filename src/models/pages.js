@@ -31,7 +31,5 @@ const PagesModel = new mongoose.Schema({
 });
 
 const Pages = mongoose.model('Pages', PagesModel);
-Pages.friendlySlugs('title');
-Pages.attachBehaviour('timestampable');
 
 export default Pages;

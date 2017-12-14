@@ -318,15 +318,6 @@ const CommentsModel = new mongoose.Schema({
 		optional: true,
 	},
 });
-const Comments = mongoose.model('Comments', CommentsModel);
-Comments.attachSchema(Comments.schema);
-
-Comments.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	createdBy: 'createdBy',
-	updatedAt: 'updated',
-	updatedBy: 'updatedBy'
-});
 
 const COMMENT_ID_LENGTH = 7;
 
@@ -392,13 +383,15 @@ function getURN(comment) {
 }
 
 // hooks:
-Comments.before.insert((userId, doc) => {
+CommentsModel.pre('insert', function(userId, doc){
 	doc.urn = getURN(doc);
 });
 
-Comments.before.update((userId, doc, fieldNames, modifier, options) => {
+CommentsModel.pre('update', function(userId, doc, fieldNames, modifier, options) {
 	modifier.$set.urn = getURN(doc);
 });
+
+const Comments = mongoose.model('Comments', CommentsModel);
 
 export default Comments;
 export { getURN };

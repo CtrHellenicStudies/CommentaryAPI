@@ -36,9 +36,4 @@ const TranslationNodesModel = new mongoose.Schema({
 });
 const TranslationNodes = mongoose.model('TranslationNodes', TranslationNodesModel);
 
-TranslationNodes.attachBehaviour('timestampable', {
-	createdAt: 'created',
-	updatedAt: 'updated',
-});
-
 export default TranslationNodes;

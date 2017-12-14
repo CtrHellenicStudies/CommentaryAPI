@@ -137,7 +137,5 @@ const SettingsModel = new mongoose.Schema({
 
 });
 const Settings = mongoose.model('Settings', SetingsModel);
-Settings.friendlySlugs('name');
-Settings.attachBehaviour('timestampable');
 
 export default Settings;
