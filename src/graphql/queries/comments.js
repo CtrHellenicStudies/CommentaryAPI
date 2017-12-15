@@ -48,8 +48,9 @@ const commentQueryFields = {
 			},
 		},
 		resolve: (parent, { queryParam, limit, skip}, {token}) => 
-			CommentService.commentsGetMore(queryParam, limit, skip).then(function(more) {
-				return more;
+			CommentService.commentsGetMore(queryParam, limit, skip).then(function(comments) {
+				const tempLimit = limit !== undefined && limit !== null ? limit : 30;
+				return comments.length > tempLimit;
 			})
 	},
 	commentsOn: {

@@ -1,9 +1,15 @@
 import _ from 'underscore';
 import mongoose from 'mongoose';
 
-import Works from './works';
+import Works, { WorksModel} from './works';
 import Books from './books';
 import Tenants from './tenants';
+import { CommentersModel } from './commenters';
+import { SubworksModel } from './subworks';
+import { ReferenceWorksModel } from './referenceWorks';
+import { KeywordsModel } from './keywords';
+import { DiscussionCommentsModel } from './discussionComments';
+import { RevisionModel } from './revision';
 
 
 const CommentsModel = new mongoose.Schema({
@@ -32,28 +38,8 @@ const CommentsModel = new mongoose.Schema({
 	},
 
 	commenters: {
-		type: [Object],
-		optional: true,
-	},
-
-	'commenters.$._id': {
-		type: String,
-		optional: true,
-	},
-
-	'commenters.$.name': {
-		type: String,
-		optional: true,
-	},
-
-	'commenters.$.slug': {
-		type: String,
-		optional: true,
-	},
-
-	'commenters.$.wordpressId': {
-		type: Number,
-		optional: true,
+		type: [CommentersModel],
+		optional: true
 	},
 
 	users: {
@@ -62,43 +48,13 @@ const CommentsModel = new mongoose.Schema({
 	},
 
 	work: {
-		type: Object,
+		type: WorksModel,
 		optional: true,
 
-	},
-
-	'work.title': {
-		type: String,
-		optional: true,
-	},
-
-	'work.slug': {
-		type: String,
-		optional: true,
-	},
-
-	'work.order': {
-		type: Number,
-		optional: true,
 	},
 
 	subwork: {
-		type: Object,
-		optional: true,
-	},
-
-	'subwork.title': {
-		type: String,
-		optional: true,
-	},
-
-	'subwork.slug': {
-		type: String,
-		optional: true,
-	},
-
-	'subwork.n': {
-		type: Number,
+		type: SubworksModel,
 		optional: true,
 	},
 
@@ -141,160 +97,27 @@ const CommentsModel = new mongoose.Schema({
 		type: String,
 		optional: true,
 	},
-
+	revisions: {
+		type: [RevisionModel],
+		optional: true
+	},
 	referenceId: {
 		type: String,
 		optional: true,
 	},
 
 	referenceWorks: {
-		type: [Object],
-		optional: true,
-	},
-
-	'referenceWorks.$.referenceWorkId': {
-		type: String,
-		optional: true,
-	},
-
-	'referenceWorks.$.section': {
-		type: Number,
-		optional: true,
-	},
-
-	'referenceWorks.$.chapter': {
-		type: Number,
-		optional: true,
-	},
-
-	'referenceWorks.$.translation': {
-		type: Number,
-		optional: true,
-	},
-
-	'referenceWorks.$.note': {
-		type: Number,
+		type: [ReferenceWorksModel],
 		optional: true,
 	},
 
 	keywords: {
-		type: [Object],
-		optional: true,
-	},
-
-	'keywords.$._id': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.wordpressId': {
-		type: Number,
-		optional: true,
-	},
-
-	'keywords.$.title': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.slug': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.description': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.descriptionRaw': {
-		type: Object,
-		optional: true,
-	},
-
-	'keywords.$.type': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.count': {
-		type: Number,
-		optional: true,
-	},
-
-	'keywords.$.work': {
-		type: Object,
-		optional: true,
-	},
-
-	'keywords.$.lineFrom': {
-		type: Number,
-		optional: true,
-	},
-
-	'keywords.$.lineTo': {
-		type: Number,
-		optional: true,
-	},
-
-	'keywords.$.lineLetters': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.nLines': {
-		type: Number,
-		optional: true,
-	},
-
-	'keywords.$.tenantId': {
-		type: String,
-		optional: true,
-	},
-
-	'keywords.$.isMentionedInLemma': {
-		type: Boolean,
-		optional: true,
-	},
-
-	revisions: {
-		type: [Object],
-		optional: true,
-	},
-
-	'revisions.$._id': {
-		type: String,
-		optional: true,
-	},
-
-	'revisions.$.title': {
-		type: String,
-		optional: true,
-	},
-
-	'revisions.$.text': {
-		type: String,
-		optional: true,
-	},
-
-	'revisions.$.textRaw': {
-		type: Object,
-		optional: true,
-		blackbox: true,
-	},
-
-	'revisions.$.originalDate': {
-		type: Date,
-		optional: true,
-	},
-
-	'revisions.$.created': {
-		type: Date,
+		type: [KeywordsModel],
 		optional: true,
 	},
 
 	discussionComments: {
-		type: [Object],
+		type: [DiscussionCommentsModel],
 		optional: true,
 	},
 
@@ -318,6 +141,7 @@ const CommentsModel = new mongoose.Schema({
 		optional: true,
 	},
 });
+
 
 const COMMENT_ID_LENGTH = 7;
 
@@ -383,7 +207,7 @@ function getURN(comment) {
 }
 
 // hooks:
-CommentsModel.pre('insert', function(userId, doc){
+CommentsModel.pre('insert', function(userId, doc) {
 	doc.urn = getURN(doc);
 });
 

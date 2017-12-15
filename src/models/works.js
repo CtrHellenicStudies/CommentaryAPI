@@ -40,3 +40,4 @@ const WorksModel = new mongoose.Schema({
 const Works = mongoose.model('Works', WorksModel);
 
 export default Works;
+export { WorksModel };

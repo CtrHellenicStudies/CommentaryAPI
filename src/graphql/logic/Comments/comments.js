@@ -30,7 +30,11 @@ export default class CommentService extends PermissionsService {
 			query = JSON.parse(queryParam);
 		}
 		query.isAnnotation = {$ne: true};
-		return Comments.find(query).limit(options.limit).sort(options.sort).exec();
+		return Comments.find(query)
+			.limit(options.limit)
+			.sort(options.sort)
+			.skip(options.skip)
+			.exec();
 	}
 		/**
 	 * Get comments for admin interface
@@ -41,18 +45,23 @@ export default class CommentService extends PermissionsService {
 	 */
 	static commentsGetMore(queryParam, limit, skip) {
 		if (!queryParam && !limit && !skip) {
-			return false;
+			return Comments.find().limit(1);
 		}
 		try { 
 			const MAX_LIMIT = 1000;
 			// const args = prepareGetCommentsArgs(workSlug, subworkN, tenantId);
 			const options = prepareGetCommentsOptions(MAX_LIMIT, skip);
-			let query = JSON.parse(queryParam);
-			if (queryParam === null) {
+			let query;
+			if (queryParam === null || queryParam === undefined) {
 				query = {};
+			} else {
+				query = JSON.parse(queryParam);
 			}
-			// TODO
-			return true;
+			return Comments.find(query)
+			.limit(options.limit + 1)
+			.sort(options.sort)
+			.skip(options.skip)
+			.exec();
 		} catch (e) {
 			console.log(e);
 		}

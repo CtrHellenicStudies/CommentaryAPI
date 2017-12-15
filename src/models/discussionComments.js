@@ -46,3 +46,4 @@ const DiscussionCommentsModel = new mongoose.Schema({
 const DiscussionComments = mongoose.model('DiscussionComments', DiscussionCommentsModel);
 
 export default DiscussionComments;
+export { DiscussionCommentsModel };

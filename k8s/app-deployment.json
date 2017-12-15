@@ -23,7 +23,7 @@
 						"ports": [
 							{
 								"name": "http-server",
-								"containerPort": 3001
+								"containerPort": 3002
 							}
 						],
 						"env": [

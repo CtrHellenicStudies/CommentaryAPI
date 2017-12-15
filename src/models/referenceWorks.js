@@ -57,3 +57,4 @@ const ReferenceWorks = mongoose.model('referenceWorks', ReferenceWorksModel);
 
 
 export default ReferenceWorks;
+export { ReferenceWorksModel };

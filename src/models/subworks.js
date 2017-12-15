@@ -37,3 +37,4 @@ const SubworksModel = new mongoose.Schema({
 const Subworks = mongoose.model('Subworks', SubworksModel);
 
 export default Subworks;
+export { SubworksModel };

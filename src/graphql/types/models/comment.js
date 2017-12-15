@@ -8,6 +8,13 @@ import {
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
 import GraphQLDate from 'graphql-date';
+import { CommenterType, CommenterInputType } from './commenter';
+import { WorkType } from './work';
+import { Subwork } from './subworks';
+import { ReferenceWorkType } from './referenceWork';
+import { KeywordType } from './keyword';
+import { DiscussionCommentType } from './discussionComment';
+import { RevisionType } from './revision';
 
 
 /**
@@ -42,10 +49,10 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: new GraphQLList(GraphQLString),
 		},
 		work: {
-			type: GraphQLJSON
+			type: WorkType
 		},
 		subwork: {
-			type: GraphQLJSON
+			type: Subwork
 		},
 		lineFrom: {
 			type: GraphQLInt,
@@ -75,16 +82,16 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		referenceWorks: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(ReferenceWorkType),
 		},
 		keywords: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(KeywordType),
 		},
 		revisions: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(RevisionType),
 		},
 		discussionComments: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(DiscussionCommentType),
 		},
 		isAnnotation: {
 			type: GraphQLBoolean,
@@ -100,7 +107,6 @@ const CommentInputType = new GraphQLInputObjectType({
 		},
 	},
 });
-
 /**
  * Comment model type
  * @type {GraphQLObjectType}
@@ -125,16 +131,16 @@ const CommentType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		commenters: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(CommenterType),
 		},
 		users: {
 			type: new GraphQLList(GraphQLString),
 		},
 		work: {
-			type: GraphQLJSON
+			type: WorkType
 		},
 		subwork: {
-			type: GraphQLJSON
+			type: Subwork
 		},
 		lineFrom: {
 			type: GraphQLInt,
@@ -164,16 +170,16 @@ const CommentType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		referenceWorks: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(ReferenceWorkType),
 		},
 		keywords: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(KeywordType),
 		},
 		revisions: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(RevisionType),
 		},
 		discussionComments: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(DiscussionCommentType),
 		},
 		isAnnotation: {
 			type: GraphQLBoolean,

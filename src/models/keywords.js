@@ -144,3 +144,4 @@ const KeywordsModel = new mongoose.Schema({
 const Keywords = mongoose.model('Keywords', KeywordsModel);
 
 export default Keywords;
+export { KeywordsModel };
