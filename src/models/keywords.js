@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 
+import { WorksModel } from './works';
+import { SubworksModel } from './subworks';
+
 const KeywordsModel = new mongoose.Schema({
 	_id: {
 		type: String,
@@ -47,72 +50,12 @@ const KeywordsModel = new mongoose.Schema({
 	},
 
 	work: {
-		type: Object,
-		optional: true,
-	},
-
-	'work._id': {
-		type: String,
-		optional: true,
-	},
-
-	'work.title': {
-		type: String,
-		optional: true,
-	},
-
-	'work.order': {
-		type: Number,
-		optional: true,
-	},
-
-	'work.subworks': {
-		type: [Object],
-		optional: true,
-	},
-
-	'work.friendlySlugs': {
-		type: Object,
-		optional: true,
-	},
-
-	'work.slug': {
-		type: String,
-		optional: true,
-	},
-
-	'work.updated': {
-		type: Date,
-		optional: true,
-	},
-
-	'work.tenantID': {
-		type: String,
+		type: WorksModel,
 		optional: true,
 	},
 
 	subwork: {
-		type: Object,
-		optional: true,
-	},
-
-	'subwork.n': {
-		type: Number,
-		optional: true,
-	},
-
-	'subwork.title': {
-		type: String,
-		optional: true,
-	},
-
-	'subwork.slug': {
-		type: String,
-		optional: true,
-	},
-
-	'subwork.comments': {
-		type: [Object],
+		type: SubworksModel,
 		optional: true,
 	},
 
