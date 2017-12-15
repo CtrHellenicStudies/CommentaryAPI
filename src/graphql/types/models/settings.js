@@ -61,7 +61,26 @@ const SettingsType = new GraphQLObjectType({
 			type: GraphQLBoolean,
 		},
 		introBlocks: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(new GraphQLObjectType({
+				name: 'IntroBlockType',
+				fields: {
+					title: {
+						type: GraphQLString
+					},
+					text: {
+						type: GraphQLString
+					},
+					linkURL: {
+						type: GraphQLString,
+						optional: true,
+					},
+				
+					linkText: {
+						type: GraphQLString,
+						optional: true,
+					}
+				}
+			})),
 		}
 	},
 });
@@ -117,7 +136,26 @@ const SettingsInputType = new GraphQLInputObjectType({
 			type: GraphQLBoolean,
 		},
 		introBlocks: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(new GraphQLObjectType({
+				name: 'IntroBlockType',
+				fields: {
+					title: {
+						type: GraphQLString
+					},
+					text: {
+						type: GraphQLString
+					},
+					linkURL: {
+						type: GraphQLString,
+						optional: true,
+					},
+				
+					linkText: {
+						type: GraphQLString,
+						optional: true,
+					}
+				}
+			})),
 		}
 	},
 });

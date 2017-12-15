@@ -4,6 +4,9 @@ import Subworks from './subworks';
 
 
 const WorksModel = new mongoose.Schema({
+	_id: {
+		type: String
+	},
 	title: {
 		type: String,
 	},

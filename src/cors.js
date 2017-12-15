@@ -8,7 +8,7 @@ import Project from './models/project';
 
 export default function corsSetup(app, redisClient) {
 
-	const whitelist = ['http://generate-manifests.orphe.us'];
+	const whitelist = ['http://ahcip.chs.local:3000'];
 
 	if (process.env.NODE_ENV === 'development') {
 		whitelist.push(process.env.CLIENT_SERVER);

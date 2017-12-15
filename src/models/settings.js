@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
 const SettingsModel = new mongoose.Schema({
+	_id: {
+		type: String
+	},
 	name: {
 		type: String,
 	},
@@ -104,27 +107,26 @@ const SettingsModel = new mongoose.Schema({
 		optional: true,
 		type: String,
 	},
-
-	'introBlocks.$.title': {
+	introBlocks: {
 		optional: true,
-		type: String,
+		type: [new mongoose.Schema({
+			title: {
+				type: String
+			},
+			text: {
+				type: String
+			},
+			linkURL: {
+				type: String,
+				optional: true,
+			},
+		
+			linkText: {
+				type: String,
+				optional: true,
+			}
+		})]
 	},
-
-	'introBlocks.$.text': {
-		optional: true,
-		type: String,
-	},
-
-	'introBlocks.$.linkURL': {
-		optional: true,
-		type: String,
-	},
-
-	'introBlocks.$.linkText': {
-		optional: true,
-		type: String,
-	},
-
 	discussionCommentsDisabled: {
 		type: Boolean,
 		optional: true,

@@ -20,7 +20,7 @@ export default class TranslationsService extends PermissionsService {
 			args.tenantId = tenantId;
 		}
 
-		return TranslationNodes.find(args).fetch();
+		return TranslationNodes.find(args).exec();
 	}
 	static getAuthors(work, subwork) {
 
@@ -28,16 +28,7 @@ export default class TranslationsService extends PermissionsService {
 			return [];
 		}
 		const workSlug = Works.findOne(work).slug;
-		const translations = TranslationNodes.find({work: workSlug, subwork: parseInt(subwork, 10)}).fetch();
-		const authors = {};
-		const ret = [];
-		for (let i = 0; i < translations.length; i += 1) {
-			if (!authors[translations[i].author]) {
-				authors[translations[i].author] = true;
-				ret.push(translations[i]);
-			}
-		}
-		return ret;
+		return TranslationNodes.find({work: workSlug, subwork: parseInt(subwork, 10)}).exec();
 	}
 	translationUpdate(translationNode) {
 

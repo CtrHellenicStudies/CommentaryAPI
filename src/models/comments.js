@@ -13,6 +13,9 @@ import { RevisionModel } from './revision';
 
 
 const CommentsModel = new mongoose.Schema({
+	_id: {
+		type: String
+	},
 	urn: {
 		type: Object,
 		optional: true,

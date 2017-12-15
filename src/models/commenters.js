@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 const CommentersModel = new mongoose.Schema({
 	_id: {
 		type: String,
-		optional: true,
 	},
 
 	wordpressId: {

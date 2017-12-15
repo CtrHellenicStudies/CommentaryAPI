@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 
 
 const RevisionModel = new mongoose.Schema({
-
+	_id: {
+		type: String
+	},
 	originalDate: {
 		type: Date,
 		optional: true,

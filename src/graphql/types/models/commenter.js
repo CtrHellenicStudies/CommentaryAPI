@@ -29,7 +29,7 @@ const CommenterType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		avatar: {
-			type: GraphQLString,
+			type: GraphQLJSON,
 		},
 		bio: {
 			type: GraphQLString,

@@ -15,6 +15,7 @@ import tenantsQueryFields from './tenants';
 import keywordQueryFields from './keywords';
 import referenceWorkQueryFields from './referenceWorks';
 import discussionCommentQueryFields from './discussionComments';
+import translationsQueryFields from './translation';
 
 /**
  * Root Queries
@@ -38,7 +39,8 @@ const RootQuery = new GraphQLObjectType({
 		...keywordQueryFields,
 		...referenceWorkQueryFields,
 		...discussionCommentQueryFields,
-		...commentQueryFields
+		...commentQueryFields,
+		...translationsQueryFields
 	},
 });
 
