@@ -7,7 +7,7 @@ import {
 	GraphQLInputObjectType
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import GraphQLDate from 'graphql-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
 
 import CommentType from './comment';
 import Comments from '../../../models/comments';
@@ -110,7 +110,7 @@ const BookType = new GraphQLObjectType({
 			}
 		}
 		*/
-		
+
 	}
 });
 

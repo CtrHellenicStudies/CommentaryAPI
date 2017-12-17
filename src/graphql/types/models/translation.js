@@ -6,7 +6,7 @@ import {
 	GraphQLList
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import GraphQLDate from 'graphql-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
 
 /**
  * Translation model type
@@ -18,35 +18,27 @@ const TranslationType = new GraphQLObjectType({
 	fields: {
 		tenantId: {
 			type: GraphQLString,
-			optional: true
 		},
 		created: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		updated: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		author: {
 			type: GraphQLString,
-			optional: true
 		},
 		work: {
 			type: GraphQLString,
-			optional: true
 		},
 		subwork: {
 			type: GraphQLInt,
-			optional: true
 		},
 		n: {
 			type: GraphQLInt,
-			optional: true
 		},
 		text: {
 			type: GraphQLString,
-			optional: true
 		},
 	},
 });
@@ -55,35 +47,27 @@ const TranslationInputType = new GraphQLInputObjectType({
 	fields: {
 		tenantId: {
 			type: GraphQLString,
-			optional: true
 		},
 		created: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		updated: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		author: {
 			type: GraphQLString,
-			optional: true
 		},
 		work: {
 			type: GraphQLString,
-			optional: true
 		},
 		subwork: {
 			type: GraphQLInt,
-			optional: true
 		},
 		n: {
 			type: GraphQLInt,
-			optional: true
 		},
 		text: {
 			type: GraphQLString,
-			optional: true
 		},
 	}
 });

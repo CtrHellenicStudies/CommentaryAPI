@@ -7,7 +7,7 @@ import {
 	GraphQLInputObjectType
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import GraphQLDate from 'graphql-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
 
 
 /**
@@ -30,13 +30,13 @@ const RevisionInputType = new GraphQLInputObjectType({
 		type: GraphQLString
 	},
 	originalDate: {
-		type: GraphQLDate,
+		type: GraphQLDateTime,
 	},
 	tenantId: {
 		type: GraphQLString,
 	},
 	created: {
-		type: GraphQLDate,
+		type: GraphQLDateTime,
 	},
 });
 /**
@@ -60,13 +60,13 @@ const RevisionType = new GraphQLObjectType({
 			type: GraphQLString
 		},
 		originalDate: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 		tenantId: {
 			type: GraphQLString,
 		},
 		created: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 	},
 });
