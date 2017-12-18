@@ -1,12 +1,14 @@
-export default class PermissionsService {
-	constructor(props) {
-		this.user = props && props.user ? props.user : null;
+import User from '../../models/user';
 
-		console.log('Permissions Service user and project', this.user);
-		this.userRolesForProject = [];
-	}
-	hasExamplePermission() {
-		console.log('Granted example permission for user: ', this.user);
-		return true;
+export default class PermissionsService {
+	constructor({ token }) {
+		this.token = token || '';
+		this.user = User.findOne({
+			'services.resume.loginTokens.hashedToken': '', // TODO: figure out how to hash login token with meteor? Accounts._hashLoginToken(this.token),
+		});
+		this.userIsAdmin = this.user && this.user.roles ? this.user.roles.indexOf('admin') !== -1 : false;
+		this.userIsEditor = this.user && this.user.roles ? this.user.roles.indexOf('editor') !== -1 : false;
+		this.userIsCommenter = this.user && this.user.roles ? this.user.roles.indexOf('commenter') !== -1 : false;
+		this.userIsNobody = !this.userIsAdmin && !this.userIsCommenter && !this.userIsEditor;
 	}
 }

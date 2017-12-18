@@ -92,25 +92,22 @@ const BookType = new GraphQLObjectType({
 			type: GraphQLString
 		},
 
-		/**
-		// TODO: Debug why Meteor is not able to resolve queries on graphql types
-		// due to a node fibers issue
 		annotations: {
 			type: new GraphQLList(CommentType),
 			args: {
-				chapterUrl: { type: GraphQLString }
+				chapterUrl: {
+					type: GraphQLString,
+				},
 			},
 			resolve: ( _, { chapterUrl }, context ) => {
-				const getComments = Meteor.bindEnvironment(_chapterUrl => {
-					return Comments.find({
-						bookChapterUrl: _chapterUrl,
-					});
+				/**
+				const comments = Comments.find({
+					bookChapterUrl: chapterUrl,
 				});
-				return getComments(chapterUrl);
+				*/
+				return []; 
 			}
 		}
-		*/
-
 	}
 });
 

@@ -1,35 +1,64 @@
-import { GraphQLID, GraphQLNull, GraphQLList } from 'graphql';
+/**
+ * Queries for users
+ */
+import { GraphQLString, GraphQLList } from 'graphql';
 
 // types
-import UserType from '../types/models/user';
-import ProjectType from '../types/models/project';
+import { UserType } from '../types/models/user';
 
-// models
-import Project from '../../models/project';
-import User from '../../models/user';
+// logic
+import UserService from '../logic/users';
+
 
 const userQueryFields = {
-	userProfile: {
-		type: UserType,
-		description: 'Get user document for currently signed-in user',
-		resolve(obj, args, context) {
-			return User.findById(context.user._id);
+	users: {
+		type: new GraphQLList(UserType),
+		description: 'Get list of users',
+		args: {
+			_id: {
+				type: GraphQLString,
+			},
+		},
+		async resolve(parent, { _id }, {token}) {
+			const userService = new UserService({token});
+			return await userService.usersGet(_id);
 		}
 	},
-	userProjects: {
-		type: new GraphQLList(ProjectType),
-		description: 'Get projects associated with user',
-		resolve(obj, arg, context) {
-			return Project.find(
-				{ users:
-					{ $elemMatch: { userId: context.user._id } }
-				},
-				function callback(err, project) {
-					if (err) throw err;
-				}
-			);
+	getAuthedUser: {
+		type: UserType,
+		description: 'Return a single users account by their login token',
+		async resolve(parent, {}, { token }) {
+			const userService = new UserService({token});
+			return await userService.getAuthedUser();
 		}
-	}
+	},
+	userGetPublicById: {
+		type: UserType,
+		description: 'Return public information about a single user by their user Id',
+		args: {
+			_id: {
+				type: GraphQLString,
+			},
+		},
+		async resolve(parent, { _id }, {token}) {
+			const userService = new UserService({token});
+			return await userService.userGetPublicById(_id);
+		}
+	},
+	usersGetPublicById: {
+		type: new GraphQLList(UserType),
+		description: 'Return public information about a single user by their user Id',
+		args: {
+			userIds: {
+				type: new GraphQLList(GraphQLString),
+			},
+		},
+		async resolve(parent, { userIds }, { token }) {
+			const userService = new UserService({ token });
+			return await userService.usersGetPublicById(userIds);
+		}
+	},
+
 };
 
 

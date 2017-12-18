@@ -7,7 +7,8 @@ import Collection from '../../../models/collection';
 
 // types
 import CollectionType from './collection';
-import UserType from './user';
+import { UserType } from './user';
+
 
 const config = {
 	name: 'ProjectType',
