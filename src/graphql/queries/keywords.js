@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import {KeywordType} from '../types/models/keyword';
+import { KeywordType } from '../types/models/keyword';
 
 // logic
 import KeywordsService from '../logic/Keywords/keywords';
@@ -25,11 +25,10 @@ const keywordQueryFields = {
 				type: GraphQLString
 			}
 		},
-		resolve: (parent, { tenantId, id, queryParam}, {token}) =>
+		resolve: (parent, { tenantId, id, queryParam}, {token}) => 
 			KeywordsService.keywordsGet(id, tenantId, queryParam).then(function(keywords) {
 				return keywords;
 			})
-
 	},
 };
 

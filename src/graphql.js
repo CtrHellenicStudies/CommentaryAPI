@@ -28,7 +28,7 @@ const createRemoteSchema = async (uri: string) => {
 		schema: await introspectSchema(fetcher),
 		fetcher
 	});
-}
+};
 
 /**
  * Root schema
@@ -60,7 +60,7 @@ const setupGraphQL = async (app) => {
 	const chsTextserverSchema = await createRemoteSchema('http://text.chs.orphe.us/graphql');
 
 	const schema = mergeSchemas({
-	  schemas: [RootSchema, chsTextserverSchema],
+		schemas: [RootSchema, chsTextserverSchema],
 	});
 
 	app.use('/graphql', jwtAuthenticate, graphqlExpress(req => ({
@@ -72,6 +72,6 @@ const setupGraphQL = async (app) => {
 	app.use('/graphiql', graphiqlExpress({
 		endpointURL: '/graphql',
 	}));
-}
+};
 
 export default setupGraphQL;
