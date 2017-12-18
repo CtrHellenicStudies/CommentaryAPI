@@ -1,7 +1,7 @@
 /**
  * Queries for works
  */
-import { GraphQLID, GraphQLList } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
 import { WorkType } from '../types/models/work';
@@ -11,7 +11,7 @@ import WorksService from '../logic/Works/works';
 
 
 const workQueryFields = {
-	works: {
+	worksAhcip: {
 		type: new GraphQLList(WorkType),
 		description: 'Get list of works',
 		args: {
@@ -24,6 +24,7 @@ const workQueryFields = {
 		},
 		resolve: (parent, { _id, tenantId }, {token}) => 
 			WorksService.worksGet(_id, tenantId).then(function(works) {
+				console.log(works);
 				return works;
 			})
 	},

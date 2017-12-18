@@ -29,7 +29,7 @@ export default class TenantsService extends PermissionsService {
 	 */
 	static tenantBySubdomainGet(subdomain) {
 		return Tenants.findOne({
-			subdomain,
+			subdomain: subdomain,
 		}).exec();
 	}
 
