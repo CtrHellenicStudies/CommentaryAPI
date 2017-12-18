@@ -39,6 +39,9 @@ const SettingsType = new GraphQLObjectType({
 		tenantId: {
 			type: GraphQLString,
 		},
+		works: {
+			type: new GraphQLList(GraphQLJSON),
+		},
 		webhooksToken: {
 			type: GraphQLString,
 		},
