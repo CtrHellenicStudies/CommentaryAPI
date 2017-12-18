@@ -32,6 +32,10 @@ const SettingsModel = new mongoose.Schema({
 	tenantId: {
 		type: String,
 	},
+	works: {
+		type: [Object],
+		optional: true,
+	},
 
 	webhooksToken: {
 		optional: true,
@@ -120,7 +124,7 @@ const SettingsModel = new mongoose.Schema({
 				type: String,
 				optional: true,
 			},
-		
+
 			linkText: {
 				type: String,
 				optional: true,
