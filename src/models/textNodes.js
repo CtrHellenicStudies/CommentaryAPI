@@ -1,46 +1,40 @@
 import mongoose from 'mongoose';
 import Editions from './editions';
 
+import { WorksModel } from './works';
+import { SubworksModel } from './subworks';
+
 
 const TextNodesModel = new mongoose.Schema({
 	tenantId: {
 		type: String,
 		optional: true,
 	},
-	text: {
-		type: [Object],
-	},
-	'text.$.n': {
-		type: Number,
-	},
-	'text.$.text': {
-		type: String,
-	},
-	'text.$.html': {
-		type: String,
-	},
-	'text.$.edition': {
-		type: String,
-	},
+	text: [new mongoose.Schema({
+		n: {
+			type: Number,
+		},
+		text: {
+			type: String,
+		},
+		html: {
+			type: String,
+		},
+		edition: {
+			type: String,
+		},
+	})],
 	work: {
-		type: Object,
-	},
-	'work.slug': {
-		type: String,
+		type: WorksModel,
 	},
 	subwork: {
-		type: Object,
-	},
-	'subwork.title': {
-		type: String,
-	},
-	'subwork.n': {
-		type: Number,
+		type: SubworksModel,
 	},
 	relatedPassages: {
 		type: [Object],
 	},
-});
+},
+{collection: 'textNodes'});
 
 const TextNodes = mongoose.model('TextNodes', TextNodesModel);
 

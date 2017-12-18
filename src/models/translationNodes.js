@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 
+import { WorksModel } from './works';
+import { SubworksModel } from './subworks';
+
 const TranslationNodesModel = new mongoose.Schema({
 	tenantId: {
 		type: String,
@@ -18,11 +21,11 @@ const TranslationNodesModel = new mongoose.Schema({
 		optional: true
 	},
 	work: {
-		type: String,
+		type: WorksModel,
 		optional: true
 	},
 	subwork: {
-		type: Number,
+		type: SubworksModel,
 		optional: true
 	},
 	n: {
@@ -33,7 +36,8 @@ const TranslationNodesModel = new mongoose.Schema({
 		type: String,
 		optional: true
 	}
-});
+},
+{collection: 'translationNodes'});
 const TranslationNodes = mongoose.model('TranslationNodes', TranslationNodesModel);
 
 export default TranslationNodes;

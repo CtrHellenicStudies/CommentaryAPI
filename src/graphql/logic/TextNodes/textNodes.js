@@ -70,12 +70,7 @@ export default class TextNodesService extends PermissionsService {
 	 */
 	static textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo) {
 		const args = {};
-		const options = {
-			sort: {
-				'work.slug': 1,
-				'text.n': 1,
-			},
-		};
+		const options = {};
 
 		if (_id) {
 			args._id = new mongoose.Types.ObjectID(_id);
@@ -110,8 +105,14 @@ export default class TextNodesService extends PermissionsService {
 		} else {
 			options.skip = 0;
 		}
-		console.log(lineFrom, ' ', lineTo, ' ', TextNodes.find(args, options).fetch().length);
-		return TextNodes.find(args, options).fetch();
+		return TextNodes.find(args)
+			.skip(options.skip)
+			.limit(options.limit)
+			.sort({
+				'work.slug': 1,
+				'text.n': 1,
+			})
+			.exec();
 	}
 
 	/**

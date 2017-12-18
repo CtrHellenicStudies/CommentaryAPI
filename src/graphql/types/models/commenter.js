@@ -29,7 +29,29 @@ const CommenterType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		avatar: {
-			type: GraphQLJSON,
+			type: new GraphQLObjectType({
+				name: 'AvatarType',
+				fields: {
+					src: {
+						type: GraphQLString
+					},
+					filename: {
+						type: GraphQLString
+					},
+					type: {
+						type: GraphQLString
+					},
+					size: {
+						type: GraphQLInt
+					},
+					directive: {
+						type: GraphQLString
+					},
+					key: {
+						type: GraphQLString
+					}
+				}
+			}),
 		},
 		bio: {
 			type: GraphQLString,
@@ -82,7 +104,29 @@ const CommenterInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		avatar: {
-			type: GraphQLJSON,
+			type: new GraphQLObjectType({
+				name: 'AvatarType',
+				fields: {
+					src: {
+						type: GraphQLString
+					},
+					filename: {
+						type: GraphQLString
+					},
+					type: {
+						type: GraphQLString
+					},
+					size: {
+						type: GraphQLInt
+					},
+					directive: {
+						type: GraphQLString
+					},
+					key: {
+						type: GraphQLString
+					}
+				}
+			}),
 		},
 		bio: {
 			type: GraphQLString,

@@ -27,41 +27,37 @@ const CommentersModel = new mongoose.Schema({
 		optional: true,
 	},
 
-	avatar: {
-		type: Object,
-		optional: true,
-	},
-
-	'avatar.src': {
-		type: String,
-		optional: true,
-	},
-
-	'avatar.filename': {
-		type: String,
-		optional: true,
-	},
-
-	'avatar.type': {
-		type: String,
-		optional: true,
-	},
-
-	'avatar.size': {
-		type: Number,
-		optional: true,
-	},
-
-	'avatar.directive': {
-		type: String,
-		optional: true,
-	},
-
-	'avatar.key': {
-		type: String,
-		optional: true,
-	},
-
+	avatar: new mongoose.Schema({
+		src: {
+			type: String,
+			optional: true,
+		},
+	
+		filename: {
+			type: String,
+			optional: true,
+		},
+	
+		type: {
+			type: String,
+			optional: true,
+		},
+	
+		size: {
+			type: Number,
+			optional: true,
+		},
+	
+		directive: {
+			type: String,
+			optional: true,
+		},
+	
+		key: {
+			type: String,
+			optional: true,
+		},
+	}),
 	bio: {
 		type: String,
 		optional: true,
