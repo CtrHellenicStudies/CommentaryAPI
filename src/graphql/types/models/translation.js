@@ -6,6 +6,7 @@ import {
 	GraphQLList
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
+import { GraphQLDateTime } from 'graphql-iso-date';
 import { WorkType } from './work';
 import { Subwork } from './subworks';
 
@@ -30,19 +31,12 @@ const TranslationType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		work: {
-<<<<<<< HEAD
 			type: WorkType,
 			optional: true
 		},
 		subwork: {
 			type: Subwork,
 			optional: true
-=======
-			type: GraphQLString,
-		},
-		subwork: {
-			type: GraphQLInt,
->>>>>>> 770b5122e92b606d1be0764e81acae856da44e85
 		},
 		n: {
 			type: GraphQLInt,
@@ -68,19 +62,13 @@ const TranslationInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		work: {
-<<<<<<< HEAD
 			type: WorkType,
 			optional: true
 		},
 		subwork: {
 			type: Subwork,
 			optional: true
-=======
-			type: GraphQLString,
-		},
-		subwork: {
-			type: GraphQLInt,
->>>>>>> 770b5122e92b606d1be0764e81acae856da44e85
+
 		},
 		n: {
 			type: GraphQLInt,
