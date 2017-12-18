@@ -17,6 +17,7 @@ import { DiscussionCommentType } from './discussionComment';
 import { RevisionType } from './revision';
 
 
+
 /**
  * Comment input type
  * @type {GraphQLInputObjectType}

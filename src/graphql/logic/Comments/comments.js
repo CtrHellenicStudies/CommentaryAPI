@@ -1,4 +1,5 @@
 import Comments from '../../../models/comments';
+import Commenters from '../../../models/commenters';
 // errors
 import { AuthenticationError } from '../../errors/index';
 
@@ -30,11 +31,32 @@ export default class CommentService extends PermissionsService {
 			query = JSON.parse(queryParam);
 		}
 		query.isAnnotation = {$ne: true};
-		return Comments.find(query)
+		return new Promise(function(resolve, reject) {
+			Comments.find(query)
 			.limit(options.limit)
 			.sort(options.sort)
 			.skip(options.skip)
-			.exec();
+			.exec()
+			.then(function(comments) {
+				const promises = [];
+				for (let i = 0; i < comments.length; i += 1) {
+					const queryCommenters = { $or: [] };
+					for (let j = 0; j < comments[i].commenters.length; j += 1) {
+						queryCommenters.$or.push({_id: comments[i].commenters[j]._id});
+					}
+					promises.push(new Promise(function(resolveNew, rejectNew) {
+						const currentComment = comments[i];
+						Commenters.find(queryCommenters).exec().then(function(commenters) {
+							currentComment.commenters = commenters;
+							resolveNew(1);
+						});
+					}));
+				}
+				Promise.all(promises).then(function() {
+					resolve(comments);
+				});
+			});
+		});
 	}
 		/**
 	 * Get comments for admin interface
