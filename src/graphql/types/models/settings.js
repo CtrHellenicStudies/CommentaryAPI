@@ -72,14 +72,12 @@ const SettingsType = new GraphQLObjectType({
 					},
 					linkURL: {
 						type: GraphQLString,
-						optional: true,
 					},
-				
+
 					linkText: {
 						type: GraphQLString,
-						optional: true,
-					}
-				}
+					},
+				},
 			})),
 		}
 	},
@@ -147,14 +145,11 @@ const SettingsInputType = new GraphQLInputObjectType({
 					},
 					linkURL: {
 						type: GraphQLString,
-						optional: true,
 					},
-				
 					linkText: {
 						type: GraphQLString,
-						optional: true,
-					}
-				}
+					},
+				},
 			})),
 		}
 	},

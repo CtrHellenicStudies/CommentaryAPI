@@ -7,7 +7,7 @@ import {
 	GraphQLInputObjectType
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import GraphQLDate from 'graphql-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
 import { CommenterType, CommenterInputType } from './commenter';
 import { WorkType } from './work';
 import { Subwork } from './subworks';
@@ -29,12 +29,10 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		urn: {
-			type: GraphQLString,
-			optional: true
+			type: GraphQLJSON,
 		},
 		originalDate: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		status: {
 			type: GraphQLString,
@@ -100,10 +98,10 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLBoolean,
 		},
 		created: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 		updated: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 	},
 });
@@ -133,7 +131,7 @@ const CommentType = new GraphQLObjectType({
 			}),
 		},
 		originalDate: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 		status: {
 			type: GraphQLString,
@@ -199,10 +197,10 @@ const CommentType = new GraphQLObjectType({
 			type: GraphQLBoolean,
 		},
 		created: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 		updated: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 	},
 });

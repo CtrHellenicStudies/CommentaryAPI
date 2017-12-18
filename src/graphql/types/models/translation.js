@@ -6,7 +6,6 @@ import {
 	GraphQLList
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import GraphQLDate from 'graphql-date';
 import { WorkType } from './work';
 import { Subwork } from './subworks';
 
@@ -20,35 +19,36 @@ const TranslationType = new GraphQLObjectType({
 	fields: {
 		tenantId: {
 			type: GraphQLString,
-			optional: true
 		},
 		created: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		updated: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		author: {
 			type: GraphQLString,
-			optional: true
 		},
 		work: {
+<<<<<<< HEAD
 			type: WorkType,
 			optional: true
 		},
 		subwork: {
 			type: Subwork,
 			optional: true
+=======
+			type: GraphQLString,
+		},
+		subwork: {
+			type: GraphQLInt,
+>>>>>>> 770b5122e92b606d1be0764e81acae856da44e85
 		},
 		n: {
 			type: GraphQLInt,
-			optional: true
 		},
 		text: {
 			type: GraphQLString,
-			optional: true
 		},
 	},
 });
@@ -57,35 +57,36 @@ const TranslationInputType = new GraphQLInputObjectType({
 	fields: {
 		tenantId: {
 			type: GraphQLString,
-			optional: true
 		},
 		created: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		updated: {
-			type: GraphQLDate,
-			optional: true
+			type: GraphQLDateTime,
 		},
 		author: {
 			type: GraphQLString,
-			optional: true
 		},
 		work: {
+<<<<<<< HEAD
 			type: WorkType,
 			optional: true
 		},
 		subwork: {
 			type: Subwork,
 			optional: true
+=======
+			type: GraphQLString,
+		},
+		subwork: {
+			type: GraphQLInt,
+>>>>>>> 770b5122e92b606d1be0764e81acae856da44e85
 		},
 		n: {
 			type: GraphQLInt,
-			optional: true
 		},
 		text: {
 			type: GraphQLString,
-			optional: true
 		},
 	}
 });

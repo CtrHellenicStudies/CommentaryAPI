@@ -39,11 +39,9 @@ const KeywordType = new GraphQLObjectType({
 		},
 		work: {
 			type: WorkType,
-			optional: true
 		},
 		subwork: {
 			type: Subwork,
-			optional: true
 		},
 		lineFrom: {
 			type: GraphQLInt,

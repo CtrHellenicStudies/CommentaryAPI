@@ -4,7 +4,7 @@ import {
 	GraphQLInputObjectType,
 	GraphQLList
 } from 'graphql';
-import GraphQLDate from 'graphql-date';
+import { GraphQLDateTime } from 'graphql-iso-date';
 
 /**
  * Reference Work model type
@@ -36,7 +36,7 @@ const ReferenceWorkType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		date: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 		urnCode: {
 			type: GraphQLString,
@@ -77,7 +77,7 @@ const ReferenceWorkInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		date: {
-			type: GraphQLDate,
+			type: GraphQLDateTime,
 		},
 		urnCode: {
 			type: GraphQLString,
