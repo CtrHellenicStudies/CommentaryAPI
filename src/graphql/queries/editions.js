@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLList } from 'graphql';
 
 // types
-import {EditionsType} from '../types/models/editions';
+import { EditionsType } from '../types/models/editions';
 
 // logic
 import EditionsService from '../logic/Editions/editions';
