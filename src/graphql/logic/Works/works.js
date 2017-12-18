@@ -62,6 +62,7 @@ export default class WorksService extends PermissionsService {
 	 * @returns {Object[]} array of works
 	 */
 	static worksGet(_id, tenantId) {
+		console.log('I am getting this');
 		const args = {};
 
 		if (tenantId) {

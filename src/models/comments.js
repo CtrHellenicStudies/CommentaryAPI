@@ -17,8 +17,16 @@ const CommentsModel = new mongoose.Schema({
 		type: String
 	},
 	urn: {
-		type: Object,
-		optional: true,
+		type: new mongoose.Schema({
+			v1: {
+				type: String,
+				optional: true
+			},
+			v2: {
+				type: String
+			}
+		}),
+
 	},
 
 	originalDate: {
@@ -221,4 +229,5 @@ CommentsModel.pre('update', function(userId, doc, fieldNames, modifier, options)
 const Comments = mongoose.model('Comments', CommentsModel);
 
 export default Comments;
+
 export { getURN };

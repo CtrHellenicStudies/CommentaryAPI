@@ -40,7 +40,7 @@ const RootSchema = new GraphQLSchema({
 });
 
 // mask error messages for production
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === 'production') {
 	maskErrors(RootSchema);
 }
 

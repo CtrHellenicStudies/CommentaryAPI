@@ -117,7 +117,18 @@ const CommentType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		urn: {
-			type: GraphQLJSON,
+			type: new GraphQLObjectType({
+				name: 'UrnType',
+				fields: {
+					v1: {
+						type: GraphQLString,
+						optional: true
+					},
+					v2: {
+						type: GraphQLString
+					}
+				}
+			}),
 		},
 		originalDate: {
 			type: GraphQLDateTime,
