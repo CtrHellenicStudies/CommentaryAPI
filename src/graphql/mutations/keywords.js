@@ -48,9 +48,12 @@ const keywordsMutationFields = {
 				type: new GraphQLNonNull(KeywordInputType)
 			}
 		},
-		resolve: (parent, {keyword}, {token}) => {
+		async resolve(parent, {keyword}, token) {
+			console.log(token);
 			const keywordService = new KeywordService({token});
-			return keywordService.keywordInsert(keyword);
+			return keywordService.keywordInsert(keyword).then(function(insertedKeyword) {
+				return insertedKeyword;
+			});
 		}
 	}
 };

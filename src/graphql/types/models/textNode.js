@@ -10,8 +10,8 @@ import {
 import GraphQLJSON from 'graphql-type-json';
 import GraphQLDate from 'graphql-date';
 
-import { WorkType } from './work';
-import { Subwork } from './subworks';
+import { WorkType, WorkInputType } from './work';
+import { Subwork, SubworkInput } from './subworks';
 
 
 /**
@@ -74,10 +74,10 @@ const TextNodeInputType = new GraphQLInputObjectType({
 			type: new GraphQLList(GraphQLJSON),
 		},
 		work: {
-			type: WorkType,
+			type: WorkInputType,
 		},
 		subwork: {
-			type: Subwork,
+			type: SubworkInput,
 		},
 		relatedPassages: {
 			type: new GraphQLList(GraphQLJSON),

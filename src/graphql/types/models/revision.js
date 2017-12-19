@@ -17,27 +17,29 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 const RevisionInputType = new GraphQLInputObjectType({
 	name: 'RevisionInputType',
 	description: 'Revision in revisions',
-	_id: {
-		type: GraphQLString,
-	},
-	title: {
-		type: GraphQLString
-	},
-	text: {
-		type: GraphQLString
-	},
-	slug: {
-		type: GraphQLString
-	},
-	originalDate: {
-		type: GraphQLDateTime,
-	},
-	tenantId: {
-		type: GraphQLString,
-	},
-	created: {
-		type: GraphQLDateTime,
-	},
+	fields: {
+		_id: {
+			type: GraphQLString,
+		},
+		title: {
+			type: GraphQLString
+		},
+		text: {
+			type: GraphQLString
+		},
+		slug: {
+			type: GraphQLString
+		},
+		originalDate: {
+			type: GraphQLDateTime,
+		},
+		tenantId: {
+			type: GraphQLString,
+		},
+		created: {
+			type: GraphQLDateTime,
+		}
+	}
 });
 /**
  * Comment model type

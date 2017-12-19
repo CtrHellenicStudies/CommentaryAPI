@@ -48,8 +48,10 @@ if (process.env.NODE_ENV === 'production') {
  * For each graphql request add user and project to context
  */
 const getGraphQLContext = req => ({
+	req: req,
 	user: req.user,
 	project: req.project,
+	token: req.token
 });
 
 /**

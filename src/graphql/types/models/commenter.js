@@ -104,8 +104,8 @@ const CommenterInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		avatar: {
-			type: new GraphQLObjectType({
-				name: 'AvatarType',
+			type: new GraphQLInputObjectType({
+				name: 'AvatarInputType',
 				fields: {
 					src: {
 						type: GraphQLString

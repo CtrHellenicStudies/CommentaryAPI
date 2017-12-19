@@ -1,6 +1,8 @@
 import Keywords from '../../../models/keywords';
 import PermissionsService from '../PermissionsService';
 
+import { AuthenticationError } from '../../errors/index';
+
 /**
  * Logic-layer service for dealing with keywords
  */
@@ -33,9 +35,9 @@ export default class KeywordsService extends PermissionsService {
 	 */
 	keywordRemove(keywordId) {
 		if (this.userIsAdmin) {
-			return Keywords.remove({_id: keywordId});
+			return Keywords.find({_id: keywordId}).remove().exec();
 		}
-		return new Error('Not authorized');
+		throw AuthenticationError();
 	}
 
 	/**
@@ -45,16 +47,31 @@ export default class KeywordsService extends PermissionsService {
 	 * @returns {boolean} result of mongo orm update
 	 */
 	keywordUpdate(keywordId, keyword) {
-		console.log(keyword);
 		if (this.userIsAdmin) {
-			return Keywords.update(keywordId, {$set: {...keyword}});
+			return new Promise(function(resolve, rejected) {
+				Keywords.update({_id: keywordId}, keyword, function(err, keywordUpdated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(keywordUpdated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw AuthenticationError();
 	}
 	keywordInsert(keyword) {
 		if (this.userIsNobody) {
-			return new Error('Not authorized');
+			throw new AuthenticationError();
 		}
-		return Keywords.insert({...keyword});
+		return new Promise(function(resolve, rejected) {
+			keyword.save(function(err, insertedKeyword) {
+				if (err) {
+					console.log(err);
+					rejected(1);
+				}
+				resolve(insertedKeyword);
+			});
+		});
 	}
 }

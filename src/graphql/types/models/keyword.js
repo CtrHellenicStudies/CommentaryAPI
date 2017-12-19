@@ -5,8 +5,8 @@ import {
 	GraphQLInputObjectType,
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import { WorkType } from './work';
-import { Subwork } from './subworks';
+import { WorkType, WorkInputType } from './work';
+import { Subwork, SubworkInput } from './subworks';
 
 /**
  * Keyword type
@@ -88,10 +88,10 @@ const KeywordInputType = new GraphQLInputObjectType({
 			type: GraphQLInt,
 		},
 		work: {
-			type: WorkType,
+			type: WorkInputType,
 		},
 		subwork: {
-			type: Subwork,
+			type: SubworkInput,
 		},
 		lineFrom: {
 			type: GraphQLInt,

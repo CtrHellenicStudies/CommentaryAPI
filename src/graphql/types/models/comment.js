@@ -9,12 +9,12 @@ import {
 import GraphQLJSON from 'graphql-type-json';
 import { GraphQLDateTime } from 'graphql-iso-date';
 import { CommenterType, CommenterInputType } from './commenter';
-import { WorkType } from './work';
-import { Subwork } from './subworks';
-import { ReferenceWorkType } from './referenceWork';
-import { KeywordType } from './keyword';
-import { DiscussionCommentType } from './discussionComment';
-import { RevisionType } from './revision';
+import { WorkType, WorkInputType } from './work';
+import { Subwork, SubworkInput } from './subworks';
+import { ReferenceWorkType, ReferenceWorkInputType } from './referenceWork';
+import { KeywordType, KeywordInputType } from './keyword';
+import { DiscussionCommentType, DiscussionCommentInputType } from './discussionComment';
+import { RevisionType, RevisionInputType } from './revision';
 
 
 
@@ -42,16 +42,16 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		commenters: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(CommenterInputType),
 		},
 		users: {
 			type: new GraphQLList(GraphQLString),
 		},
 		work: {
-			type: WorkType
+			type: WorkInputType
 		},
 		subwork: {
-			type: Subwork
+			type: SubworkInput
 		},
 		lineFrom: {
 			type: GraphQLInt,
@@ -81,16 +81,16 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		referenceWorks: {
-			type: new GraphQLList(ReferenceWorkType),
+			type: new GraphQLList(ReferenceWorkInputType),
 		},
 		keywords: {
-			type: new GraphQLList(KeywordType),
+			type: new GraphQLList(KeywordInputType),
 		},
 		revisions: {
-			type: new GraphQLList(RevisionType),
+			type: new GraphQLList(RevisionInputType),
 		},
 		discussionComments: {
-			type: new GraphQLList(DiscussionCommentType),
+			type: new GraphQLList(DiscussionCommentInputType),
 		},
 		isAnnotation: {
 			type: GraphQLBoolean,

@@ -137,8 +137,8 @@ const SettingsInputType = new GraphQLInputObjectType({
 			type: GraphQLBoolean,
 		},
 		introBlocks: {
-			type: new GraphQLList(new GraphQLObjectType({
-				name: 'IntroBlockType',
+			type: new GraphQLList(new GraphQLInputObjectType({
+				name: 'IntroBlockInputType',
 				fields: {
 					title: {
 						type: GraphQLString
