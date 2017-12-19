@@ -27,6 +27,9 @@ const RevisionInputType = new GraphQLInputObjectType({
 		text: {
 			type: GraphQLString
 		},
+		textRaw: {
+			type: GraphQLString
+		},
 		slug: {
 			type: GraphQLString
 		},
@@ -56,6 +59,9 @@ const RevisionType = new GraphQLObjectType({
 			type: GraphQLString
 		},
 		text: {
+			type: GraphQLString
+		},
+		textRaw: {
 			type: GraphQLString
 		},
 		slug: {

@@ -34,7 +34,7 @@ const KeywordsModel = new mongoose.Schema({
 	},
 
 	descriptionRaw: {
-		type: Object,
+		type: String,
 		optional: true,
 	},
 

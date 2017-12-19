@@ -94,6 +94,5 @@ UserSchema.statics.resetPassword = async function resetPassword(resetPasswordTok
  * @type {Object}
  */
 const User = mongoose.model('User', UserSchema);
-
 export default User;
 export { UserSchema };

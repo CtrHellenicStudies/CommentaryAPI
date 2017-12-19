@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 import Comments from '../../../models/comments';
 import Commenters from '../../../models/commenters';
 
@@ -16,17 +18,18 @@ export default class CommentService extends PermissionsService {
 	/**
 	 * Remove a comment
 	 * @param {string} _id - comment id to remove
-	 * @returns {boolean} result of mongo orm remove
+	 * @returns {object} promise
 	 */
 	commentRemove(_id) {
 		if (this.userIsAdmin) {
-			return Comments.remove({ _id });
+			return Comments.find({_id: _id}).remove().exec();
 		}
 		throw AuthenticationError();
 	}
 	/**
 	 * Add a comment
 	 * @param {object} comment - comment to insert
+	 * @returns {object} promise
 	 */
 	commentInsert(comment) {
 		if (this.userIsNobody) {
@@ -34,34 +37,46 @@ export default class CommentService extends PermissionsService {
 		}
 		let commentId;
 		let ret;
-		try {
-			commentId = Comments.insert({...comment});
-			ret = Comments.findOne({_id: commentId});
-			ret.urn = getURN(ret);
-			Comments.update({_id: commentId}, {$set: {urn: ret.urn}});
-		} catch (e) {
-			console.log(e);
-			return '';
-		}
-		return Comments.findOne({_id: commentId});
+		comment._id = new mongoose.mongo.ObjectId();
+		return new Promise(function(resolve, rejection) {
+			getURN(comment).then(function(urns) {
+				comment.urn = urns;
+				Comments.create(comment, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
+		});
 	}
 	/**
 	 * Update comment
-	 * @param {String} id 
-	 * @param {object} comment 
+	 * @param {String} id - id of updating comment
+	 * @param {object} comment - comment updated version
+	 * @returns {object} promise
 	 */
 	commentUpdate(id, comment) {
-		if (this.user.userIsNobody) { // TODO editor or admin
-			throw AuthenticationError();
+		if (this.userIsAdmin) {
+			return new Promise(function(resolve, rejected) {
+				Comments.update({_id: id}, comment, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		try {
-			commentId = Comments.update({_id: id}, {$set: comment});
-
-		} catch (e) {
-			console.log(e);
-			return '';
-		}
+		throw AuthenticationError();
 	}
+	/**
+	 * Add revision to comment
+	 * @param {String} commentId - id of comment of revision
+	 * @param {object} revision - added revision
+	 * @returns {object} promise
+	 */
 	addRevision(commentId, revision) {
 	
 		if (this.userIsNobody) {
@@ -101,6 +116,12 @@ export default class CommentService extends PermissionsService {
 		}
 		return revisionId;
 	}
+	/**
+	 * Remove revision
+	 * @param {String} commentId - id of comment of revision
+	 * @param {object} revision - revision to remove
+	 * @returns {object} promise
+	 */
 	removeRevision(commentId, revision) {
 		
 		if (this.userIsNobody) {

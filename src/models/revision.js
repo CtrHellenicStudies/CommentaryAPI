@@ -21,6 +21,9 @@ const RevisionModel = new mongoose.Schema({
 	text: {
 		type: String
 	},
+	textRaw: {
+		type: String,
+	},
 	tenantId: {
 		type: String,
 	},

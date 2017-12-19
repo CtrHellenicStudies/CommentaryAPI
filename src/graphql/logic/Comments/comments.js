@@ -38,6 +38,7 @@ export default class CommentService extends PermissionsService {
 			.skip(options.skip)
 			.exec()
 			.then(function(comments) {
+				console.log('I am in first then!');
 				const promises = [];
 				for (let i = 0; i < comments.length; i += 1) {
 					const queryCommenters = { $or: [] };
@@ -45,6 +46,7 @@ export default class CommentService extends PermissionsService {
 						queryCommenters.$or.push({_id: comments[i].commenters[j]._id});
 					}
 					promises.push(new Promise(function(resolveNew, rejectNew) {
+						console.log('I am in the second promise');
 						const currentComment = comments[i];
 						Commenters.find(queryCommenters).exec().then(function(commenters) {
 							currentComment.commenters = commenters;
@@ -102,38 +104,5 @@ export default class CommentService extends PermissionsService {
 		const options = prepareGetCommentsOptions(skip, limit);
 
 		return Comments.find(args).limit(options.limit).sort(options.sort).exec();
-	}
-
-	/**
-	 * Remove a comment
-	 * @param {string} _id - comment id to remove
-	 * @returns {boolean} result of mongo orm remove
-	 */
-	commentRemove(_id) {
-		if (this.userIsAdmin) {
-			return Comments.remove({ _id });
-		}
-		throw AuthenticationError();
-	}
-	/**
-	 * Add a comment
-	 * @param {object} comment - comment to insert
-	 */
-	commentInsert(comment) {
-		if (this.userIsNobody) {
-			throw AuthenticationError();
-		}
-		let commentId;
-		let ret;
-		try {
-			commentId = Comments.insert({...comment});
-			ret = Comments.findOne({_id: commentId});
-			ret.urn = getURN(ret);
-			Comments.update({_id: commentId}, {$set: {urn: ret.urn}});
-		} catch (e) {
-			console.log(e);
-			return '';
-		}
-		return Comments.findOne({_id: commentId});
 	}
 }

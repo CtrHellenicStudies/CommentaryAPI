@@ -22,9 +22,11 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(CommentInputType)
 			}
 		},
-		resolve: (parent, {comment}, {token}) => {
+		resolve(parent, {comment}, {token}) {
 			const commentsService = new CommentService({token});
-			return commentsService.commentInsert(comment);
+			return commentsService.commentInsert(comment).then(function(_comment) {
+				return _comment;
+			});
 		}
 	},
 	commentUpdate: {
@@ -38,9 +40,11 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(CommentInputType)
 			}
 		},
-		resolve: (parent, {id, comment}, {token}) => {
+		resolve(parent, {id, comment}, {token}) {
 			const commentsService = new CommentService({token});
-			return commentsService.commentUpdate(id, comment);
+			return commentsService.commentUpdate(id, comment).then(function(_comment) {
+				return _comment._id;
+			});
 		}
 	},
 	commentRemove: {
@@ -51,9 +55,11 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {commentId}, {token}) => {
+		resolve(parent, {commentId}, {token}) {
 			const commentsService = new CommentService({token});
-			return commentsService.commentRemove(commentId);
+			return commentsService.commentRemove(commentId).then(function(_comment) {
+				return _comment._id;
+			});
 		}
 	},
 	commentInsertRevision: {
@@ -67,9 +73,11 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(RevisionInputType)
 			}
 		},
-		resolve: (parent, {id, revision}, {token}) => {
+		resolve(parent, {id, revision}, {token}) {
 			const commentsService = new CommentService({token});
-			return commentsService.addRevision(id, revision);
+			return commentsService.addRevision(id, revision).then(function(_comment) {
+				return _comment._id;
+			});
 		}
 	},
 	commentRemoveRevision: {
@@ -80,9 +88,11 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {id}, {token}) => {
+		resolve(parent, {id}, {token}) {
 			const commentsService = new CommentService({token});
-			return commentsService.removeRevision(id);
+			return commentsService.removeRevision(id).then(function(_comment) {
+				return _comment._id;
+			});
 		}
 	}
 };
