@@ -1,5 +1,6 @@
 import Editions from '../../../models/editions';
 import PermissionsService from '../PermissionsService';
+import { AuthenticationError } from '../../errors/index';
 
 /**
  * Logic-layer service for dealing with editions
@@ -26,20 +27,29 @@ export default class EditionsService extends PermissionsService {
 	 * @param {string} multiline - multiline text
 	 */
 	editionInsert(edition, multiline) {
-
 		if (this.userIsNobody) {
-			throw new Error('not-authized');
+			throw new AuthenticationError();
 		}
-	
-		const currentEdition = Editions.findOne(edition._id);
-		const currentMultiline = currentEdition.multiLine && currentEdition.multiLine.length ? currentEdition.multiLine : [];
-	
-		if (currentMultiline.indexOf(multiline) === -1) {
-			currentMultiline.push(multiline);
-			Editions.update(edition._id, {$set: {multiLine: currentMultiline}});
-		} else {
-			return new Error('Multiline edition already exists!');
-		}
+		return new Promise(function(resolve, rejected) {
+			Editions.findOne(edition._id).exec().then(function(currentEdition) {
+				const currentMultiline = currentEdition.multiLine && currentEdition.multiLine.length ? currentEdition.multiLine : [];
+				
+				if (currentMultiline.indexOf(multiline) === -1) {
+					currentMultiline.push(multiline);
+					currentEdition.multiLine = currentMultiline;
+					Editions.update({_id: edition._id}, currentEdition, function(err, updated) {
+						if (err) {
+							console.log(err);
+							rejected(1);
+						}
+						resolve(updated);
+					});
+				} else {
+					rejected(2);
+					return new Error('Multiline edition already exists!');
+				}
+			});
+		});
 	}
 	/**
 	 * Remove edition
@@ -47,15 +57,21 @@ export default class EditionsService extends PermissionsService {
 	 * @param {string} multiline - multiline text
 	 */
 	editionsRemove(edition, multiline) {
-
 		if (this.userIsNobody) {
-			throw new Error('not-authorized');
+			throw new AuthenticationError();
 		}
-
-		const currentEdition = Editions.findOne(edition._id);
-		const multilineIndex = currentEdition.multiLine.indexOf(multiline);
-		currentEdition.multiLine.splice(multilineIndex, 1);
-	
-		Editions.update(edition._id, {$set: currentEdition});
+		return new Promise(function(resolve, rejected) {
+			Editions.findOne(edition._id).exec().then(function(currentEdition) {
+				const multilineIndex = currentEdition.multiLine.indexOf(multiline);
+				currentEdition.multiLine.splice(multilineIndex, 1);
+				Editions.update({_id: edition._id}, currentEdition, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
+		});
 	}
 }

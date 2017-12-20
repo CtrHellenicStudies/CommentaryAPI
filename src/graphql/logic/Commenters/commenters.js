@@ -21,7 +21,6 @@ export default class CommentService extends PermissionsService {
 		const promise = Commenters.find(args).sort({slug: 1}).exec();
 		return promise;
 	}
-
 	/**
 	 * Update a commenter
 	 * @param {string} _id - commenter id
@@ -50,7 +49,6 @@ export default class CommentService extends PermissionsService {
 		}
 		throw AuthenticationError();
 	}
-
 	/**
 	 * Remove a commenter
 	 * @param {string} commenterId - id of the commenter to remove
@@ -62,7 +60,6 @@ export default class CommentService extends PermissionsService {
 		}
 		throw AuthenticationError();
 	}
-
 	/**
 	 * Create a new commenter
 	 * @param {Object} commenter - the new commenter candidate 

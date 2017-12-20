@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Promise } from 'mongoose';
 
 import Comments from '../../../models/comments';
 import Commenters from '../../../models/commenters';
@@ -82,39 +82,20 @@ export default class CommentService extends PermissionsService {
 		if (this.userIsNobody) {
 			throw AuthenticationError();
 		}
-		const comment = Comments.findOne({ _id: commentId });
-		const commenters = Commenters.find().fetch();
-	
-		let allowedToEdit = false;
-		this.user.canEditCommenters.forEach((commenterId) => {
-			comment.commenters.forEach((commenter) => {
-				commenters.forEach((_commenter) => {
-					if (
-							commenter.slug === _commenter.slug
-						&& _commenter._id === commenterId
-					) {
-						allowedToEdit = true;
+		return new Promise(function(resolve, rejected) { 
+			Comments.findOne({ _id: commentId }).exec().then(function(comment) {
+				const revisionId = new mongoose.mongo.ObjectId();
+				revision._id = revisionId;
+				comment.revisions.push(revision);
+				Comments.update({_id: commentId}, comment, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
 					}
+					resolve(updated._id);
 				});
 			});
 		});
-		if (!allowedToEdit) {
-			throw AuthenticationError();
-		}
-		const revisionId = Random.id();
-		revision._id = revisionId;
-		try {
-			Comments.update({
-				_id: commentId,
-			}, {
-				$push: {
-					revisions: {...revision},
-				},
-			});
-		} catch (err) {
-			throw new Error(`Error adding revision to comment: ${err}`);
-		}
-		return revisionId;
 	}
 	/**
 	 * Remove revision
@@ -127,24 +108,20 @@ export default class CommentService extends PermissionsService {
 		if (this.userIsNobody) {
 			throw AuthenticationError();
 		}
-
-		const revisionId = Random.id();
-		revision._id = revisionId;
-	
-		try {
-			Comments.update({
-				_id: commentId,
-			}, {
-				$pull: {
-					revisions: revision,
-				},
-			}, {
-				getAutoValues: false,
+		return new Promise(function(resolve, rejected) { 
+			Comments.findOne({ _id: commentId }).exec().then(function(comment) {
+				const revisionId = new mongoose.mongo.ObjectId();
+				revision._id = revisionId;
+				comment.revisions.pull(revision);
+				Comments.update({_id: commentId}, comment, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated._id);
+				});
 			});
-		} catch (err) {
-			throw new Error(`Error adding revision to comment: ${err}`);
-		}
-		return revisionId;
+		});
 	}
 	
 }
