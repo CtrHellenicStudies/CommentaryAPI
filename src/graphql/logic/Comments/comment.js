@@ -1,4 +1,4 @@
-import mongoose, { Promise } from 'mongoose';
+import mongoose from 'mongoose';
 
 import Comments from '../../../models/comments';
 import Commenters from '../../../models/commenters';
