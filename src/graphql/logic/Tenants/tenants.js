@@ -1,5 +1,6 @@
 import Tenants from '../../../models/tenants';
 import PermissionsService from '../PermissionsService';
+import { AuthenticationError } from '../../errors/index';
 
 /**
  * Logic-layer service for dealing with tenants
@@ -21,7 +22,6 @@ export default class TenantsService extends PermissionsService {
 
 		return Tenants.find(args).exec();
 	}
-
 	/**
 	 * Get a tenant by the supplied subdomain
 	 * @param {string} subdomain - id of tenant
@@ -32,7 +32,6 @@ export default class TenantsService extends PermissionsService {
 			subdomain: subdomain,
 		}).exec();
 	}
-
 	/**
 	 * Update a tenant
 	 * @param {string} _id - id of tenant
@@ -41,12 +40,18 @@ export default class TenantsService extends PermissionsService {
 	 */
 	tenantUpdate(_id, tenant) {
 		if (this.userIsAdmin) {
-			Tenants.update(_id, {$set: tenant});
-			return Tenants.findOne(_id);
+			return new Promise(function(resolve, rejected) {
+				Tenants.update({_id: _id}, tenant, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Remove a tenant
 	 * @param {string} tenantId - id of tenant
@@ -54,11 +59,10 @@ export default class TenantsService extends PermissionsService {
 	 */
 	tenantRemove(tenantId) {
 		if (this.userIsAdmin) {
-			return Tenants.remove({_id: tenantId});
+			return Tenants.find({_id: tenantId}).remove().exec();
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Create a tenant
 	 * @param {Object} tenant - candidate tenant to create
@@ -66,9 +70,16 @@ export default class TenantsService extends PermissionsService {
 	 */
 	tenantCreate(tenant) {
 		if (this.userIsAdmin) {
-			const tenantId = Tenants.insert({...tenant});
-			return Tenants.findOne(tenantId);
+			return new Promise(function(resolve, rejection) {
+				Tenants.create(tenant, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 }

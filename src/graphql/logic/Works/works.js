@@ -1,5 +1,6 @@
 import Works from '../../../models/works';
 import PermissionsService from '../PermissionsService';
+import { AuthenticationError } from '../../errors/index';
 
 /**
  * Logic-layer service for dealing with works
@@ -9,36 +10,40 @@ export default class WorksService extends PermissionsService {
 	/**
 	 * Rewrite subworks for modifiying works
 	 * @param {(Object|Array)} subworks
-	 * @returns {(Object|Array)} the new subwork
+	 * @returns {object} promise
 	 */
 	static rewriteSubworks(subworks) {
 		const newSubworks = [];
-		subworks.map((singleSubwork) => {
+		subworks.map(singleSubwork => 
 			newSubworks.push({
 				title: singleSubwork.title,
 				slug: singleSubwork.slug,
 				n: singleSubwork.n
-			});
-		});
+			})
+		);
 		return newSubworks;
 	}
-
 	/**
 	 * Create a work
 	 * @param {Object} work - candidate work to create
-	 * @returns {Object} newly created work
+	 * @returns {Object} promise
 	 */
 	workInsert(work) {
 		if (!this.userIsNobody) {
 			const newWork = work;
 			newWork.subworks = this.rewriteSubworks(work.subworks);
-
-			const workId = Works.insert({...newWork});
-			return Works.findOne(workId);
+			return new Promise(function(resolve, rejection) {
+				Works.create(newWork, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Update a work
 	 * @param {string} _id - id of work
@@ -49,12 +54,18 @@ export default class WorksService extends PermissionsService {
 		if (!this.userIsNobody) {
 			const newWork = work;
 			newWork.subworks = this.rewriteSubworks(work.subworks);
-
-			return Works.update(_id, {$set: newWork});
+			return new Promise(function(resolve, rejected) {
+				Works.update({_id: _id}, newWork, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Get works
 	 * @param {string} _id - id of work
@@ -74,7 +85,6 @@ export default class WorksService extends PermissionsService {
 		const promise = Works.find(args).sort({slug: 1}).exec();
 		return promise;
 	}
-
 	/**
 	 * Remove a work
 	 * @param {string} _id - id of work
@@ -82,8 +92,8 @@ export default class WorksService extends PermissionsService {
 	 */
 	workRemove(_id) {
 		if (!this.userIsNobody) {
-			return Works.remove({ _id });
+			return Works.find({ _id }).remove().exec();
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 }

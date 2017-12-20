@@ -1,11 +1,11 @@
 import Settings from '../../../models/settings';
 import PermissionsService from '../PermissionsService';
+import { AuthenticationError } from '../../errors/index';
 
 /**
  * Logic-layer service for dealing with settings
  */
 export default class SettingsService extends PermissionsService {
-
 
 	/**
 	 * Get settings
@@ -27,7 +27,6 @@ export default class SettingsService extends PermissionsService {
 		const promise = Settings.find(args).exec();
 		return promise;
 	}
-
 	/**
 	 * Update a settings
 	 * @param {string} _id - id of settings
@@ -36,11 +35,18 @@ export default class SettingsService extends PermissionsService {
 	 */
 	settingsUpdate(_id, settings) {
 		if (this.userIsAdmin) {
-			return Settings.update(_id, {$set: settings});
+			return new Promise(function(resolve, rejected) {
+				Settings.update({_id: _id}, settings, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Remove a settings
 	 * @param {string} settingsId - id of settings
@@ -48,11 +54,10 @@ export default class SettingsService extends PermissionsService {
 	 */
 	settingsRemove(settingsId) {
 		if (this.userIsAdmin) {
-			return Settings.remove({_id: settingsId});
+			return Settings.find({_id: settingsId}).remove().exec();
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Create a settings
 	 * @param {Object} settings - candidate settings record to create
@@ -60,9 +65,16 @@ export default class SettingsService extends PermissionsService {
 	 */
 	settingsCreate(settings) {
 		if (this.userIsAdmin) {
-			const settingsId = Settings.insert({...settings});
-			return Settings.findOne(settingsId);
+			return new Promise(function(resolve, rejection) {
+				Settings.create(settings, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 }

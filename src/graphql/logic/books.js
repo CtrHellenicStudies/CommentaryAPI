@@ -1,5 +1,6 @@
 import Books from '../../models/books';
 import PermissionsService from './PermissionsService';
+import { AuthenticationError } from '../errors/index';
 
 /**
  * Logic-layer service for dealing with books
@@ -35,51 +36,62 @@ export default class BookService extends PermissionsService {
 	/**
 	 * Create a new book
 	 * @param {Object} book - a new book candidate
-	 * @returns {Object} the newly created book object
+	 * @returns {Object} promise
 	 */
 	bookInsert(book) {
 		if (this.userIsAdmin) {
 			const newBook = book;
 			newBook.chapters = this.rewriteChapter(book.chapters);
-
-			const bookId = Books.insert({...newBook});
-			return Books.findOne(bookId);
+			return new Promise(function(resolve, rejection) {
+				Books.create(newBook, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Update a book record
 	 * @param {string} _id - id of book to be updated
 	 * @param {Object} book - book update parameters
-	 * @returns {Object} updated book record
+	 * @returns {Object} promise
 	 */
 	bookUpdate(_id, book) {
 		if (this.userIsAdmin) {
 			const newBook = book;
 			newBook.chapters = this.rewriteChapter(book.chapters);
-			Books.update({_id}, {$set: newBook});
-			return Books.findOne(_id);
+			return new Promise(function(resolve, rejected) {
+				Books.update({_id: _id}, newBook, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 
 	/**
 	 * Remove a book
 	 * @param {string} _id - id of book to be updated
-	 * @returns {boolean} result of the mongo orm remove
+	 * @returns {Object} promise
 	 */
 	bookRemove(_id) {
 		if (this.userIsAdmin) {
-			return Books.remove(_id);
+			return Books.find({_id: _id}).remove().exec();
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Get a book by the supplied chapter url
 	 * @param {string} chapterUrl - the URL of a chapter of the book
-	 * @returns {Object} a book record
+	 * @returns {Object} promise
 	 */
 	static bookByChapter(chapterUrl) {
 		const args = {
@@ -88,12 +100,11 @@ export default class BookService extends PermissionsService {
 		const promise = Books.findOne(args).sort({slug: 1}).exec();
 		return promise;
 	}
-
 	/**
 	 * Get a book by supplied _id or chapter url
 	 * @param {string} _id - the id of the book
 	 * @param {string} chapterUrl - the URL of a chapter of the book
-	 * @returns {Object[]} the book records
+	 * @returns {Object} promise
 	 */
 	static booksGet(_id, chapterUrl) {
 		const args = {};

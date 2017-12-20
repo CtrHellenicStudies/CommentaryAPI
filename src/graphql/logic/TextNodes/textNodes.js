@@ -3,6 +3,7 @@ import slugify from 'slugify';
 
 import TextNodes from '../../../models/textNodes';
 import PermissionsService from '../PermissionsService';
+import { AuthenticationError } from '../../errors/index';
 
 /**
  * Logic-layer service for dealing with textNodes
@@ -16,9 +17,17 @@ export default class TextNodesService extends PermissionsService {
 	 */
 	textNodeCreate(textNode) {
 		if (this.userIsAdmin) {
-			return TextNodes.insert(textNode);
+			return new Promise(function(resolve, rejection) {
+				TextNodes.create(textNode, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 	/**
 	 * Update textNode
@@ -29,28 +38,30 @@ export default class TextNodesService extends PermissionsService {
 	 */
 	textNodeUpdate(id, editionId, updatedText, updatedTextN) {
 		if (this.userIsNobody) {
-			throw new Error('not-authorized');
+			throw new AuthenticationError();
 		}
-		const textNode = TextNodes.findOne({ _id: id });
-		if (!textNode) {
-			throw new Error('text-editor', 'Unable to update text for provided text node ID');
-		}
-	
-		const textNodeTextValues = textNode.text.slice();
-		textNodeTextValues.forEach(textValue => {
-			if (textValue.edition === editionId) {
-				textValue.html = updatedText;
-				textValue.n = updatedTextN;
-				textValue.text = stripTags(updatedText);
-			}
-		});
-	
-		return TextNodes.update({
-			_id: id,
-		}, {
-			$set: {
-				text: textNodeTextValues,
-			},
+		return new Promise(function(resolve, rejected) {
+			TextNodes.find({_id: id}).exec().then(function(textNode) {
+				if (!textNode) {
+					throw new Error('text-editor', 'Unable to update text for provided text node ID');
+				}
+				const textNodeTextValues = textNode.text.slice();
+				textNodeTextValues.forEach((textValue) => {
+					if (textValue.edition === editionId) {
+						textValue.html = updatedText;
+						textValue.n = updatedTextN;
+						textValue.text = stripTags(updatedText);
+					}
+				});
+				textNode.text = textNodeTextValues;
+				TextNodes.update({_id: id}, textNode, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		});
 	}
 	/**
@@ -123,9 +134,9 @@ export default class TextNodesService extends PermissionsService {
 	textNodeRemove(id) {
 		if (this.userIsAdmin) {
 			const removeId = new mongoose.Types.ObjectID(id);
-			return TextNodes.remove({_id: removeId});
+			return TextNodes.find({_id: removeId}).remove().exec();
 		}
-		return new Error('Not authorized');
+		return new AuthenticationError();
 	}
 	/**
 	 * Get max line
@@ -140,25 +151,27 @@ export default class TextNodesService extends PermissionsService {
 			workSlug = 'hymns';
 		}
 	
-		const _maxLine = TextNodes.aggregate([{
-			$match: {
-				'work.slug': workSlug,
-				'subwork.n': subworkN,
-			},
-		}, {
-			$group: {
-				_id: 'maxLine',
-				maxLine: {
-					$max: '$text.n',
+		return new Promise(function(resolve, rejected) {
+			TextNodes.aggregate([{
+				$match: {
+					'work.slug': workSlug,
+					'subwork.n': subworkN,
 				},
-			},
-		}]);
-	
-		if (_maxLine && _maxLine.length) {
-			maxLine = _maxLine[0].maxLine[0]; // granted that all text.editions have the same max line number
-		}
-	
-		return maxLine;
+			}, {
+				$group: {
+					_id: 'maxLine',
+					maxLine: {
+						$max: '$text.n',
+					},
+				},
+			}]).exec().then(function(_maxLine) {
+				if (_maxLine && _maxLine.length) {
+					maxLine = _maxLine[0].maxLine[0]; // granted that all text.editions have the same max line number
+				}
+			
+				resolbe(maxLine);
+			});
+		});
 	
 	}
 }

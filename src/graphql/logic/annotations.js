@@ -3,6 +3,7 @@ import Comments from '../../models/comments';
 import Books from '../../models/books';
 
 import PermissionsService from './PermissionsService';
+import { AuthenticationError } from '../errors/index';
 
 /**
  * Logic-layer service for dealing with annotations
@@ -62,7 +63,7 @@ export default class AnnotationService extends PermissionsService {
 			return Comments.findOne(commentId);
 		}
 
-		return new Error('Not authorized to create annotation');
+		throw new AuthenticationError();
 	}
 
 
@@ -76,7 +77,7 @@ export default class AnnotationService extends PermissionsService {
 		if (this.hasAnnotationPermission(annotation.bookChapterUrl) || this.userIsAdmin) {
 			return Comments.remove({ _id });
 		}
-		return new Error('Not authorized to delete annotation');
+		throw new AuthenticationError();
 	}
 
 	/**
@@ -98,6 +99,6 @@ export default class AnnotationService extends PermissionsService {
 				},
 			});
 		}
-		return new Error('Not authorized to add revision to annotation');
+		throw new AuthenticationError();
 	}
 }

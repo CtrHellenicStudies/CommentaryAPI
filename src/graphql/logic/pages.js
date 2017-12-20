@@ -1,5 +1,6 @@
 import Pages from '../../models/pages';
 import PermissionsService from './PermissionsService';
+import { AuthenticationError } from '../errors/index';
 
 /**
  * Logic-layer service for dealing with pages
@@ -10,7 +11,7 @@ export default class PageService extends PermissionsService {
 	 * Get pages
 	 * @param {string} _id - id of page
 	 * @param {string} tenantId - id of current tenant
-	 * @returns {Object[]} array of pages
+	 * @returns {object} promise
 	 */
 	static pagesGet(_id, tenantId) {
 		const args = {};
@@ -20,45 +21,59 @@ export default class PageService extends PermissionsService {
 		if (_id) {
 			args._id = _id;
 		}
-		const promise = Pages.find(args).exec();
-		return promise;
+		return Pages.find(args).exec();
 	}
 
 	/**
 	 * Update a page
 	 * @param {string} _id - id of page
 	 * @param {Object} page - page params to update
-	 * @returns {boolean} result of mongo orm update
+	 * @returns {object} promise
 	 */
 	pageUpdate(_id, page) {
 		if (this.userIsAdmin) {
-			return Pages.update(_id, {$set: page});
+			return new Promise(function(resolve, rejected) {
+				Pages.update({_id: _id}, page, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 
 	/**
 	 * Remove a page
 	 * @param {string} pageId - id of page to remove
-	 * @returns {boolean} result of mongo orm remove
+	 * @returns {object} promise
 	 */
 	pageRemove(pageId) {
 		if (this.userIsAdmin) {
-			return Pages.remove({_id: pageId});
+			return Pages.find({_id: pageId}).remove().exec();
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 
 	/**
 	 * Create a new page
 	 * @param {Object} page - new page candidate
-	 * @returns {Object} the new page that was created
+	 * @returns {object} promise
 	 */
 	pageCreate(page) {
 		if (this.userIsAdmin) {
-			const pageId = Pages.insert({...page});
-			return Pages.findOne(pageId);
+			return new Promise(function(resolve, rejection) {
+				Pages.create(page, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
 }
