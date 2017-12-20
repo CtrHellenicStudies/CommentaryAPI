@@ -34,7 +34,6 @@ const tenantsQueryFields = {
 		},
 		resolve: (parent, { subdomain }, {token}) =>
 			TenantsService.tenantBySubdomainGet(subdomain).then(function(tenants) {
-				console.log(tenants);
 				return tenants;
 			})
 	},

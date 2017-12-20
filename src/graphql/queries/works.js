@@ -24,7 +24,6 @@ const workQueryFields = {
 		},
 		resolve: (parent, { _id, tenantId }, {token}) => 
 			WorksService.worksGet(_id, tenantId).then(function(works) {
-				console.log(works);
 				return works;
 			})
 	},

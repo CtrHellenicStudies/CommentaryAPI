@@ -28,10 +28,11 @@ const commentQueryFields = {
 				type: GraphQLBoolean
 			}
 		},
-		resolve: (parent, { queryParam, limit, skip, sortRecent}, {token}) => 
-			CommentService.commentsGet(queryParam, limit, skip, sortRecent).then(function(comments) {
+		resolve(parent, { queryParam, limit, skip, sortRecent}, {token}) {
+			return CommentService.commentsGet(queryParam, limit, skip, sortRecent).then(function(comments) {
 				return comments;
-			})
+			});
+		}
 	},
 	commentsMore: {
 		type: GraphQLBoolean,

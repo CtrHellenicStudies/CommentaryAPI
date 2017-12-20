@@ -26,8 +26,6 @@ export default class EditionsService extends PermissionsService {
 	 * @param {string} multiline - multiline text
 	 */
 	editionInsert(edition, multiline) {
-		console.log(edition);
-		console.log(multiline);
 
 		if (this.userIsNobody) {
 			throw new Error('not-authized');

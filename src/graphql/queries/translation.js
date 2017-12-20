@@ -23,7 +23,7 @@ const translationsQueryFields = {
 				return translations;
 			})
 	},
-	authors: {
+	authorsOfTranslations: {
 		type: new GraphQLList(TranslationType),
 		description: 'Get list of authors for translation',
 		args: {

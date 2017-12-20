@@ -38,15 +38,13 @@ export default class CommentService extends PermissionsService {
 			.skip(options.skip)
 			.exec()
 			.then(function(comments) {
-				console.log('I am in first then!');
 				const promises = [];
 				for (let i = 0; i < comments.length; i += 1) {
 					const queryCommenters = { $or: [] };
 					for (let j = 0; j < comments[i].commenters.length; j += 1) {
-						queryCommenters.$or.push({_id: comments[i].commenters[j]._id});
+						queryCommenters.$or.push({slug: comments[i].commenters[j].slug});
 					}
 					promises.push(new Promise(function(resolveNew, rejectNew) {
-						console.log('I am in the second promise');
 						const currentComment = comments[i];
 						Commenters.find(queryCommenters).exec().then(function(commenters) {
 							currentComment.commenters = commenters;

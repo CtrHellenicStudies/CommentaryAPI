@@ -31,11 +31,11 @@ const TranslationType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		work: {
-			type: WorkType,
+			type: GraphQLString,
 			optional: true
 		},
 		subwork: {
-			type: Subwork,
+			type: GraphQLInt,
 			optional: true
 		},
 		n: {
@@ -62,11 +62,11 @@ const TranslationInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		work: {
-			type: WorkInputType,
+			type: GraphQLString,
 			optional: true
 		},
 		subwork: {
-			type: SubworkInput,
+			type: GraphQLInt,
 			optional: true
 
 		},

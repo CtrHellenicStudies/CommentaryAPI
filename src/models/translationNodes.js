@@ -1,8 +1,5 @@
 import mongoose from 'mongoose';
 
-import { WorksModel } from './works';
-import { SubworksModel } from './subworks';
-
 const TranslationNodesModel = new mongoose.Schema({
 	tenantId: {
 		type: String,
@@ -21,11 +18,11 @@ const TranslationNodesModel = new mongoose.Schema({
 		optional: true
 	},
 	work: {
-		type: WorksModel,
+		type: String,
 		optional: true
 	},
 	subwork: {
-		type: SubworksModel,
+		type: Number,
 		optional: true
 	},
 	n: {

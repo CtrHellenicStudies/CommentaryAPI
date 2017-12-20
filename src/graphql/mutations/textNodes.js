@@ -81,9 +81,13 @@ const textNodeMutationFields = {
 				type: new GraphQLNonNull(GraphQLInt)
 			}
 		},
-		resolve: (parent, {workSlug, subworkN}, {token}) => {
-			const textNodeService = new TextNodeService({token});
-			return textNodeService.getMaxLine(workSlug, subworkN);
+		resolve(parent, {workSlug, subworkN}, {token}){
+			// TextNodeService.getMaxLine(workSlug, subworkN).then(function(maxLine) {
+			// 	return maxLine;
+			// })
+			// TOD0
+			return 1;
+
 		}
 	}
 };
