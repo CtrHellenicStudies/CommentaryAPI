@@ -45,7 +45,6 @@ const textNodeQueryFields = {
 		},
 		resolve: (parent, { _id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo }, {token}) =>
 			TextNodesService.textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo).then(function(textnodes) {
-				console.log(textnodes.length);
 				return textnodes;
 			})
 	},

@@ -77,15 +77,24 @@ const CommentInputType = new GraphQLInputObjectType({
 		parentCommentId: {
 			type: GraphQLString,
 		},
-		referenceId: {
-			type: GraphQLString,
-		},
 		referenceWorks: {
 			type: new GraphQLList(new GraphQLInputObjectType({
 				name: 'ReferenceWorkIdsInputType',
 				fields: {
-					referenceId: {
+					referenceWorkId: {
 						type: GraphQLString
+					},
+					section: {
+						type: GraphQLInt
+					},
+					chapter: {
+						type: GraphQLInt
+					},
+					note: {
+						type: GraphQLInt
+					},
+					translation: {
+						type: GraphQLInt
 					}
 				}
 			}),
@@ -184,11 +193,27 @@ const CommentType = new GraphQLObjectType({
 		parentCommentId: {
 			type: GraphQLString,
 		},
-		referenceId: {
-			type: GraphQLString,
-		},
 		referenceWorks: {
-			type: new GraphQLList(ReferenceWorkType),
+			type: new GraphQLList(new GraphQLObjectType({
+				name: 'ReferenceWorkIdsType',
+				fields: {
+					referenceWorkId: {
+						type: GraphQLString
+					},
+					section: {
+						type: GraphQLInt
+					},
+					chapter: {
+						type: GraphQLInt
+					},
+					note: {
+						type: GraphQLInt
+					},
+					translation: {
+						type: GraphQLInt
+					}
+				}
+			})),
 		},
 		keywords: {
 			type: new GraphQLList(KeywordType),

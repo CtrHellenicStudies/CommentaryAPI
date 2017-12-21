@@ -123,6 +123,22 @@ const CommentsModel = new mongoose.Schema({
 				type: String,
 				optional: true,
 			},
+			section: {
+				type: Number,
+				optional: true
+			},
+			chapter: {
+				type: Number,
+				optional: true
+			},
+			translation: {
+				type: Number,
+				optional: true
+			},
+			note: {
+				type: Number,
+				optional: true
+			}
 		})],
 		optional: true,
 	},

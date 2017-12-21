@@ -49,20 +49,18 @@ export default class CommentService extends PermissionsService {
 					for (let j = 0; j < comments[i].referenceWorks.length; j += 1) {
 						queryReferenceWorks.$or.push({_id: comments[i].referenceWorks[j].referenceWorkId});
 					}
-					if (queryReferenceWorks.$or.length > 0) {
-						promises.push(new Promise(function(resolveNew, rejectNew) {
-							const currentComment = comments[i];
-							ReferenceWorks.find(queryReferenceWorks).exec().then(function(referenceWorks) {
-								currentComment.referenceWorks = referenceWorks;
-								for (let k = 0; k < referenceWorks.length; k += 1) {
-									currentComment.referenceWorks[k] = referenceWorks[k];
-								}
-								console.log(referenceWorks);
-								console.log(currentComment.referenceWorks);
-								resolveNew(1);
-							});
-						}));
-					}
+					// if (queryReferenceWorks.$or.length > 0) {
+					// 	promises.push(new Promise(function(resolveNew, rejectNew) {
+					// 		const currentComment = comments[i];
+					// 		ReferenceWorks.find(queryReferenceWorks).exec().then(function(referenceWorks) {
+					// 			currentComment.referenceWorks = referenceWorks;
+					// 			for (let k = 0; k < referenceWorks.length; k += 1) {
+					// 				currentComment.referenceWorks[k] = referenceWorks[k];
+					// 			}
+					// 			resolveNew(1);
+					// 		});
+					// 	}));
+					// }
 					promises.push(new Promise(function(resolveNew, rejectNew) {
 						const currentComment = comments[i];
 						Commenters.find(queryCommenters).exec().then(function(commenters) {
