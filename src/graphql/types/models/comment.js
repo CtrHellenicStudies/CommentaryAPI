@@ -81,7 +81,15 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		referenceWorks: {
-			type: new GraphQLList(ReferenceWorkInputType),
+			type: new GraphQLList(new GraphQLInputObjectType({
+				name: 'ReferenceWorkIdsInputType',
+				fields: {
+					referenceId: {
+						type: GraphQLString
+					}
+				}
+			}),
+			),
 		},
 		keywords: {
 			type: new GraphQLList(KeywordInputType),

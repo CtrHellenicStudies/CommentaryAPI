@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
 const PagesModel = new mongoose.Schema({
+	_id: {
+		type: String
+	},
 	title: {
 		type: String,
 	},

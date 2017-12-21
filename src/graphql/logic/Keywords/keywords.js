@@ -16,7 +16,7 @@ export default class KeywordsService extends PermissionsService {
 	 * @param {string} tenantId - id of tenant
 	 * @returns {boolean} result promise
 	 */
-	static keywordsGet(id, tenantId, queryParam) {
+	static keywordsGet(id, tenantId, slug, queryParam) {
 		let args = {};
 		if (queryParam) {
 			args = JSON.parse(queryParam);
@@ -26,6 +26,9 @@ export default class KeywordsService extends PermissionsService {
 		}
 		if (id) {
 			args._id = id;
+		}
+		if (slug) {
+			args.slug = slug;
 		}
 		return	Keywords.find(args).sort({title: 1}).exec();
 	}

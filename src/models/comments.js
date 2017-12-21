@@ -118,7 +118,12 @@ const CommentsModel = new mongoose.Schema({
 	},
 
 	referenceWorks: {
-		type: [ReferenceWorksModel],
+		type: [new mongoose.Schema({
+			referenceWorkId: {
+				type: String,
+				optional: true,
+			},
+		})],
 		optional: true,
 	},
 

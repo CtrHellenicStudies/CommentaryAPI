@@ -8,7 +8,6 @@ import { SubworksModel } from './subworks';
 const TextNodesModel = new mongoose.Schema({
 	tenantId: {
 		type: String,
-		optional: true,
 	},
 	text: [new mongoose.Schema({
 		n: {

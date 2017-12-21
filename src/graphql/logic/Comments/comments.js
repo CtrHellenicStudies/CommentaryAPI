@@ -1,5 +1,6 @@
 import Comments from '../../../models/comments';
 import Commenters from '../../../models/commenters';
+import ReferenceWorks from '../../../models/referenceWorks';
 // errors
 import { AuthenticationError } from '../../errors/index';
 
@@ -41,8 +42,26 @@ export default class CommentService extends PermissionsService {
 				const promises = [];
 				for (let i = 0; i < comments.length; i += 1) {
 					const queryCommenters = { $or: [] };
+					const queryReferenceWorks = { $or: [] };
 					for (let j = 0; j < comments[i].commenters.length; j += 1) {
 						queryCommenters.$or.push({slug: comments[i].commenters[j].slug});
+					}
+					for (let j = 0; j < comments[i].referenceWorks.length; j += 1) {
+						queryReferenceWorks.$or.push({_id: comments[i].referenceWorks[j].referenceWorkId});
+					}
+					if (queryReferenceWorks.$or.length > 0) {
+						promises.push(new Promise(function(resolveNew, rejectNew) {
+							const currentComment = comments[i];
+							ReferenceWorks.find(queryReferenceWorks).exec().then(function(referenceWorks) {
+								currentComment.referenceWorks = referenceWorks;
+								for (let k = 0; k < referenceWorks.length; k += 1) {
+									currentComment.referenceWorks[k] = referenceWorks[k];
+								}
+								console.log(referenceWorks);
+								console.log(currentComment.referenceWorks);
+								resolveNew(1);
+							});
+						}));
 					}
 					promises.push(new Promise(function(resolveNew, rejectNew) {
 						const currentComment = comments[i];

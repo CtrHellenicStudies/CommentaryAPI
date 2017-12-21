@@ -37,7 +37,6 @@ export default class TranslationsService extends PermissionsService {
 				return;
 			}
 			Works.findOne({_id: workId}).exec().then(function(work) {
-				console.log(work);
 				TranslationNodes.find({work: work.slug, subwork: parseInt(subwork, 10)}).exec().then(function(translations) {
 					const authors = {};
 					const ret = [];
@@ -47,7 +46,6 @@ export default class TranslationsService extends PermissionsService {
 							ret.push(translations[i]);
 						}
 					}
-					console.log(ret);
 					resolve(ret);
 				});
 			});

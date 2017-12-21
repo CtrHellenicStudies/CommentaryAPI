@@ -23,10 +23,13 @@ const keywordQueryFields = {
 			},
 			queryParam: {
 				type: GraphQLString
+			},
+			slug: {
+				type: GraphQLString
 			}
 		},
-		resolve: (parent, { tenantId, id, queryParam}, {token}) => 
-			KeywordsService.keywordsGet(id, tenantId, queryParam).then(function(keywords) {
+		resolve: (parent, { tenantId, id, slug, queryParam}, {token}) => 
+			KeywordsService.keywordsGet(id, tenantId, slug, queryParam).then(function(keywords) {
 				return keywords;
 			})
 	},

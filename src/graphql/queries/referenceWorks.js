@@ -25,7 +25,6 @@ const referenceWorkQueryFields = {
 		},
 		resolve(parent, { tenantId, id }, {token}) {
 			return ReferenceWorksService.referenceWorksGet(id, tenantId).then(function(referenceWorks) {
-				console.log(JSON.stringify(referenceWorks[0]) === JSON.stringify(referenceWorks[1]));
 				return referenceWorks;
 			});
 		}
