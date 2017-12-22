@@ -72,32 +72,6 @@ export default class UserService extends PermissionsService {
 		throw new AuthenticationError();
 	}
 	/**
-	 * Create a user
-	 * @param {Object} user - candidate user to create
-	 * @returns {Object} newly created user
-	 */
-	userCreate(user) {
-		if (this.userIsAdmin) {
-			const userObject = {
-				username: user.username,
-				mail: user.emails[0].address,
-				password: user.password,
-			};
-			const newUserId = new mongoose.Types.ObjectID();
-			delete user.password;
-			return new Promise(function(resolve, rejection) {
-				User.update({_id: newUserId}, user, function(err, inserted) {
-					if (err) {
-						console.log(err);
-						rejected(1);
-					}
-					resolve(inserted);
-				});
-			});
-		}
-		throw new AuthenticationError();
-	}
-	/**
 	 * Get the user information of the user currently logged in to Meteor
 	 * @returns {Object} the user data for the currently logged in user
 	 */

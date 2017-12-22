@@ -24,14 +24,15 @@ const SubworksModel = new mongoose.Schema({
 	},
 
 	commentHeatmap: {
-		type: [Object],
+		type: [new mongoose.Schema({
+			nComments: {
+				type: Number
+			},
+			n: {
+				type: Number
+			}
+		})],
 		optional: true,
-	},
-	'commentHeatmap.$.n': {
-		type: Number,
-	},
-	'commentHeatmap.$.nComments': {
-		type: Number,
 	},
 });
 const Subworks = mongoose.model('Subworks', SubworksModel);

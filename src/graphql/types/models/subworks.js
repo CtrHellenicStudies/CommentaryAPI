@@ -34,7 +34,17 @@ const Subwork = new GraphQLObjectType({
 			type: GraphQLInt,
 		},
 		commentHeatmap: {
-			type: new GraphQLList(GraphQLJSON),
+			type: new GraphQLList(new GraphQLObjectType({
+				name: 'CommentHeatmapType',
+				fields: {
+					nComments: {
+						type: GraphQLInt
+					},
+					n: {
+						type: GraphQLInt
+					}
+				}
+			})),
 		},
 	},
 });
