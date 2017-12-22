@@ -69,6 +69,9 @@ const KeywordInputType = new GraphQLInputObjectType({
 	name: 'KeywordInputType',
 	description: 'A tag of a word or idea in the commentary',
 	fields: {
+		_id: {
+			type: GraphQLString,
+		},
 		title: {
 			type: GraphQLString,
 		},
