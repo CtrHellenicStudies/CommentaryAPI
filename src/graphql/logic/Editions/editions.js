@@ -31,7 +31,7 @@ export default class EditionsService extends PermissionsService {
 			throw new AuthenticationError();
 		}
 		return new Promise(function(resolve, rejected) {
-			Editions.findOne(edition._id).exec().then(function(currentEdition) {
+			Editions.findOne({_id: edition._id}).exec().then(function(currentEdition) {
 				const currentMultiline = currentEdition.multiLine && currentEdition.multiLine.length ? currentEdition.multiLine : [];
 				
 				if (currentMultiline.indexOf(multiline) === -1) {
@@ -61,7 +61,7 @@ export default class EditionsService extends PermissionsService {
 			throw new AuthenticationError();
 		}
 		return new Promise(function(resolve, rejected) {
-			Editions.findOne(edition._id).exec().then(function(currentEdition) {
+			Editions.findOne({_id: edition._id}).exec().then(function(currentEdition) {
 				const multilineIndex = currentEdition.multiLine.indexOf(multiline);
 				currentEdition.multiLine.splice(multilineIndex, 1);
 				Editions.update({_id: edition._id}, currentEdition, function(err, updated) {

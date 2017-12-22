@@ -1,4 +1,8 @@
+import mongoose, { Promise } from 'mongoose';
+
 import PermissionsService from './PermissionsService';
+import User from '../../models/user';
+import { AuthenticationError } from '../errors/index';
 
 /**
  * Logic-layer service for dealing with users
@@ -10,42 +14,30 @@ export default class UserService extends PermissionsService {
 	 * @param {string} _id - id of user
 	 * @returns {Object[]} array of users
 	 */
-	usersGet(_id) {
-		if (this.userIsAdmin) {
-			const args = {};
+	static usersGet(_id) {
+		const args = {};
 
-			if (_id) {
-				args._id = _id;
-			}
-
-			return Meteor.users.find(
-				args,
-				{
-					fields: {
-						username: 1,
-						emails: 1,
-						profile: 1,
-						services: 1,
-						subscriptions: 1,
-						roles: 1,
-						highlightingPreference: 1,
-						canAnnotateBooks: 1,
-						authorOfBooks: 1,
-						canEditCommenters: 1,
-						recentPositions: 1,
-					},
-					sort: {
-						'profile.name': 1,
-						'emails.address': 1,
-						username: 1,
-					},
-				}
-			).fetch();
+		if (_id) {
+			args._id = _id;
 		}
+		User.find(args, {
+			username: 1,
+			emails: 1,
+			profile: 1,
+			services: 1,
+			subscriptions: 1,
+			roles: 1,
+			highlightingPreference: 1,
+			canAnnotateBooks: 1,
+			authorOfBooks: 1,
+			canEditCommenters: 1,
+			recentPositions: 1,
+		}).sort({
+			'profile.name': 1,
+			'emails.address': 1,
+			username: 1,
+		}).exec();
 
-		// TODO: determine best handling for users that aren't administrators
-		// return new Error('Not authorized');
-		return [];
 	}
 
 	/**
@@ -56,12 +48,18 @@ export default class UserService extends PermissionsService {
 	 */
 	userUpdate(_id, user) {
 		if (this.userIsAdmin) {
-			Meteor.users.update(_id, {$set: user});
-			return Meteor.users.findOne(_id);
+			return new Promise(function(resolve, rejected) {
+				User.update({_id: _id}, user, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Remove a user
 	 * @param {string} userId - id of user
@@ -69,11 +67,10 @@ export default class UserService extends PermissionsService {
 	 */
 	userRemove(userId) {
 		if (this.userIsAdmin) {
-			return Meteor.users.remove({_id: userId});
+			return User.find({_id: userId}).remove();
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Create a user
 	 * @param {Object} user - candidate user to create
@@ -81,29 +78,25 @@ export default class UserService extends PermissionsService {
 	 */
 	userCreate(user) {
 		if (this.userIsAdmin) {
-
-			const newUser = user;
-
 			const userObject = {
 				username: user.username,
 				mail: user.emails[0].address,
 				password: user.password,
 			};
-			const newUserId = Accounts.createUser(userObject);
-
-			delete newUser.password;
-
-			Meteor.users.update({
-				_id: newUserId,
-			}, {
-				$set: newUser,
+			const newUserId = new mongoose.Types.ObjectID();
+			delete user.password;
+			return new Promise(function(resolve, rejection) {
+				User.update({_id: newUserId}, user, function(err, inserted) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(inserted);
+				});
 			});
-
-			return Meteor.users.findOne(newUserId);
 		}
-		return new Error('Not authorized');
+		throw new AuthenticationError();
 	}
-
 	/**
 	 * Get the user information of the user currently logged in to Meteor
 	 * @returns {Object} the user data for the currently logged in user
@@ -111,73 +104,60 @@ export default class UserService extends PermissionsService {
 	getAuthedUser() {
 		return this.user;
 	}
-
 	/**
 	 * Get a user's public information by their id
 	 * @param {string} _id - id of user
 	 * @returns {Object} the user data
 	 */
-	userGetPublicById(_id) {
-		return Meteor.users.findOne(
+	static userGetPublicById(_id) {
+		return User.findOne(
 			{
 				_id,
 			},
 			{
-				fields: {
-					username: 1,
-					profile: 1,
-					services: 1,
-					subscriptions: 1,
-					roles: 1,
-					highlightingPreference: 1,
-					canAnnotateBooks: 1,
-					authorOfBooks: 1,
-					canEditCommenters: 1,
-					recentPositions: 1,
-				},
-				sort: {
-					'profile.name': 1,
-					'emails.address': 1,
-					username: 1,
-				},
-			}
-		);
+				username: 1,
+				profile: 1,
+				services: 1,
+				subscriptions: 1,
+				roles: 1,
+				highlightingPreference: 1,
+				canAnnotateBooks: 1,
+				authorOfBooks: 1,
+				canEditCommenters: 1,
+				recentPositions: 1,
+			}).exec();
 	}
-
 	/**
 	 * Get multiple users' public information by their id
 	 * @param {string[]} userIds - an array of user ids
 	 * @returns {Object[]} array of user data
 	 */
-	usersGetPublicById(userIds) {
-		return Meteor.users.find(
+	static usersGetPublicById(userIds) {
+		return User.find(
 			{
 				_id: {
 					$in: userIds,
 				},
 			},
 			{
-				fields: {
-					username: 1,
-					profile: 1,
-					services: 1,
-					subscriptions: 1,
-					roles: 1,
-					highlightingPreference: 1,
-					canAnnotateBooks: 1,
-					authorOfBooks: 1,
-					canEditCommenters: 1,
-					recentPositions: 1,
-				},
-				sort: {
-					'profile.name': 1,
-					'emails.address': 1,
-					username: 1,
-				},
+				username: 1,
+				profile: 1,
+				services: 1,
+				subscriptions: 1,
+				roles: 1,
+				highlightingPreference: 1,
+				canAnnotateBooks: 1,
+				authorOfBooks: 1,
+				canEditCommenters: 1,
+				recentPositions: 1,
 			}
-		).fetch();
-	}
+		).sort({
+			'profile.name': 1,
+			'emails.address': 1,
+			username: 1,
+		}).exec();
 
+	}
 	/**
 	 * Update the most recent position of given users
 	 * @param {Object} position - position information about where a user was most
@@ -186,7 +166,7 @@ export default class UserService extends PermissionsService {
 	 */
 	userUpdatePosition(position) {
 		if (!this.user) {
-			throw new Meteor.Error('recent-position-update', 'not-logged-in');
+			throw new Error('recent-position-update', 'not-logged-in');
 		}
 
 		let recentPositions = this.user.recentPositions || [];
@@ -196,17 +176,17 @@ export default class UserService extends PermissionsService {
 			recentPositions = recentPositions.slice(1);
 		}
 		recentPositions.push(position);
-
-		Meteor.users.update({
-			_id: this.user._id,
-		}, {
-			$set: {
-				recentPositions,
-			},
-		});
-
-		return Meteor.users.findOne({
-			_id: this.user._id,
+		return new Promise(function(resolve, rejected) {
+			User.findOne({id: this.user._id}).exec().then(function(user) {
+				user.recentPositions = recentPositions;
+				User.update({_id: this.user._id}, user, function(err, updated) {
+					if (err) {
+						console.log(err);
+						rejected(1);
+					}
+					resolve(updated);
+				});
+			});
 		});
 	}
 }

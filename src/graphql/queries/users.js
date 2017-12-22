@@ -19,17 +19,21 @@ const userQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		async resolve(parent, { _id }, {token}) {
+		resolve(parent, { _id }, {token}) {
 			const userService = new UserService({token});
-			return await userService.usersGet(_id);
+			return userService.usersGet(_id).then(function(users) {
+				return users;
+			});
 		}
 	},
 	getAuthedUser: {
 		type: UserType,
 		description: 'Return a single users account by their login token',
-		async resolve(parent, {}, { token }) {
+		resolve(parent, {}, { token }) {
 			const userService = new UserService({token});
-			return await userService.getAuthedUser();
+			return userService.getAuthedUser().then(function(user){
+				return user;
+			});
 		}
 	},
 	userGetPublicById: {
@@ -40,9 +44,11 @@ const userQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		async resolve(parent, { _id }, {token}) {
+		resolve(parent, { _id }, {token}) {
 			const userService = new UserService({token});
-			return await userService.userGetPublicById(_id);
+			return userService.userGetPublicById(_id).then(function(user) {
+				return user;
+			});
 		}
 	},
 	usersGetPublicById: {
@@ -53,9 +59,11 @@ const userQueryFields = {
 				type: new GraphQLList(GraphQLString),
 			},
 		},
-		async resolve(parent, { userIds }, { token }) {
+		resolve(parent, { userIds }, { token }) {
 			const userService = new UserService({ token });
-			return await userService.usersGetPublicById(userIds);
+			return userService.usersGetPublicById(userIds).then(function(users) {
+				return users;
+			});
 		}
 	},
 

@@ -100,10 +100,8 @@ export default class TranslationsService extends PermissionsService {
 		if (this.userIsNobody) {
 			throw new AuthenticationError();
 		}
-			// TODO: remove this after changing to workId instead of a slug
-		const workSlug = Works.findOne(workDetails.work).slug;
 		return new Promise(function(resolve, rejected) {
-			Works.findOne(workDetails.work).exec().then(function(work) {
+			Works.findOne({slug: workDetails.work}).exec().then(function(work) {
 				const newAuthor = Object.assign({}, workDetails, {author: authorName, work: workSlug});
 				TranslationNodes.create(newAuthor, function(err, inserted) {
 					if (err) {
