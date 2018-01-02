@@ -108,6 +108,26 @@ const commentQueryFields = {
 				return comment;
 			})
 	},
+	commentsByUrns: {
+		type: new GraphQLList(CommentType),
+		description: 'Get comments which urns was passed in argument of this query',
+		args: {
+			urns: {
+				type: new GraphQLList(GraphQLString),
+				required: true
+			},
+			limit: {
+				type: GraphQLInt
+			},
+			skip: {
+				type: GraphQLInt
+			}
+		},
+		resolve: (parent, { urns, limit, skip }, { token }) =>
+		CommentService.commentsGetByUrnsList(urns, limit, skip).then(function(comments) {
+			return comments;
+		})
+	}
 };
 
 export default commentQueryFields;

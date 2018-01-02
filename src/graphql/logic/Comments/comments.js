@@ -75,6 +75,22 @@ export default class CommentService extends PermissionsService {
 			});
 		});
 	}
+	/**
+	 * 
+	 * @param {array} urns - array of urns 
+	 * @param {number} limit - limit of records 
+	 * @param {number} skip - skip records
+	 */
+	static commentsGetByUrnsList(urns, limit, skip) {
+		const args = {};
+		args.$or = [];
+		for (let i = 0; i < urns.length; i += 1) {
+			args.$or.push({'urn.v1': urns[i]});
+			args.$or.push({'urn.v2': urns[i]});
+		}
+		const options = prepareGetCommentsOptions(limit, skip);
+		return Comments.find(args).limit(options.limit).skip(options.skip);
+	}
 		/**
 	 * Get comments for admin interface
 	 * @param {string} queryParam - query describing comments to get
