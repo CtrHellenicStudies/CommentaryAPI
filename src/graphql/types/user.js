@@ -313,4 +313,5 @@ const PositionInputType = new GraphQLInputObjectType({
 	},
 });
 
-export { UserType, UserInputType, PositionInputType };
+export { UserInputType, PositionInputType };
+export default UserType;

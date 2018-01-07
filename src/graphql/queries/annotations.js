@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList, GraphQLBoolean } from 'graphql';
 
 // types
-import CommentType from '../types/models/comment';
+import CommentType from '../types/comment';
 
 // logic
 import AnnotationService from '../logic/annotations';

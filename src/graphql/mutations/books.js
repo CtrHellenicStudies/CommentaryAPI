@@ -5,8 +5,8 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import {BookType, BookInputType} from '../types/models/book';
-import { RemoveType } from '../types/index';
+import {BookType, BookInputType} from '../types/book';
+import RemoveType from '../types/remove';
 
 // logic
 import BookService from '../logic/books';

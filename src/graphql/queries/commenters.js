@@ -5,7 +5,7 @@
 import { GraphQLString, GraphQLID, GraphQLList } from 'graphql';
 
 // types
-import { CommenterType } from '../types/models/commenter';
+import { CommenterType } from '../types/commenter';
 
 // logic
 import CommentersService from '../logic/Commenters/commenters';

@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import { KeywordType } from '../types/models/keyword';
+import { KeywordType } from '../types/keyword';
 
 // logic
 import KeywordsService from '../logic/Keywords/keywords';

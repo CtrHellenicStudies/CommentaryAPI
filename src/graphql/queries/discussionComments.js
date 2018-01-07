@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLList } from 'graphql';
 
 // types
-import {DiscussionCommentType} from '../types/models/discussionComment';
+import {DiscussionCommentType} from '../types/discussionComment';
 
 // logic
 import DiscussionCommentService from '../logic/DiscussionComments/discussionComments';

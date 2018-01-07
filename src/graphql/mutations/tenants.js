@@ -5,8 +5,8 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import { TenantType, TenantInputType } from '../types/models/tenants';
-import { RemoveType } from '../types/index';
+import { TenantType, TenantInputType } from '../types/tenants';
+import RemoveType from '../types/remove';
 
 // logic
 import TenantsService from '../logic/Tenants/tenants';

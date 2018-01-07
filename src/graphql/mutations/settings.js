@@ -5,8 +5,8 @@
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 
 // types
-import { SettingsType, SettingsInputType } from '../types/models/settings';
-import { RemoveType } from '../types/index';
+import { SettingsType, SettingsInputType } from '../types/settings';
+import RemoveType from '../types/remove';
 
 // logic
 import SettingsService from '../logic/Settings/settings';

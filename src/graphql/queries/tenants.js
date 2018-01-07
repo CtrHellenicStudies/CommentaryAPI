@@ -4,7 +4,7 @@
 import { GraphQLString, GraphQLList } from 'graphql';
 
 // types
-import { TenantType } from '../types/models/tenants';
+import { TenantType } from '../types/tenants';
 
 // logicd
 import TenantsService from '../logic/Tenants/tenants';

@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import { PageType } from '../types/models/page';
+import { PageType } from '../types/page';
 
 // logic
 import PageService from '../logic/pages';

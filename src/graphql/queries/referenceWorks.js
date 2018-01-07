@@ -5,7 +5,7 @@
 import { GraphQLString, GraphQLList } from 'graphql';
 
 // types
-import { ReferenceWorkType } from '../types/models/referenceWork';
+import { ReferenceWorkType } from '../types/referenceWork';
 
 // logic
 import ReferenceWorksService from '../logic/ReferenceWorks/referenceWorks';

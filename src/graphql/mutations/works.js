@@ -5,8 +5,8 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import { WorkType, WorkInputType } from '../types/models/work';
-import { RemoveType } from '../types/index';
+import { WorkType, WorkInputType } from '../types/work';
+import RemoveType from '../types/remove';
 
 // logic
 import WorksService from '../logic/Works/works';

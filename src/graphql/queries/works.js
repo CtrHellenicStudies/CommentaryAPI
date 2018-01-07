@@ -4,7 +4,7 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import { WorkType } from '../types/models/work';
+import { WorkType } from '../types/work';
 
 // logic
 import WorksService from '../logic/Works/works';

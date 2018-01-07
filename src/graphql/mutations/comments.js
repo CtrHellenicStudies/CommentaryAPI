@@ -5,9 +5,9 @@
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 
 // types
-import CommentType, { CommentInputType } from '../types/models/comment';
-import { RevisionInputType } from '../types/models/revision';
-import { RemoveType } from '../types/index';
+import CommentType, { CommentInputType } from '../types/comment';
+import { RevisionInputType } from '../types/revision';
+import RemoveType from '../types/remove';
 
 // logic
 import CommentService from '../logic/Comments/comment';

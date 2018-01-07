@@ -4,8 +4,8 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import { KeywordType, KeywordInputType} from '../types/models/keyword';
-import { RemoveType } from '../types/index';
+import { KeywordType, KeywordInputType} from '../types/keyword';
+import RemoveType from '../types/remove';
 
 // logic
 import KeywordService from '../logic/Keywords/keywords';

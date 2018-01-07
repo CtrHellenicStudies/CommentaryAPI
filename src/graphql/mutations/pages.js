@@ -5,8 +5,8 @@
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 
 // types
-import { PageType, PageInputType} from '../types/models/page';
-import { RemoveType } from '../types/index';
+import { PageType, PageInputType} from '../types/page';
+import RemoveType from '../types/remove';
 
 // logic
 import PagesService from '../logic/pages';

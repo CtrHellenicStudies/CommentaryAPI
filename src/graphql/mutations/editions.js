@@ -5,8 +5,8 @@
 import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 
 // types
-import {EditionsType, EditionsInputType} from '../types/models/editions';
-import { RemoveType } from '../types/index';
+import {EditionsType, EditionsInputType} from '../types/editions';
+import RemoveType from '../types/remove';
 
 // logic
 import EditionsService from '../logic/Editions/editions';

@@ -5,8 +5,8 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import { DiscussionCommentType, DiscussionCommentInputType} from '../types/models/discussionComment';
-import { RemoveType } from '../types/index';
+import { DiscussionCommentType, DiscussionCommentInputType} from '../types/discussionComment';
+import RemoveType from '../types/remove';
 
 // logic
 import DiscussionCommentService from '../logic/DiscussionComments/discussionComments';

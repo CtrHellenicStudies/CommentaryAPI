@@ -4,7 +4,7 @@
 import { GraphQLString, GraphQLList } from 'graphql';
 
 // types
-import { UserType } from '../types/models/user';
+import UserType from '../types/user';
 
 // logic
 import UserService from '../logic/users';

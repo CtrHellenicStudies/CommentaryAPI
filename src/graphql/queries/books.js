@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLString, GraphQLList } from 'graphql';
 
 // types
-import { BookType } from '../types/models/book';
+import { BookType } from '../types/book';
 
 // logic
 import BookService from '../logic/books';

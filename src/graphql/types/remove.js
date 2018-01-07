@@ -1,8 +1,7 @@
 import { GraphQLObjectType, GraphQLID } from 'graphql';
 
 
-
-export const RemoveType = new GraphQLObjectType({
+const RemoveType = new GraphQLObjectType({
 	name: 'RemoveType',
 	fields: {
 		_id: {
@@ -10,3 +9,6 @@ export const RemoveType = new GraphQLObjectType({
 		},
 	},
 });
+
+
+export default RemoveType;

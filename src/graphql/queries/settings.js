@@ -4,7 +4,7 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import { SettingsType } from '../types/models/settings';
+import { SettingsType } from '../types/settings';
 
 // logic
 import SettingsService from '../logic/Settings/settings';

@@ -14,9 +14,9 @@ import GraphQLJSON from 'graphql-type-json';
 
 
 // types
-import { TranslationType, TranslationInputType } from '../types/models/translation';
-import { WorkInputType } from '../types/models/work';
-import { RemoveType } from '../types/index';
+import { TranslationType, TranslationInputType } from '../types/translation';
+import { WorkInputType } from '../types/work';
+import RemoveType from '../types/remove';
 
 // logic
 import TranslationService from '../logic/Translations/translations';

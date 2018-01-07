@@ -4,7 +4,7 @@
 import { GraphQLID, GraphQLList, GraphQLInt, GraphQLString, } from 'graphql';
 
 // types
-import { TextNodeType } from '../types/models/textNode';
+import { TextNodeType } from '../types/textNode';
 
 // logic
 import TextNodesService from '../logic/TextNodes/textNodes';

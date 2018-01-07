@@ -4,7 +4,7 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import { TranslationType } from '../types/models/translation';
+import { TranslationType } from '../types/translation';
 
 // logic
 import TranslationService from '../logic/Translations/translations';

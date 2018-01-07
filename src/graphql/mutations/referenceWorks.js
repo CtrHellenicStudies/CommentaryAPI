@@ -4,8 +4,8 @@
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 
 // types
-import { ReferenceWorkType, ReferenceWorkInputType} from '../types/models/referenceWork';
-import { RemoveType } from '../types/index';
+import { ReferenceWorkType, ReferenceWorkInputType} from '../types/referenceWork';
+import RemoveType from '../types/remove';
 
 // logic
 import ReferenceWorksService from '../logic/ReferenceWorks/referenceWorks';
