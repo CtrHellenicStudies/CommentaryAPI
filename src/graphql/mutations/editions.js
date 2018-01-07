@@ -1,7 +1,7 @@
 /**
  * Mutations for books
  */
- 
+
 import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 
 // types
@@ -23,8 +23,8 @@ const editionMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve(parent, { edition, multiline }, {token}) {
-			const editionsService = new EditionsService({token});
+		async resolve (parent, { edition, multiline }, { token }) {
+			const editionsService = new EditionsService({ token });
 			return editionsService.editionInsert(edition, multiline);
 		}
 	},
@@ -39,8 +39,8 @@ const editionMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { edition, multiline }, {token}) => {
-			const editionsService = new EditionsService({token});
+		async resolve (parent, { edition, multiline }, { token }) {
+			const editionsService = new EditionsService({ token });
 			return editionsService.removeEdition(edition, multiline);
 		}
 	},

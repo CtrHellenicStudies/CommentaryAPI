@@ -19,10 +19,11 @@ const tenantsQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve: (parent, { tenantId }, {token}) =>
-			TenantsService.tenantsGet(tenantId).then(function(tenants) {
-				return tenants;
-			})
+		async resolve (parent, { tenantId }, { token }) {
+			const tenantsService = new TenantsService(token);
+			const tenants = await tenantsService.tenantsGet(tenantId);
+			return tenants;
+		},
 	},
 	tenantBySubdomain: {
 		type: TenantType,
@@ -32,10 +33,11 @@ const tenantsQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve: (parent, { subdomain }, {token}) =>
-			TenantsService.tenantBySubdomainGet(subdomain).then(function(tenants) {
-				return tenants;
-			})
+		async resolve (parent, { subdomain }, { token }) {
+			const tenantService = new TenantService(token);
+			const tenant = await tenantsService.tenantBySubdomainGet(subdomain);
+			return tenant;
+		},
 	},
 };
 

@@ -20,8 +20,8 @@ const worksMutationFields = {
 				type: WorkInputType
 			}
 		},
-		resolve: (parent, { work }, {token}) => {
-			const worksService = new WorksService({token});
+		async resolve (parent, { work }, { token }) {
+			const worksService = new WorksService({ token });
 			return worksService.workInsert(work);
 		}
 	},
@@ -36,8 +36,8 @@ const worksMutationFields = {
 				type: WorkInputType
 			}
 		},
-		resolve: (parent, { _id, work }, {token}) => {
-			const worksService = new WorksService({token});
+		async resolve (parent, { _id, work }, { token }) {
+			const worksService = new WorksService({ token });
 			return worksService.workUpdate(_id, work);
 		}
 	},
@@ -49,8 +49,8 @@ const worksMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {workId}, {token}) => {
-			const worksService = new WorksService({token});
+		async resolve (parent, {workId}, { token }) {
+			const worksService = new WorksService({ token });
 			return worksService.workRemove(workId);
 		}
 	}

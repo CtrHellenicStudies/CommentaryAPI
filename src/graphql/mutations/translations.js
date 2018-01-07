@@ -30,8 +30,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { translationId }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { translationId }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationRemove(id);
 		}
 	},
@@ -43,8 +43,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(TranslationInputType)
 			}
 		},
-		resolve: (parent, { translation }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { translation }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationUpdate(translation);
 		}
 	},
@@ -56,8 +56,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(TranslationInputType)
 			}
 		},
-		resolve: (parent, { translation }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { translation }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationInsert(translation);
 		}
 	},
@@ -72,8 +72,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { workSlug, name }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { workSlug, name }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationUpdateAuthor(workSlug, name);
 		}
 	},
@@ -91,8 +91,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { workSlug, translation, name }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { workSlug, translation, name }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationAddAuthor(workSlug, translation, name);
 		}
 	},

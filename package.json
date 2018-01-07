@@ -50,6 +50,7 @@
     "react-autocomplete": "^1.5.10",
     "react-s3-uploader": "^4.2.0",
     "request": "^2.81.0",
+    "request-promise": "^4.2.2",
     "slugify": "^1.2.6",
     "subscriptions-transport-ws": "^0.8.1",
     "twitter": "^1.7.1",

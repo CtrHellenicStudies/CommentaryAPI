@@ -1,5 +1,5 @@
 /**
- * Mutations for reference works 
+ * Mutations for reference works
  */
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 
@@ -19,8 +19,8 @@ const referenceWorksMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {referenceWorkId}, {token}) => {
-			const referenceWorksService = new ReferenceWorksService({token});
+		async resolve (parent, {referenceWorkId}, { token }) {
+			const referenceWorksService = new ReferenceWorksService({ token });
 			return referenceWorksService.referenceWorkRemove(referenceWorkId);
 		}
 	},
@@ -35,8 +35,8 @@ const referenceWorksMutationFields = {
 				type: new GraphQLNonNull(ReferenceWorkInputType)
 			}
 		},
-		resolve: (parent, {referenceWorkId, referenceWork}, {token}) => {
-			const referenceWorksService = new ReferenceWorksService({token});
+		async resolve (parent, {referenceWorkId, referenceWork}, { token }) {
+			const referenceWorksService = new ReferenceWorksService({ token });
 			return referenceWorksService.referenceWorkUpdate(referenceWorkId, referenceWork);
 		}
 	},
@@ -48,8 +48,8 @@ const referenceWorksMutationFields = {
 				type: ReferenceWorkInputType
 			}
 		},
-		resolve: (parent, {referenceWork}, {token}) => {
-			const referenceWorksService = new ReferenceWorksService({token});
+		async resolve (parent, {referenceWork}, { token }) {
+			const referenceWorksService = new ReferenceWorksService({ token });
 			return referenceWorksService.referenceWorkCreate(referenceWork);
 		}
 	}

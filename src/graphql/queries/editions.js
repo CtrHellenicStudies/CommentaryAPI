@@ -19,10 +19,11 @@ const editionsQueryFields = {
 				type: GraphQLID,
 			},
 		},
-		resolve: (parent, { editionId }, {token}) => 
-			EditionsService.editionsGet(editionId).then(function(editions) {
-				return editions;
-			})
+		async resolve (parent, { editionId }, { token }) {
+			const editionService = new EditionService(token);
+			const editions = await editionsService.editionsGet(editionId);
+			return editions;
+		},
 	},
 };
 

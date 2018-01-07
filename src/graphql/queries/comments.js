@@ -28,11 +28,11 @@ const commentQueryFields = {
 				type: GraphQLBoolean
 			}
 		},
-		resolve(parent, { queryParam, limit, skip, sortRecent}, {token}) {
-			return CommentService.commentsGet(queryParam, limit, skip, sortRecent).then(function(comments) {
-				return comments;
-			});
-		}
+		async resolve (parent, { queryParam, limit, skip, sortRecent }, { token }) {
+			const commentService = new CommentService(token);
+			const comments = commentService.commentsGet(queryParam, limit, skip, sortRecent);
+			return comments;
+		},
 	},
 	commentsMore: {
 		type: GraphQLBoolean,
@@ -48,11 +48,12 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve: (parent, { queryParam, limit, skip}, {token}) =>
-			CommentService.commentsGetMore(queryParam, limit, skip).then(function(comments) {
-				const tempLimit = limit !== undefined && limit !== null ? limit : 30;
-				return comments.length > tempLimit;
-			})
+		async resolve (parent, { queryParam, limit, skip}, { token }) {
+			const commentService = new CommentService(token);
+			const comments = await commentService.commentsGetMore(queryParam, limit, skip);
+			const tempLimit = limit !== undefined && limit !== null ? limit : 30;
+			return comments.length > tempLimit;
+		},
 	},
 	commentsOn: {
 		type: new GraphQLList(CommentType),
@@ -69,18 +70,11 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve: (parent, { urn, limit, skip }, { token }) =>
-			CommentService.commentsGetURN(urn, limit, skip).then(function(comments) {
-				comments.map((comment) => {
-					try {
-						comment.urn = JSON.parse(comment.urn);
-					} catch (e) {
-						console.log(e);
-					}
-					return comment;
-				});
-				return comments;
-			})
+		async resolve (parent, { urn, limit, skip }, { token }) {
+			const commentService = new CommentService(token);
+			const comments = await commentService.commentsGetURN(urn, limit, skip);
+			return comment;
+		},
 	},
 	commentedOnBy: {
 		type: new GraphQLList(CommentType),
@@ -101,10 +95,11 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve: (parent, { urn, commenterId, limit, skip }, { token }) =>
-			CommentService.commentsGetCommentedOnBy(urn, commenterId, limit, skip).then(function(comment) {
-				return comment;
-			})
+		async resolve (parent, { urn, commenterId, limit, skip }, { token }) {
+			const commentService = new CommentService(token);
+			const comments = await commentService.commentsGetCommentedOnBy(urn, commenterId, limit, skip);
+			return comments;
+		},
 	},
 	commentsByUrns: {
 		type: new GraphQLList(CommentType),
@@ -121,10 +116,11 @@ const commentQueryFields = {
 				type: GraphQLInt
 			}
 		},
-		resolve: (parent, { urns, limit, skip }, { token }) =>
-		CommentService.commentsGetByUrnsList(urns, limit, skip).then(function(comments) {
+		async resolve (parent, { urns, limit, skip }, { token }) {
+			const commentService = new CommentService(token);
+			const comments = await commentService.commentsGetByUrnsList(urns, limit, skip);
 			return comments;
-		})
+		}
 	}
 };
 

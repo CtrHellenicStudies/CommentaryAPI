@@ -1,12 +1,11 @@
-import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
+import { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLList } from 'graphql';
 
 // types
 import CollectionType, { CollectionInputType } from '../types/collection';
 import RemoveType from '../types/remove';
 
-// models
-import Collection from '../../models/collection';
-import Project from '../../models/project';
+// Logic
+import CollectionService from '../logic/collections';
 
 
 const collectionMutationFields = {
@@ -14,17 +13,19 @@ const collectionMutationFields = {
 		type: CollectionType,
 		description: 'Create a new collection',
 		args: {
+			hostname: {
+				type: new GraphQLNonNull(GraphQLString)
+			},
 			collection: {
 				type: new GraphQLNonNull(CollectionInputType)
-			}
+			},
+			items: {
+				type: new GraphQLList(GraphQLString),
+			},
 		},
-		async resolve(parent, { collection }, context) {
-			const CollectionProject = await Project.findByHostname(context.project.hostname);
-			collection.projectId = CollectionProject._id;
-			// Initiate new collection
-			const NewCollection = new Collection(collection);
-
-			return NewCollection.save();
+		async resolve(_, { hostname, collection, items }, { token }) {
+			const collectionService = new CollectionService(token);
+			return await collectionService.create(hostname, collection, items);
 		}
 	},
 	collectionUpdate: {
@@ -34,27 +35,13 @@ const collectionMutationFields = {
 			collection: {
 				type: new GraphQLNonNull(CollectionInputType),
 			},
-			collectionId: {
-				type: new GraphQLNonNull(GraphQLID),
-			}
+			items: {
+				type: new GraphQLList(GraphQLString),
+			},
 		},
-		async resolve(parent, { collection, collectionId }, context) {
-			// Initiate collection
-			const FoundCollection = await Collection.findById(collectionId);
-			if (!FoundCollection) throw new ArgumentError({ data: { field: 'collectionId' } });
-
-			// Perform action
-			// update collection
-			Object.keys(collection).forEach((key) => {
-				FoundCollection[key] = item[key];
-			});
-
-			// Save new collection
-			try {
-				return await FoundCollection.save();
-			} catch (err) {
-				handleMongooseError(err);
-			}
+		async resolve(_, { collection, items }, { token }) {
+			const collectionService = new CollectionService(token);
+			return await collectionService.update(collection, items);
 		}
 	},
 
@@ -62,28 +49,16 @@ const collectionMutationFields = {
 		type: RemoveType,
 		description: 'Remove collection',
 		args: {
-			collectionId: {
-				type: new GraphQLNonNull(GraphQLID),
-			}
+			_id: {
+				type: new GraphQLNonNull(GraphQLString),
+			},
+			hostname: {
+				type: new GraphQLNonNull(GraphQLString)
+			},
 		},
-		async resolve (parent, { collectionId }, { user, collection }) {
-			// if user is not logged in
-			if (!user) throw new AuthenticationError();
-
-			// initiate collection
-			const FoundCollection = await Collection.findById(collectionId);
-			if (!FoundCollection) throw new ArgumentError({ data: { field: 'collectionId' } });
-
-			// perform action
-			// save new collection
-			try {
-				await FoundCollection.remove();
-				return {
-					_id: collectionId,
-				};
-			} catch (err) {
-				handleMongooseError(err);
-			}
+		async resolve (_, { _id, hostname }, { token }) {
+			const collectionService = new CollectionService(token);
+			return await collectionService.remove(_id, hostname);
 		}
 	}
 };

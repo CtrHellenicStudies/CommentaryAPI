@@ -19,10 +19,10 @@ const annotationQueryFields = {
 				type: GraphQLString,
 			}
 		},
-		resolve: (parent, { bookChapterUrl }, {token}) => {
-			AnnotationService.annotationsGet(bookChapterUrl).then(function(annotations) {
-				return annotations;
-			});
+		async resolve (parent, { bookChapterUrl }, { token }) {
+			const annotationService = new AnnotationService(token);
+			const annotations = await annotationService.annotationsGet(bookChapterUrl);
+			return annotations;
 		}
 	},
 };

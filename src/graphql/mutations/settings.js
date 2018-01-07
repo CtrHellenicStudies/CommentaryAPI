@@ -21,8 +21,8 @@ const settingsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {settingsId}, {token}) => {
-			const settingsService = new SettingsService({token});
+		async resolve (parent, {settingsId}, { token }) {
+			const settingsService = new SettingsService({ token });
 			return settingsService.settingsRemove(settingsId);
 		}
 	},
@@ -37,8 +37,8 @@ const settingsMutationFields = {
 				type: SettingsInputType
 			}
 		},
-		resolve: (parent, {settingsId, settings}, {token}) => {
-			const settingsService = new SettingsService({token});
+		async resolve (parent, {settingsId, settings}, { token }) {
+			const settingsService = new SettingsService({ token });
 			return settingsService.settingsUpdate(settingsId, settings);
 		}
 	},
@@ -50,8 +50,8 @@ const settingsMutationFields = {
 				type: SettingsInputType
 			}
 		},
-		resolve: (parent, {settings}, {token}) => {
-			const settingsService = new SettingsService({token});
+		async resolve (parent, {settings}, { token }) {
+			const settingsService = new SettingsService({ token });
 			return settingsService.settingsCreate(settings);
 		}
 	}

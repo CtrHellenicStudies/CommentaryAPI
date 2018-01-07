@@ -22,10 +22,11 @@ const pagesQueryFields = {
 				type: GraphQLString
 			}
 		},
-		resolve: (parent, { _id, tenantId }, {token}) => 
-			PageService.pagesGet(_id, tenantId).then(function(pages) {
-				return pages;
-			})
+		async resolve (parent, { _id, tenantId }, { token }) {
+			const pageService = new PageService(token);
+			const pages = await pageService.pagesGet(_id, tenantId);
+			return pages;
+		},
 	},
 };
 

@@ -23,10 +23,10 @@ const referenceWorkQueryFields = {
 				type: GraphQLString,
 			}
 		},
-		resolve(parent, { tenantId, id }, {token}) {
-			return ReferenceWorksService.referenceWorksGet(id, tenantId).then(function(referenceWorks) {
-				return referenceWorks;
-			});
+		async resolve (parent, { tenantId, id }, { token }) {
+			const referenceWorkService = new ReferenceWorksService(token);
+			const referenceWorks = await referenceWorksService.referenceWorksGet(id, tenantId);
+			return referenceWorks;
 		}
 	},
 };

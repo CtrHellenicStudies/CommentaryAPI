@@ -19,7 +19,8 @@ const projectMutationFields = {
 		},
 		async resolve(parent, { project }, { token }) {
 			const projectService = new ProjectService(token);
-			return await projectService.create(project);
+			const projectCreated = await projectService.create(project);
+			return projectCreated;
 		},
 	},
 
@@ -31,9 +32,10 @@ const projectMutationFields = {
 				type: new GraphQLNonNull(ProjectInputType),
 			},
 		},
-		async resolve(parent, { project }, { token }) {
+		async resolve (parent, { project }, { token }) {
 			const projectService = new ProjectService(token);
-			return await projectService.update(project);
+			const projectUpdated = await projectService.update(project);
+			return projectUpdated;
 		}
 	},
 
@@ -50,7 +52,8 @@ const projectMutationFields = {
 		},
 		async resolve (parent, { _id, hostname }, { token }) {
 			const projectService = new ProjectService(token);
-			return await projectService.remove(_id, hostname);
+			const remove = await projectService.remove(_id, hostname);
+			return remove;
 		},
 	},
 };

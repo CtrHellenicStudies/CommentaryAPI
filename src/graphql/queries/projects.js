@@ -22,10 +22,11 @@ const projectQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve(parent, { _id, slug, hostname }, { token }) {
+		async resolve (parent, { _id, slug, hostname }, { token }) {
 			const projectService = new ProjectService(token);
-			return projectService.getProject({ _id, slug, hostname });
-		}
+			const project = await projectService.getProject({ _id, slug, hostname });
+			return project;
+		},
 	},
 	checkProjectAvailability: {
 		type: ProjectType,
@@ -35,9 +36,10 @@ const projectQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve(parent, { hostname }, { token }) {
+		async resolve (parent, { hostname }, { token }) {
 			const projectService = new ProjectService(token);
-			return projectService.getProject({ hostname });
+			const project = await projectService.getProject({ hostname });
+			return project;
 		}
 	},
 	projects: {
@@ -54,9 +56,10 @@ const projectQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve(parent, { limit, offset, textsearch }, { token }) {
+		async resolve (parent, { limit, offset, textsearch }, { token }) {
 			const projectService = new ProjectService(token);
-			return projectService.getProjects({ limit, offset, textsearch });
+			const projects = await projectService.getProjects({ limit, offset, textsearch });
+			return projects;
 		}
 	},
 	userProjects: {
@@ -70,10 +73,11 @@ const projectQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve(parent, { limit, offset }, { token }) {
+		async resolve (parent, { limit, offset }, { token }) {
 			const projectService = new ProjectService(token);
-			return projectService.getUserProjects({ limit, offset });
-		}
+			const projects = await projectService.getUserProjects({ limit, offset });
+			return projects;
+		},
 	},
 };
 

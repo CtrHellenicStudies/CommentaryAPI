@@ -1,7 +1,7 @@
 /**
  * Mutations for books
  */
- 
+
 import { GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
@@ -20,9 +20,10 @@ const bookMutationFields = {
 				type: BookInputType
 			}
 		},
-		resolve: (parent, { book }, {token}) => {
-			const bookService = new BookService({token});
-			return bookService.bookInsert(book);
+		async resolve (parent, { book }, { token }) {
+			const bookService = new BookService({ token });
+			const bookCreated = await bookService.bookInsert(book);
+			return bookCreated;
 		}
 	},
 	bookUpdate: {
@@ -36,9 +37,10 @@ const bookMutationFields = {
 				type: new GraphQLNonNull(BookInputType)
 			}
 		},
-		resolve: (parent, { _id, book }, {token}) => {
-			const bookService = new BookService({token});
-			return bookService.bookUpdate(_id, book);
+		async resolve (parent, { _id, book }, { token }) {
+			const bookService = new BookService({ token });
+			const bookUpdated = await bookService.bookUpdate(_id, book);
+			return bookUpdated;
 		}
 	},
 	bookRemove: {
@@ -49,9 +51,10 @@ const bookMutationFields = {
 				type: new GraphQLNonNull(GraphQLID)
 			}
 		},
-		resolve: (parent, { bookId }, {token}) => {
-			const bookService = new BookService({token});
-			return bookService.bookRemove(bookId);
+		async resolve (parent, { bookId }, { token }) {
+			const bookService = new BookService({ token });
+			const bookRemove = await bookService.bookRemove(bookId);
+			return bookRemove;
 		}
 	},
 };

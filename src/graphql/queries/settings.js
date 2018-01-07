@@ -21,11 +21,12 @@ const settingsQueryFields = {
 				type: GraphQLString
 			}
 		},
-		resolve: (parent, { _id, tenantId }, {token}) => 
-			SettingsService.settingsGet(_id, tenantId).then(function(settings) {
-				return settings;
-			})
-	}
+		async resolve (parent, { _id, tenantId }, { token }) {
+			const settingsService = new SettingsService(token);
+			const settings = await settingsService.settingsGet(_id, tenantId);
+			return settings;
+		},
+	},
 };
 
 export default settingsQueryFields;

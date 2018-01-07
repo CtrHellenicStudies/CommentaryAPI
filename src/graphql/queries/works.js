@@ -22,10 +22,11 @@ const workQueryFields = {
 				type: GraphQLID,
 			},
 		},
-		resolve: (parent, { _id, tenantId }, {token}) => 
-			WorksService.worksGet(_id, tenantId).then(function(works) {
-				return works;
-			})
+		async resolve (parent, { _id, tenantId }, { token }) {
+			const worksService = new WorksService(token);
+			const works = worksService.worksGet(_id, tenantId);
+			return works;
+		},
 	},
 };
 

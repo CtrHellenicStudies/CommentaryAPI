@@ -28,10 +28,11 @@ const keywordQueryFields = {
 				type: GraphQLString
 			}
 		},
-		resolve: (parent, { tenantId, id, slug, queryParam}, {token}) => 
-			KeywordsService.keywordsGet(id, tenantId, slug, queryParam).then(function(keywords) {
-				return keywords;
-			})
+		async resolve (parent, { tenantId, id, slug, queryParam}, { token }) {
+			const keywordsService = new KeywordsService(token);
+			const keywords = await keywordsService.keywordsGet(id, tenantId, slug, queryParam);
+			return keywords;
+		},
 	},
 };
 

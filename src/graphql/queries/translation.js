@@ -18,10 +18,11 @@ const translationsQueryFields = {
 				type: GraphQLID,
 			}
 		},
-		resolve: (parent, { tenantId }, {token}) =>
-			TranslationService.translationGet(tenantId).then(function(translations) {
-				return translations;
-			})
+		async resolve (parent, { tenantId }, { token }) {
+			const translationService = new TranslationService(token);
+			const translations = translationService.translationGet(tenantId);
+			return translations;
+		},
 	},
 	authorsOfTranslations: {
 		type: new GraphQLList(TranslationType),
@@ -34,19 +35,22 @@ const translationsQueryFields = {
 				type: GraphQLString
 			}
 		},
-		resolve: (parent, { selectedWork, selectedSubwork }, {token}) => 
-			TranslationService.getAuthors(selectedWork, selectedSubwork).then(function(translations) {
-				const authors = {};
-				const ret = [];
-				for (let i = 0; i < translations.length; i += 1) {
-					if (!authors[translations[i].author]) {
-						authors[translations[i].author] = true;
-						ret.push(translations[i]);
-					}
+		async resolve (parent, { selectedWork, selectedSubwork }, { token }) {
+			const translationService = new TranslationService(token);
+			const translations = translationService.getAuthors(selectedWork, selectedSubwork);
+
+			const authors = {};
+			const ret = [];
+			for (let i = 0; i < translations.length; i += 1) {
+				if (!authors[translations[i].author]) {
+					authors[translations[i].author] = true;
+					ret.push(translations[i]);
 				}
-				return ret;
-			})
-	}
+			}
+
+			return translations;
+		},
+	},
 };
 
 export default translationsQueryFields;

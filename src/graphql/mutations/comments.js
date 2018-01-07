@@ -22,8 +22,8 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(CommentInputType)
 			}
 		},
-		resolve(parent, {comment}, {token}) {
-			const commentsService = new CommentService({token});
+		async resolve (parent, {comment}, { token }) {
+			const commentsService = new CommentService({ token });
 			return commentsService.commentInsert(comment).then(function(_comment) {
 				return _comment;
 			});
@@ -40,8 +40,8 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(CommentInputType)
 			}
 		},
-		resolve(parent, {id, comment}, {token}) {
-			const commentsService = new CommentService({token});
+		async resolve (parent, {id, comment}, { token }) {
+			const commentsService = new CommentService({ token });
 			return commentsService.commentUpdate(id, comment).then(function(_comment) {
 				return _comment._id;
 			});
@@ -55,8 +55,8 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve(parent, {commentId}, {token}) {
-			const commentsService = new CommentService({token});
+		async resolve (parent, {commentId}, { token }) {
+			const commentsService = new CommentService({ token });
 			return commentsService.commentRemove(commentId).then(function(_comment) {
 				return _comment._id;
 			});
@@ -73,8 +73,8 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(RevisionInputType)
 			}
 		},
-		resolve(parent, {id, revision}, {token}) {
-			const commentsService = new CommentService({token});
+		async resolve (parent, {id, revision}, { token }) {
+			const commentsService = new CommentService({ token });
 			return commentsService.addRevision(id, revision).then(function(_comment) {
 				return _comment._id;
 			});
@@ -88,8 +88,8 @@ const commentMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve(parent, {id}, {token}) {
-			const commentsService = new CommentService({token});
+		async resolve (parent, {id}, { token }) {
+			const commentsService = new CommentService({ token });
 			return commentsService.removeRevision(id).then(function(_comment) {
 				return _comment._id;
 			});
