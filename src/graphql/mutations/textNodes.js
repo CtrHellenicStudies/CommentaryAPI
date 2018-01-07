@@ -81,7 +81,7 @@ const textNodeMutationFields = {
 				type: new GraphQLNonNull(GraphQLInt)
 			}
 		},
-		resolve(parent, {workSlug, subworkN}, {token}){
+		resolve(parent, {workSlug, subworkN}, {token}) {
 			// TextNodeService.getMaxLine(workSlug, subworkN).then(function(maxLine) {
 			// 	return maxLine;
 			// })

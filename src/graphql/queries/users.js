@@ -21,19 +21,15 @@ const userQueryFields = {
 		},
 		resolve(parent, { _id }, {token}) {
 			const userService = new UserService({token});
-			return userService.usersGet(_id).then(function(users) {
-				return users;
-			});
+			return userService.usersGet(_id).then(users => users);
 		}
 	},
 	getAuthedUser: {
 		type: UserType,
 		description: 'Return a single users account by their login token',
-		resolve(parent, {}, { token }) {
+		resolve(parent, _, { token }) {
 			const userService = new UserService({token});
-			return userService.getAuthedUser().then(function(user){
-				return user;
-			});
+			return userService.getAuthedUser().then(user => user);
 		}
 	},
 	userGetPublicById: {
@@ -46,9 +42,7 @@ const userQueryFields = {
 		},
 		resolve(parent, { _id }, {token}) {
 			const userService = new UserService({token});
-			return userService.userGetPublicById(_id).then(function(user) {
-				return user;
-			});
+			return userService.userGetPublicById(_id).then(user => user);
 		}
 	},
 	usersGetPublicById: {
@@ -61,9 +55,7 @@ const userQueryFields = {
 		},
 		resolve(parent, { userIds }, { token }) {
 			const userService = new UserService({ token });
-			return userService.usersGetPublicById(userIds).then(function(users) {
-				return users;
-			});
+			return userService.usersGetPublicById(userIds).then(users => users);
 		}
 	},
 

@@ -99,13 +99,13 @@ const BookType = new GraphQLObjectType({
 					type: GraphQLString,
 				},
 			},
-			resolve: ( _, { chapterUrl }, context ) => {
+			resolve: (_, { chapterUrl }, context) => { // eslint-disable-line
 				/**
 				const comments = Comments.find({
 					bookChapterUrl: chapterUrl,
 				});
 				*/
-				return []; 
+				return [];
 			}
 		}
 	}

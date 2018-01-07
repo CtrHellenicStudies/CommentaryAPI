@@ -40,68 +40,64 @@ function prepareGetCommentsOptions(limit, skip, sortRecent) {
 	}
 	return options;
 }
-const _getCommentURN = (comment) => {
-	return new Promise(function(resolve, rejected) {
-		Works.findOne({ slug: comment.work.slug }).exec().then(function(work) {
-			Tenants.findOne({_id: comment.tenantId}).then(function(tenant) {
-				const urnPrefixV1 = 'urn:cts:CHS.Commentary';
-				const urnPrefixV2 = `urn:cts:CHS:Commentaries. ${tenant.subdomain.toUpperCase()}`;
+const _getCommentURN = comment => new Promise(function(resolve, rejected) {
+	Works.findOne({ slug: comment.work.slug }).exec().then(function(work) {
+		Tenants.findOne({_id: comment.tenantId}).then(function(tenant) {
+			const urnPrefixV1 = 'urn:cts:CHS.Commentary';
+			const urnPrefixV2 = `urn:cts:CHS:Commentaries. ${tenant.subdomain.toUpperCase()}`;
 				// Use work tlg if it exists, otherwise, search for subwork tlg number
 				// Failing either, just use creator
-				let urnTLG = work.tlgCreator;
-				if (work.tlg && work.tlg.length) {
-					urnTLG += `.${work.tlg}`;
-				} else {
-					work.subworks.forEach((subwork) => {
-						if (
+			let urnTLG = work.tlgCreator;
+			if (work.tlg && work.tlg.length) {
+				urnTLG += `.${work.tlg}`;
+			} else {
+				work.subworks.forEach((subwork) => {
+					if (
 								subwork.n === comment.subwork.n
 							&& subwork.tlgNumber
 							&& subwork.tlgNumber.length
 						) {
-							urnTLG += `.${subwork.tlgNumber}`;
-						}
-					});
-				}
+						urnTLG += `.${subwork.tlgNumber}`;
+					}
+				});
+			}
 					//
-				urnTLG += '.chsCommentary';
-				const workTitle = comment.work.title.replace(' ', '');
+			urnTLG += '.chsCommentary';
+			const workTitle = comment.work.title.replace(' ', '');
 
-				let urnComment = `${workTitle}.${comment.subwork.title}.${comment.lineFrom}`;
+			let urnComment = `${workTitle}.${comment.subwork.title}.${comment.lineFrom}`;
 
-				if (typeof comment.lineTo !== 'undefined' && comment.lineFrom !== comment.lineTo) {
-					urnComment += `-${comment.subwork.title}.${comment.lineTo}`;
-				}
+			if (typeof comment.lineTo !== 'undefined' && comment.lineFrom !== comment.lineTo) {
+				urnComment += `-${comment.subwork.title}.${comment.lineTo}`;
+			}
 
-				const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
-				const ret = {
-					v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
-					v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`};
-				resolve(ret);
-			});
+			const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
+			const ret = {
+				v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
+				v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`};
+			resolve(ret);
 		});
 	});
-};
+});
 
-const _getAnnotationURN = (comment) => {
-	return new Promise(function(resolve, rejected) {
-		Books.findOne({ 'chapters.url': comment.bookChapterUrl }).exec().then(function(book) {
-			Tenants.findOne({_id: comment.tenantId}).exec().then(function(tenant) {
-				const chapter = _.find(book.chapters, c => c.url === comment.bookChapterUrl);
-				const urnPrefixV1 = 'urn:cts:CHS.Annotations';
-				const urnPrefixV2 = `urn:cts:CHS:Annotations. ${tenant.subdomain.toUpperCase()}`;
-				const urnBook = `${book.authorURN}.${book.slug}`;
-				const urnComment = `${chapter.n}.${comment.paragraphN}`;
-				const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
+const _getAnnotationURN = comment => new Promise(function(resolve, rejected) {
+	Books.findOne({ 'chapters.url': comment.bookChapterUrl }).exec().then(function(book) {
+		Tenants.findOne({_id: comment.tenantId}).exec().then(function(tenant) {
+			const chapter = _.find(book.chapters, c => c.url === comment.bookChapterUrl);
+			const urnPrefixV1 = 'urn:cts:CHS.Annotations';
+			const urnPrefixV2 = `urn:cts:CHS:Annotations. ${tenant.subdomain.toUpperCase()}`;
+			const urnBook = `${book.authorURN}.${book.slug}`;
+			const urnComment = `${chapter.n}.${comment.paragraphN}`;
+			const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
 			
-				const ret = {
-					v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
-					v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`
-				};
-				resolve(ret);
-			});
+			const ret = {
+				v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
+				v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`
+			};
+			resolve(ret);
 		});
 	});
-};
+});
 function getURN(comment) {
 	if (comment.isAnnotation) {
 		return _getAnnotationURN(comment);
@@ -190,7 +186,7 @@ function sendUpdateNotification(comment) {
 
 	// add notification
 	const emailList = prepareEmailList(comment);
-	emailList.forEach(subscribedUser => {
+	emailList.forEach((subscribedUser) => {
 
 		let username = 'Commentary User';
 		if (subscribedUser.profile.name) {

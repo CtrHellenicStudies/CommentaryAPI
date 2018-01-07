@@ -16,16 +16,16 @@ export default function corsSetup(app, redisClient) {
 		origin: (origin, callback) => {
 			let isAllowed = false;
 
-			allowedOrigins.forEach(allowedOrigin => {
+			allowedOrigins.forEach((allowedOrigin) => {
 				if (_s(allowedOrigin).endsWith(allowedOrigin)) {
 					isAllowed = true;
 				}
 			});
 
 			if (isAllowed) {
-				callback(null, true)
+				callback(null, true);
 			} else {
-				callback(new Error('Not allowed by CORS'))
+				callback(new Error('Not allowed by CORS'));
 			}
 		},
 		credentials: true,
