@@ -1,12 +1,12 @@
 /**
  * Mutations for books
  */
- 
+
 import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
 
 // types
-import {EditionsType, EditionsInputType} from '../types/models/editions';
-import { RemoveType } from '../types/index';
+import {EditionsType, EditionsInputType} from '../types/editions';
+import RemoveType from '../types/remove';
 
 // logic
 import EditionsService from '../logic/Editions/editions';
@@ -23,8 +23,8 @@ const editionMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve(parent, { edition, multiline }, {token}) {
-			const editionsService = new EditionsService({token});
+		async resolve (parent, { edition, multiline }, { token }) {
+			const editionsService = new EditionsService({ token });
 			return editionsService.editionInsert(edition, multiline);
 		}
 	},
@@ -39,8 +39,8 @@ const editionMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { edition, multiline }, {token}) => {
-			const editionsService = new EditionsService({token});
+		async resolve (parent, { edition, multiline }, { token }) {
+			const editionsService = new EditionsService({ token });
 			return editionsService.removeEdition(edition, multiline);
 		}
 	},

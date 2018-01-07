@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLString, GraphQLList } from 'graphql';
 
 // types
-import { BookType } from '../types/models/book';
+import { BookType } from '../types/book';
 
 // logic
 import BookService from '../logic/books';
@@ -20,12 +20,13 @@ const bookQueryFields = {
 			},
 			chapterUrl: {
 				type: GraphQLString
-			}
+			},
 		},
-		resolve: (parent, { bookId, chapterUrl }, {token}) => 
-			BookService.booksGet(bookId, chapterUrl).then(function(books) {
-				return books;
-			})
+		async resolve (parent, { bookId, chapterUrl }, { token }) {
+			const bookService = new BookService(token);
+			const books = await bookService.booksGet(bookId, chapterUrl);
+			return books;
+		},
 	},
 	bookByChapter: {
 		type: BookType,
@@ -35,10 +36,11 @@ const bookQueryFields = {
 				type: GraphQLString
 			}
 		},
-		resolve: (parent, { chapterUrl }, { token }) =>
-			BookService.bookByChapter(chapterUrl).then(function(book) {
-				return book;
-			})
+		async resolve (parent, { chapterUrl }, { token }) {
+			const bookService = new BookService(token);
+			const book = await bookService.bookByChapter(chapterUrl);
+			return book;
+		},
 	},
 };
 

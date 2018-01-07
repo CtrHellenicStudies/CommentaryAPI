@@ -1,12 +1,12 @@
 /**
- * Mutations for commenters 
+ * Mutations for commenters
  */
 
 import { GraphQLString, GraphQLNonNull } from 'graphql';
 
 // types
-import { CommenterType, CommenterInputType } from '../types/models/commenter';
-import { RemoveType } from '../types/index';
+import { CommenterType, CommenterInputType } from '../types/commenter';
+import RemoveType from '../types/remove';
 
 // logic
 import CommentersService from '../logic/Commenters/commenters';
@@ -21,8 +21,8 @@ const commenterMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {commenterId}, {token}) => {
-			const commentersService = new CommentersService({token});
+		async resolve (parent, {commenterId}, { token }) {
+			const commentersService = new CommentersService({ token });
 			return commentersService.commenterRemove(commenterId);
 		}
 	},
@@ -37,8 +37,8 @@ const commenterMutationFields = {
 				type: CommenterInputType
 			}
 		},
-		resolve: (parent, {commenterId, commenter}, {token}) => {
-			const commentersService = new CommentersService({token});
+		async resolve (parent, {commenterId, commenter}, { token }) {
+			const commentersService = new CommentersService({ token });
 			return commentersService.commenterUpdate(commenterId, commenter);
 		}
 	},
@@ -50,8 +50,8 @@ const commenterMutationFields = {
 				type: CommenterInputType
 			}
 		},
-		resolve: (parent, {commenter}, {token}) => {
-			const commentersService = new CommentersService({token});
+		async resolve (parent, {commenter}, { token }) {
+			const commentersService = new CommentersService({ token });
 			return commentersService.commenterCreate(commenter);
 		}
 	}

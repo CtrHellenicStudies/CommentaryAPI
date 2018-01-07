@@ -14,8 +14,8 @@ import GraphQLJSON from 'graphql-type-json';
 
 
 // types
-import { TextNodeType, TextNodeInputType } from '../types/models/textNode';
-import { RemoveType } from '../types/index';
+import { TextNodeType, TextNodeInputType } from '../types/textNode';
+import RemoveType from '../types/remove';
 
 // logic
 import TextNodeService from '../logic/TextNodes/textNodes';
@@ -29,8 +29,8 @@ const textNodeMutationFields = {
 				type: new GraphQLNonNull(TextNodeInputType),
 			},
 		},
-		resolve: (parent, { textNode }, { token }) => {
-			const textNodeService = new TextNodeService({token});
+		async resolve (parent, { textNode }, { token }) {
+			const textNodeService = new TextNodeService({ token });
 			return textNodeService.textNodeCreate(textNode);
 		}
 	},
@@ -52,8 +52,8 @@ const textNodeMutationFields = {
 				type: new GraphQLNonNull(GraphQLInt)
 			}
 		},
-		resolve: (parent, { id, editionId, updatedText, updatedTextN }, { token }) => {
-			const textNodeService = new TextNodeService({token});
+		async resolve (parent, { id, editionId, updatedText, updatedTextN }, { token }) {
+			const textNodeService = new TextNodeService({ token });
 			return textNodeService.textNodeUpdate(id, editionId, updatedText, updatedTextN);
 		}
 	},
@@ -65,8 +65,8 @@ const textNodeMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {textNodeId}, {token}) => {
-			const textNodeService = new TextNodeService({token});
+		async resolve (parent, {textNodeId}, { token }) {
+			const textNodeService = new TextNodeService({ token });
 			return textNodeService.textNodeRemove(textNodeId);
 		}
 	},
@@ -81,7 +81,7 @@ const textNodeMutationFields = {
 				type: new GraphQLNonNull(GraphQLInt)
 			}
 		},
-		resolve(parent, {workSlug, subworkN}, {token}) {
+		async resolve (parent, {workSlug, subworkN}, { token }) {
 			// TextNodeService.getMaxLine(workSlug, subworkN).then(function(maxLine) {
 			// 	return maxLine;
 			// })

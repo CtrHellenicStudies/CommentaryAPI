@@ -3,7 +3,6 @@ import { GraphQLObjectType } from 'graphql';
 import projectMutationFields from './projects';
 import collectionMutationFields from './collections';
 import itemMutationFields from './items';
-import miradorMutationFields from './miradorManifests';
 import annotationMutationFields from './annotations';
 import bookMutationFields from './books';
 import commenterMutationFields from './commenters';
@@ -30,7 +29,6 @@ const RootMutations = new GraphQLObjectType({
 		...projectMutationFields,
 		...collectionMutationFields,
 		...itemMutationFields,
-		...miradorMutationFields,
 		...annotationMutationFields,
 		...bookMutationFields,
 		...commenterMutationFields,

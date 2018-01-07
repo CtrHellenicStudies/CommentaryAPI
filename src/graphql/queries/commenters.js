@@ -5,7 +5,7 @@
 import { GraphQLString, GraphQLID, GraphQLList } from 'graphql';
 
 // types
-import { CommenterType } from '../types/models/commenter';
+import { CommenterType } from '../types/commenter';
 
 // logic
 import CommentersService from '../logic/Commenters/commenters';
@@ -19,10 +19,10 @@ const commenterQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve: (parent, { tenantId }, {token}) =>
-			CommentersService.commentersQuery(tenantId).then(function(commenters) {
-				return commenters;
-			})
+		async resolve (parent, { tenantId }, { token }) {
+			const commentersService = new CommentersService(token);
+			const commenters = commentersService.commentersQuery(tenantId);
+		}
 	},
 };
 

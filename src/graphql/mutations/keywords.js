@@ -1,11 +1,11 @@
 /**
- * Mutations for keywords 
+ * Mutations for keywords
  */
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import { KeywordType, KeywordInputType} from '../types/models/keyword';
-import { RemoveType } from '../types/index';
+import { KeywordType, KeywordInputType} from '../types/keyword';
+import RemoveType from '../types/remove';
 
 // logic
 import KeywordService from '../logic/Keywords/keywords';
@@ -19,8 +19,8 @@ const keywordsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {keywordId}, {token}) => {
-			const keywordService = new KeywordService({token});
+		async resolve (parent, {keywordId}, { token }) {
+			const keywordService = new KeywordService({ token });
 			return keywordService.keywordRemove(keywordId);
 		}
 	},
@@ -35,8 +35,8 @@ const keywordsMutationFields = {
 				type: new GraphQLNonNull(KeywordInputType)
 			}
 		},
-		resolve: (parent, {keywordId, keyword}, {token}) => {
-			const keywordService = new KeywordService({token});
+		async resolve (parent, {keywordId, keyword}, { token }) {
+			const keywordService = new KeywordService({ token });
 			return keywordService.keywordUpdate(keywordId, keyword);
 		}
 	},
@@ -48,8 +48,8 @@ const keywordsMutationFields = {
 				type: new GraphQLNonNull(KeywordInputType)
 			}
 		},
-		async resolve(parent, {keyword}, {token}) {
-			const keywordService = new KeywordService({token});
+		async resolve (parent, {keyword}, { token }) {
+			const keywordService = new KeywordService({ token });
 			return keywordService.keywordInsert(keyword).then(function(insertedKeyword) {
 				return insertedKeyword;
 			});

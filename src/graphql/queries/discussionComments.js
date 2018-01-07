@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLList } from 'graphql';
 
 // types
-import {DiscussionCommentType} from '../types/models/discussionComment';
+import {DiscussionCommentType} from '../types/discussionComment';
 
 // logic
 import DiscussionCommentService from '../logic/DiscussionComments/discussionComments';
@@ -19,10 +19,11 @@ const discussionCommentQueryFields = {
 				type: GraphQLID,
 			},
 		},
-		resolve: (parent, { tenantId }, {token}) =>
-			DiscussionCommentService.discussionCommentsGet(tenantId).then(function(discussionComments) {
-				return discussionComments;
-			})
+		async resolve (parent, { tenantId }, { token }) {
+			const dicussionCommentService = new DiscussionCommentService(token);
+			const discussionComments = await discussionCommentService.discussionCommentsGet(tenantId);
+			return discussionComments;
+		},
 	},
 };
 

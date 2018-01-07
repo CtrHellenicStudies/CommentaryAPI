@@ -14,9 +14,9 @@ import GraphQLJSON from 'graphql-type-json';
 
 
 // types
-import { TranslationType, TranslationInputType } from '../types/models/translation';
-import { WorkInputType } from '../types/models/work';
-import { RemoveType } from '../types/index';
+import { TranslationType, TranslationInputType } from '../types/translation';
+import { WorkInputType } from '../types/work';
+import RemoveType from '../types/remove';
 
 // logic
 import TranslationService from '../logic/Translations/translations';
@@ -30,8 +30,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { translationId }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { translationId }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationRemove(id);
 		}
 	},
@@ -43,8 +43,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(TranslationInputType)
 			}
 		},
-		resolve: (parent, { translation }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { translation }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationUpdate(translation);
 		}
 	},
@@ -56,8 +56,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(TranslationInputType)
 			}
 		},
-		resolve: (parent, { translation }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { translation }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationInsert(translation);
 		}
 	},
@@ -72,8 +72,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { workSlug, name }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { workSlug, name }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationUpdateAuthor(workSlug, name);
 		}
 	},
@@ -91,8 +91,8 @@ const translationsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { workSlug, translation, name }, {token}) => {
-			const translationService = new TranslationService({token});
+		async resolve (parent, { workSlug, translation, name }, { token }) {
+			const translationService = new TranslationService({ token });
 			return translationService.translationAddAuthor(workSlug, translation, name);
 		}
 	},

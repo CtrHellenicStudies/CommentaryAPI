@@ -5,7 +5,7 @@
 import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList, GraphQLBoolean } from 'graphql';
 
 // types
-import CommentType from '../types/models/comment';
+import CommentType from '../types/comment';
 
 // logic
 import AnnotationService from '../logic/annotations';
@@ -19,10 +19,10 @@ const annotationQueryFields = {
 				type: GraphQLString,
 			}
 		},
-		resolve: (parent, { bookChapterUrl }, {token}) => {
-			AnnotationService.annotationsGet(bookChapterUrl).then(function(annotations) {
-				return annotations;
-			});
+		async resolve (parent, { bookChapterUrl }, { token }) {
+			const annotationService = new AnnotationService(token);
+			const annotations = await annotationService.annotationsGet(bookChapterUrl);
+			return annotations;
 		}
 	},
 };

@@ -4,7 +4,7 @@
 import { GraphQLID, GraphQLList, GraphQLInt, GraphQLString, } from 'graphql';
 
 // types
-import { TextNodeType } from '../types/models/textNode';
+import { TextNodeType } from '../types/textNode';
 
 // logic
 import TextNodesService from '../logic/TextNodes/textNodes';
@@ -43,10 +43,12 @@ const textNodeQueryFields = {
 				type: GraphQLString,
 			},
 		},
-		resolve: (parent, { _id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo }, {token}) =>
-			TextNodesService.textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo).then(function(textnodes) {
-				return textnodes;
-			})
+		async resolve (parent, { _id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo }, { token }) {
+			const textNodesService = new TextNodesService(token);
+			const textNodes = await TextNodesService.textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo);
+
+			return textNodes;
+		},
 	},
 };
 

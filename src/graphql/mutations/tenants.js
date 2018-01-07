@@ -5,8 +5,8 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import { TenantType, TenantInputType } from '../types/models/tenants';
-import { RemoveType } from '../types/index';
+import { TenantType, TenantInputType } from '../types/tenants';
+import RemoveType from '../types/remove';
 
 // logic
 import TenantsService from '../logic/Tenants/tenants';
@@ -20,8 +20,8 @@ const tenantsMutationFields = {
 				type: TenantInputType
 			}
 		},
-		resolve: (parent, { tenant }, {token}) => {
-			const tenantsService = new TenantsService({token});
+		async resolve (parent, { tenant }, { token }) {
+			const tenantsService = new TenantsService({ token });
 			return tenantsService.tenantCreate(tenant);
 		}
 	},
@@ -36,8 +36,8 @@ const tenantsMutationFields = {
 				type: TenantInputType
 			}
 		},
-		resolve: (parent, { _id, tenant }, {token}) => {
-			const tenantsService = new TenantsService({token});
+		async resolve (parent, { _id, tenant }, { token }) {
+			const tenantsService = new TenantsService({ token });
 			return tenantsService.tenantUpdate(_id, tenant);
 		}
 	},
@@ -49,8 +49,8 @@ const tenantsMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, {tenantId}, {token}) => {
-			const tenantsService = new TenantsService({token});
+		async resolve (parent, {tenantId}, { token }) {
+			const tenantsService = new TenantsService({ token });
 			return tenantsService.tenantRemove(tenantId);
 		}
 	}

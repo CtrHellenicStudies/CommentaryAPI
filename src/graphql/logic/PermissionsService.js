@@ -1,14 +1,46 @@
+import jsonwebtoken from 'jsonwebtoken';
+
+import Project from '../../models/project';
 import User from '../../models/user';
 
 export default class PermissionsService {
-	constructor({ token }) {
-		this.token = token || '';
-		this.user = User.findOne({
-			'services.resume.loginTokens.hashedToken': '', // TODO: figure out how to hash login token with meteor? Accounts._hashLoginToken(this.token),
+
+	constructor(token) {
+		this.userId = null;
+		this.userName = null;
+		this.userAvatar = null;
+		this.project = null;
+
+		if (token !== 'null' && token) {
+			this.token = token;
+			const decoded = jsonwebtoken.decode(token);
+			if (decoded) {
+				this.userId = decoded.userId;
+				this.userName = decoded.userName;
+				this.userAvatar = decoded.userAvatar;
+			}
+		}
+	}
+
+
+	_getUserRoleForProject(project) {
+		let userRoleForProject;
+
+		// TODO add other roles
+		// Right now only one role
+		project.users.forEach((user) => {
+			if (
+				user.userId
+				&& user.userId.toString() === this.userId
+			) {
+				userRoleForProject = user.role;
+			}
 		});
-		this.userIsAdmin = true; // this.user && this.user.roles ? this.user.roles.indexOf('admin') !== -1 : false;
-		this.userIsEditor = true; // this.user && this.user.roles ? this.user.roles.indexOf('editor') !== -1 : false;
-		this.userIsCommenter = true; // this.user && this.user.roles ? this.user.roles.indexOf('commenter') !== -1 : false;
-		this.userIsNobody = false; // !this.userIsAdmin && !this.userIsCommenter && !this.userIsEditor;
+
+		return userRoleForProject;
+	}
+
+	userIsProjectAdmin(project) {
+		return (this._getUserRoleForProject(project) === 'admin');
 	}
 }

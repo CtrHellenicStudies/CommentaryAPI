@@ -5,9 +5,9 @@
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 // types
-import CommentType, { CommentInputType } from '../types/models/comment';
-import { RemoveType } from '../types/index';
-import { RevisionInputType } from '../types/models/revision';
+import CommentType, { CommentInputType } from '../types/comment';
+import RemoveType from '../types/remove';
+import { RevisionInputType } from '../types/revision';
 
 // models
 import Comments from '../../models/comments';
@@ -25,9 +25,10 @@ const annotationMutationFields = {
 				type: CommentInputType
 			}
 		},
-		resolve: (parent, { annotation }, {token}) => {
-			const annotationService = new AnnotationService({token});
-			return annotationService.createAnnotation(annotation);
+		async resolve (parent, { annotation }, { token }) {
+			const annotationService = new AnnotationService({ token });
+			const annotationCreated = await annotationService.createAnnotation(annotation);
+			return annotationCreated;
 		}
 	},
 	annotationRemove: {
@@ -38,10 +39,10 @@ const annotationMutationFields = {
 				type: new GraphQLNonNull(GraphQLString)
 			}
 		},
-		resolve: (parent, { id }, {token}) => {
-
-			const annotationService = new AnnotationService({token});
-			return annotationService.deleteAnnotation(id);
+		async resolve (parent, { id }, { token }) {
+			const annotationService = new AnnotationService({ token });
+			const remove = await annotationService.deleteAnnotation(id);
+			return remove;
 		}
 	},
 	annotationAddRevision: {
@@ -55,9 +56,10 @@ const annotationMutationFields = {
 				type: new GraphQLNonNull(RevisionInputType)
 			}
 		},
-		resolve: (parent, {id, revision}, {token}) => {
-			const annotationService = new AnnotationService({token});
-			return annotationService.addRevision(id, revision);
+		async resolve (parent, {id, revision}, { token }) {
+			const annotationService = new AnnotationService({ token });
+			const annotationUpdated = awaitannotationService.addRevision(id, revision);
+			return annotationUpdated;
 		}
 	}
 };
