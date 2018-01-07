@@ -48,7 +48,7 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve: (parent, { queryParam, limit, skip}, {token}) => 
+		resolve: (parent, { queryParam, limit, skip}, {token}) =>
 			CommentService.commentsGetMore(queryParam, limit, skip).then(function(comments) {
 				const tempLimit = limit !== undefined && limit !== null ? limit : 30;
 				return comments.length > tempLimit;
@@ -56,14 +56,11 @@ const commentQueryFields = {
 	},
 	commentsOn: {
 		type: new GraphQLList(CommentType),
-		description: 'Get list of comments provided at least a startURN and paginated via skip/limit. Relates a scholion to the passage of text it comments on.',
+		description: 'Get list of comments via urn and paginated via skip/limit. Relates a scholion to the passage of text it comments on.',
 		args: {
-			urnStart: {
+			urn: {
 				type: GraphQLString,
 				required: true,
-			},
-			urnEnd: {
-				type: GraphQLString,
 			},
 			limit: {
 				type: GraphQLInt,
@@ -72,8 +69,8 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve: (parent, { urnStart, urnEnd, limit, skip }, { token }) =>
-			CommentService.commentsGetURN(urnStart, urnEnd, limit, skip).then(function(comments) {
+		resolve: (parent, { urn, limit, skip }, { token }) =>
+			CommentService.commentsGetURN(urn, limit, skip).then(function(comments) {
 				comments.map((comment) => {
 					try {
 						comment.urn = JSON.parse(comment.urn);
@@ -87,14 +84,15 @@ const commentQueryFields = {
 	},
 	commentedOnBy: {
 		type: new GraphQLList(CommentType),
-		description: 'Get list of comments provided at least a startURN and paginated via skip/limit. Relates a passage of text to a scholion commenting on it.',
+		description: 'Get list of comments provided at a and paginated via skip/limit. Relates a passage of text to a scholion commenting on it.',
 		args: {
-			urnStart: {
+			urn: {
 				type: GraphQLString,
 				required: true,
 			},
-			urnEnd: {
+			commenterId: {
 				type: GraphQLString,
+				required: true,
 			},
 			limit: {
 				type: GraphQLInt,
@@ -103,8 +101,8 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		resolve: (parent, { urnStart, urnEnd, limit, skip }, { token }) =>
-			CommentService.commentsGetURN(urnStart, urnEnd, limit, skip).then(function(comment) {
+		resolve: (parent, { urn, commenterId, limit, skip }, { token }) =>
+			CommentService.commentsGetCommentedOnBy(urn, commenterId, limit, skip).then(function(comment) {
 				return comment;
 			})
 	},
