@@ -34,7 +34,7 @@ const tenantsQueryFields = {
 			},
 		},
 		async resolve (parent, { subdomain }, { token }) {
-			const tenantService = new TenantService(token);
+			const tenantService = new TenantsService(token);
 			const tenant = await tenantsService.tenantBySubdomainGet(subdomain);
 			return tenant;
 		},

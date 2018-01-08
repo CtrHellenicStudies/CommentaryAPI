@@ -12,9 +12,9 @@ export default class WorksService extends PermissionsService {
 	 * @param {(Object|Array)} subworks
 	 * @returns {object} promise
 	 */
-	static rewriteSubworks(subworks) {
+	rewriteSubworks(subworks) {
 		const newSubworks = [];
-		subworks.map(singleSubwork => 
+		subworks.map(singleSubwork =>
 			newSubworks.push({
 				title: singleSubwork.title,
 				slug: singleSubwork.slug,
@@ -72,7 +72,7 @@ export default class WorksService extends PermissionsService {
 	 * @param {string} tenantId - id of current tenant
 	 * @returns {Object[]} array of works
 	 */
-	static worksGet(_id, tenantId) {
+	worksGet(_id, tenantId) {
 		const args = {};
 
 		if (tenantId) {

@@ -18,7 +18,7 @@ export default class DiscussionCommentService extends PermissionsService {
 	 * @param {string} tenantId - the id of the current tenant
 	 * @returns {Object[]} array of discussion comments
 	 */
-	static discussionCommentsGet(tenantId) {
+	discussionCommentsGet(tenantId) {
 
 		const args = {};
 		if (tenantId) {
@@ -38,7 +38,7 @@ export default class DiscussionCommentService extends PermissionsService {
 		if (!this.userIsAdmin) {
 			throw AuthenticationError();
 		}
-		
+
 		DiscussionComments.update({
 			_id: discussionCommentId
 		}, {
@@ -80,11 +80,11 @@ export default class DiscussionCommentService extends PermissionsService {
 				});
 		}		catch (e) {
 			throw e;
-		}	
+		}
 	}
 	/**
 	 * Report selected discussionComment
-	 * @param {string} discussionCommentId - id of the comment to report 
+	 * @param {string} discussionCommentId - id of the comment to report
 	 */
 	discussionCommentReport(discussionCommentId) {
 
@@ -94,13 +94,13 @@ export default class DiscussionCommentService extends PermissionsService {
 
 		const discussionComment = DiscussionComments.findOne(discussionCommentId);
 		const comment = Comments.findOne(discussionComment.commentId);
-	
+
 		// Make sure the user has not already reported this comment
 		if ('usersReported' in discussionComment
 			&& discussionComment.usersReported.indexOf(this.user._id >= 0)) {
 			throw new Error('Already reported by this user.');
 		}
-	
+
 		try {
 			if ('usersReported' in discussionComment) {
 				DiscussionComments.update({
@@ -122,7 +122,7 @@ export default class DiscussionCommentService extends PermissionsService {
 		} catch (err) {
 			throw err;
 		}
-		
+
 		// TODO notifications
 		// sendReportMessage(comment, discussionComment);
 	}
@@ -137,7 +137,7 @@ export default class DiscussionCommentService extends PermissionsService {
 		}
 
 		const discussionComment = DiscussionComments.findOne(discussionCommentId);
-		
+
 		try {
 			if ('usersReported' in discussionComment) {
 				DiscussionComments.update({
@@ -157,8 +157,8 @@ export default class DiscussionCommentService extends PermissionsService {
 	 */
 	discussionCommentUpvote(discussionCommentId) {
 		const discussionComment = DiscussionComments.findOne(discussionCommentId);
-		
-		if (this.userIsNobody || 
+
+		if (this.userIsNobody ||
 			discussionComment.voters.indexOf(this.user._id) >= 0) {
 			throw AuthenticationError();
 		}
@@ -194,11 +194,11 @@ export default class DiscussionCommentService extends PermissionsService {
 			voters: [this.user._id],
 			status: 'pending'
 		};
-	
+
 		// check if discussion comments for this comment have not been disabled:
 		const comment = Comments.findOne({_id: commentId});
 		if (comment.discussionCommentsDisabled) throw new Error('insert denied - discussionCommentsDisabled');
-	
+
 		try {
 			DiscussionComments.insert(discussionComment);
 		} catch (err) {

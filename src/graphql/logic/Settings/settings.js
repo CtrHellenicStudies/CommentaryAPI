@@ -13,7 +13,7 @@ export default class SettingsService extends PermissionsService {
 	 * @param {string} tenantId - id of current tenant
 	 * @returns {Object[]} array of settings
 	 */
-	static settingsGet(_id, tenantId) {
+	settingsGet(_id, tenantId) {
 
 		const args = {};
 

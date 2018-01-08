@@ -14,7 +14,7 @@ export default class UserService extends PermissionsService {
 	 * @param {string} _id - id of user
 	 * @returns {Object[]} array of users
 	 */
-	static usersGet(_id) {
+	usersGet(_id) {
 		const args = {};
 
 		if (_id) {
@@ -83,7 +83,7 @@ export default class UserService extends PermissionsService {
 	 * @param {string} _id - id of user
 	 * @returns {Object} the user data
 	 */
-	static userGetPublicById(_id) {
+	userGetPublicById(_id) {
 		return User.findOne(
 			{
 				_id,
@@ -106,7 +106,7 @@ export default class UserService extends PermissionsService {
 	 * @param {string[]} userIds - an array of user ids
 	 * @returns {Object[]} array of user data
 	 */
-	static usersGetPublicById(userIds) {
+	usersGetPublicById(userIds) {
 		return User.find(
 			{
 				_id: {

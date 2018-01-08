@@ -13,7 +13,7 @@ export default class ReferenceWorksService extends PermissionsService {
 	 * @param {string} tenantId - id of current tenant
 	 * @returns {Object} promise
 	 */
-	static referenceWorksGet(id, tenantId) {
+	referenceWorksGet(id, tenantId) {
 
 		const args = {};
 

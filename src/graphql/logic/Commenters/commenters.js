@@ -13,7 +13,7 @@ export default class CommentService extends PermissionsService {
 	 * @param {string} tenantId - id for current tenant
 	 * @returns {Object[]} array of commenters
 	 */
-	static commentersQuery(tenantId, callback) {
+	commentersQuery(tenantId, callback) {
 		const args = {};
 		if (tenantId) {
 			args.tenantId = tenantId;
@@ -62,7 +62,7 @@ export default class CommentService extends PermissionsService {
 	}
 	/**
 	 * Create a new commenter
-	 * @param {Object} commenter - the new commenter candidate 
+	 * @param {Object} commenter - the new commenter candidate
 	 * @returns {Object} the newly created commenter record
 	 */
 	commenterInsert(commenter) {

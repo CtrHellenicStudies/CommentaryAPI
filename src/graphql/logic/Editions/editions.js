@@ -12,7 +12,7 @@ export default class EditionsService extends PermissionsService {
 	 * @param {string} editionId - id of edition
 	 * @returns {Object[]} array of editions
 	 */
-	static editionsGet(editionId) {
+	editionsGet(editionId) {
 		const args = {};
 
 		if (editionId) {
@@ -33,7 +33,7 @@ export default class EditionsService extends PermissionsService {
 		return new Promise(function(resolve, rejected) {
 			Editions.findOne({_id: edition._id}).exec().then(function(currentEdition) {
 				const currentMultiline = currentEdition.multiLine && currentEdition.multiLine.length ? currentEdition.multiLine : [];
-				
+
 				if (currentMultiline.indexOf(multiline) === -1) {
 					currentMultiline.push(multiline);
 					currentEdition.multiLine = currentMultiline;

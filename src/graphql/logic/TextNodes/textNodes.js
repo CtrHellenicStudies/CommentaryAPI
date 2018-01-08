@@ -31,10 +31,10 @@ export default class TextNodesService extends PermissionsService {
 	}
 	/**
 	 * Update textNode
-	 * @param {String} id 
-	 * @param {String} editionId 
-	 * @param {String} updatedText 
-	 * @param {Int} updatedTextN 
+	 * @param {String} id
+	 * @param {String} editionId
+	 * @param {String} updatedText
+	 * @param {Int} updatedTextN
 	 */
 	textNodeUpdate(id, editionId, updatedText, updatedTextN) {
 		if (this.userIsNobody) {
@@ -68,8 +68,8 @@ export default class TextNodesService extends PermissionsService {
 	 * Get text nodes
 	 * @param {string} _id - id of text node
 	 * @param {string} tenantId - id of current tenant
-	 * @param {number} limit - limit 
-	 * @param {number} skip - skip 
+	 * @param {number} limit - limit
+	 * @param {number} skip - skip
 	 * @param {string} workSlug - slug of work
 	 * @param {number} subworkN - number of subwork
 	 * @param {string} editionId - id of edition
@@ -79,7 +79,7 @@ export default class TextNodesService extends PermissionsService {
 	 *   or equal to
 	 * @returns {Object[]} array of text nodes
 	 */
-	static textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo) {
+	textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo) {
 		const args = {};
 		const options = {};
 
@@ -140,17 +140,17 @@ export default class TextNodesService extends PermissionsService {
 	}
 	/**
 	 * Get max line
-	 * @param {String} workSlug 
-	 * @param {Number} subworkN 
+	 * @param {String} workSlug
+	 * @param {Number} subworkN
 	 */
-	static getMaxLine(workSlug, subworkN) {
+	getMaxLine(workSlug, subworkN) {
 
 		let maxLine = 0;
-		
+
 		if (workSlug === 'homeric-hymns') {
 			workSlug = 'hymns';
 		}
-	
+
 		return new Promise(function(resolve, rejected) {
 			TextNodes.aggregate([{
 				$match: {
@@ -168,10 +168,10 @@ export default class TextNodesService extends PermissionsService {
 				if (_maxLine && _maxLine.length) {
 					maxLine = _maxLine[0].maxLine[0]; // granted that all text.editions have the same max line number
 				}
-			
+
 				resolbe(maxLine);
 			});
 		});
-	
+
 	}
 }

@@ -13,7 +13,7 @@ export default class PageService extends PermissionsService {
 	 * @param {string} tenantId - id of current tenant
 	 * @returns {object} promise
 	 */
-	static pagesGet(_id, tenantId) {
+	pagesGet(_id, tenantId) {
 		const args = {};
 		if (tenantId) {
 			args.tenantId = tenantId;

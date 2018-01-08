@@ -12,9 +12,9 @@ export default class TranslationsService extends PermissionsService {
 	 * DEPRECATED
 	 * Get translations
 	 * @param {string} tenantId - id of current tenant
-	 * @returns {Object[]} array of translations 
+	 * @returns {Object[]} array of translations
 	 */
-	static translationGet(tenantId) {
+	translationGet(tenantId) {
 		const args = {};
 
 		if (tenantId) {
@@ -27,9 +27,9 @@ export default class TranslationsService extends PermissionsService {
 	 * Get Authors of work
 	 * @param {String} workId - id of work which authors
 	 * @param {Number} subwork - subwork number
-	 * @returns {object} promise 
+	 * @returns {object} promise
 	 */
-	static getAuthors(workId, subwork) {
+	getAuthors(workId, subwork) {
 
 		return new Promise(function(resolve, rejected) {
 			if (!workId || !subwork) {
@@ -53,7 +53,7 @@ export default class TranslationsService extends PermissionsService {
 	}
 	/**
 	 * Update translation node
-	 * @param {object} translationNode 
+	 * @param {object} translationNode
 	 * @returns {object} promise
 	 */
 	translationUpdate(translationNode) {
@@ -62,8 +62,8 @@ export default class TranslationsService extends PermissionsService {
 			throw new AuthenticationError();
 		}
 		return new Promise(function(resolve, rejected) {
-			if (!translationNode.n)	{ 
-				rejected(); 
+			if (!translationNode.n)	{
+				rejected();
 			}
 			const query = {
 				author: translationNode.author,
@@ -92,8 +92,8 @@ export default class TranslationsService extends PermissionsService {
 	}
 	/**
 	 * add new translation author
-	 * @param {object} workDetails 
-	 * @param {string} authorName 
+	 * @param {object} workDetails
+	 * @param {string} authorName
 	 * @returns {object} promise
 	 */
 	translationAddAuthor(workDetails, authorName) {
@@ -115,7 +115,7 @@ export default class TranslationsService extends PermissionsService {
 	}
 	/**
 	 * Remove selected translation node
-	 * @param {String} id - translationNode id 
+	 * @param {String} id - translationNode id
 	 * @returns {object} promise
 
 	 */

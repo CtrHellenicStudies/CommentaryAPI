@@ -14,7 +14,7 @@ export default class AnnotationService extends PermissionsService {
 	 * @param {string} bookChapterUrl - the URL of the book chapter to be annotated
 	 * @returns {Object[]} cursor of comments
 	 */
-	static annotationsGet(bookChapterUrl) {
+	annotationsGet(bookChapterUrl) {
 		const args = {
 			bookChapterUrl,
 			isAnnotation: true,
@@ -82,7 +82,7 @@ export default class AnnotationService extends PermissionsService {
 
 	/**
 	 * Add a revision to the annotation for the supplied annotation id
-	 * @param {Object} _id - the id of the annotation to update 
+	 * @param {Object} _id - the id of the annotation to update
 	 * @returns {boolean} result of the mongo orm update
 	 */
 	addRevision(_id, revision) {

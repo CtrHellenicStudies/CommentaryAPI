@@ -12,8 +12,8 @@ export default class TenantsService extends PermissionsService {
 	 * @param {string} _id - id of tenant
 	 * @returns {Object[]} array of tenants
 	 */
-	static tenantsGet(_id) {
-		
+	tenantsGet(_id) {
+
 		const args = {};
 
 		if (_id) {
@@ -27,7 +27,7 @@ export default class TenantsService extends PermissionsService {
 	 * @param {string} subdomain - id of tenant
 	 * @returns {Object} found tenant record
 	 */
-	static tenantBySubdomainGet(subdomain) {
+	tenantBySubdomainGet(subdomain) {
 		return Tenants.findOne({
 			subdomain: subdomain,
 		}).exec();

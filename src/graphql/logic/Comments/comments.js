@@ -22,7 +22,7 @@ export default class CommentService extends PermissionsService {
 	 * @param {boolean} sortRecent - if should sort in the recent sequence
 	 * @returns {Object[]} array of comments
 	 */
-	static commentsGet(queryParam, limit, skip, sortRecent) {
+	commentsGet(queryParam, limit, skip, sortRecent) {
 
 		const options = prepareGetCommentsOptions(limit, skip);
 		let query;
@@ -76,12 +76,12 @@ export default class CommentService extends PermissionsService {
 		});
 	}
 	/**
-	 * 
-	 * @param {array} urns - array of urns 
-	 * @param {number} limit - limit of records 
+	 *
+	 * @param {array} urns - array of urns
+	 * @param {number} limit - limit of records
 	 * @param {number} skip - skip records
 	 */
-	static commentsGetByUrnsList(urns, limit, skip) {
+	commentsGetByUrnsList(urns, limit, skip) {
 		const args = {};
 		args.$or = [];
 		for (let i = 0; i < urns.length; i += 1) {
@@ -98,7 +98,7 @@ export default class CommentService extends PermissionsService {
 	 * @param {number} skip - mongo orm skip
 	 * @returns {boolean} is there any other comments which are possible to get
 	 */
-	static commentsGetMore(queryParam, limit, skip) {
+	commentsGetMore(queryParam, limit, skip) {
 		if (!queryParam && !limit && !skip) {
 			return Comments.find().limit(1).exec();
 		}
@@ -126,7 +126,7 @@ export default class CommentService extends PermissionsService {
 	 * @param {number} skip - mongo orm skip
 	 * @returns {Object[]} array of comments
 	 */
-	static commentsGetURN(urnStart, urnEnd, limit = 20, skip = 0) {
+	commentsGetURN(urnStart, urnEnd, limit = 20, skip = 0) {
 		const args = {};
 		const options = prepareGetCommentsOptions(skip, limit);
 

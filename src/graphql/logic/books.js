@@ -12,7 +12,7 @@ export default class BookService extends PermissionsService {
 	 * @param {(Object|Array)} chapter
 	 * @returns {(Object|Array)} the new chapter
 	 */
-	static rewriteChapter(chapter) {
+	rewriteChapter(chapter) {
 		if (chapter instanceof Array) {
 			const newChapter = [];
 			chapter.map((singleChapter) => {
@@ -93,7 +93,7 @@ export default class BookService extends PermissionsService {
 	 * @param {string} chapterUrl - the URL of a chapter of the book
 	 * @returns {Object} promise
 	 */
-	static bookByChapter(chapterUrl) {
+	bookByChapter(chapterUrl) {
 		const args = {
 			'chapters.url': chapterUrl,
 		};
@@ -106,7 +106,7 @@ export default class BookService extends PermissionsService {
 	 * @param {string} chapterUrl - the URL of a chapter of the book
 	 * @returns {Object} promise
 	 */
-	static booksGet(_id, chapterUrl) {
+	booksGet(_id, chapterUrl) {
 		const args = {};
 
 		if (_id) {
