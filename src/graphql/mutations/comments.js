@@ -23,8 +23,8 @@ const commentMutationFields = {
 			}
 		},
 		async resolve (parent, {comment}, { token }) {
-			const commentsService = new CommentService({ token });
-			return commentsService.commentInsert(comment).then(function(_comment) {
+			const commentService = new CommentService({ token });
+			return commentService.commentInsert(comment).then(function(_comment) {
 				return _comment;
 			});
 		}
@@ -41,8 +41,8 @@ const commentMutationFields = {
 			}
 		},
 		async resolve (parent, {id, comment}, { token }) {
-			const commentsService = new CommentService({ token });
-			return commentsService.commentUpdate(id, comment).then(function(_comment) {
+			const commentService = new CommentService({ token });
+			return commentService.commentUpdate(id, comment).then(function(_comment) {
 				return _comment._id;
 			});
 		}
@@ -56,8 +56,8 @@ const commentMutationFields = {
 			}
 		},
 		async resolve (parent, {commentId}, { token }) {
-			const commentsService = new CommentService({ token });
-			return commentsService.commentRemove(commentId).then(function(_comment) {
+			const commentService = new CommentService({ token });
+			return commentService.commentRemove(commentId).then(function(_comment) {
 				return _comment._id;
 			});
 		}
@@ -74,8 +74,8 @@ const commentMutationFields = {
 			}
 		},
 		async resolve (parent, {id, revision}, { token }) {
-			const commentsService = new CommentService({ token });
-			return commentsService.addRevision(id, revision).then(function(_comment) {
+			const commentService = new CommentService({ token });
+			return commentService.addRevision(id, revision).then(function(_comment) {
 				return _comment._id;
 			});
 		}
@@ -89,8 +89,8 @@ const commentMutationFields = {
 			}
 		},
 		async resolve (parent, {id}, { token }) {
-			const commentsService = new CommentService({ token });
-			return commentsService.removeRevision(id).then(function(_comment) {
+			const commentService = new CommentService({ token });
+			return commentService.removeRevision(id).then(function(_comment) {
 				return _comment._id;
 			});
 		}

@@ -9,7 +9,7 @@ import { CommenterType, CommenterInputType } from '../types/commenter';
 import RemoveType from '../types/remove';
 
 // logic
-import CommentersService from '../logic/Commenters/commenters';
+import CommenterService from '../logic/Commenters/commenters';
 
 const commenterMutationFields = {
 
@@ -22,8 +22,8 @@ const commenterMutationFields = {
 			}
 		},
 		async resolve (parent, {commenterId}, { token }) {
-			const commentersService = new CommentersService({ token });
-			return commentersService.commenterRemove(commenterId);
+			const commenterService = new CommenterService({ token });
+			return commenterService.commenterRemove(commenterId);
 		}
 	},
 	commenterUpdate: {
@@ -38,8 +38,8 @@ const commenterMutationFields = {
 			}
 		},
 		async resolve (parent, {commenterId, commenter}, { token }) {
-			const commentersService = new CommentersService({ token });
-			return commentersService.commenterUpdate(commenterId, commenter);
+			const commenterService = new CommenterService({ token });
+			return commenterService.commenterUpdate(commenterId, commenter);
 		}
 	},
 	commenterCreate: {
@@ -51,8 +51,8 @@ const commenterMutationFields = {
 			}
 		},
 		async resolve (parent, {commenter}, { token }) {
-			const commentersService = new CommentersService({ token });
-			return commentersService.commenterCreate(commenter);
+			const commenterService = new CommenterService({ token });
+			return commenterService.commenterCreate(commenter);
 		}
 	}
 };

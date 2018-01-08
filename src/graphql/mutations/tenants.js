@@ -9,7 +9,7 @@ import { TenantType, TenantInputType } from '../types/tenants';
 import RemoveType from '../types/remove';
 
 // logic
-import TenantsService from '../logic/Tenants/tenants';
+import TenantService from '../logic/Tenants/tenants';
 
 const tenantsMutationFields = {
 	tenantCreate: {
@@ -21,8 +21,8 @@ const tenantsMutationFields = {
 			}
 		},
 		async resolve (parent, { tenant }, { token }) {
-			const tenantsService = new TenantsService({ token });
-			return tenantsService.tenantCreate(tenant);
+			const tenantService = new TenantService({ token });
+			return tenantService.tenantCreate(tenant);
 		}
 	},
 	tenantUpdate: {
@@ -37,8 +37,8 @@ const tenantsMutationFields = {
 			}
 		},
 		async resolve (parent, { _id, tenant }, { token }) {
-			const tenantsService = new TenantsService({ token });
-			return tenantsService.tenantUpdate(_id, tenant);
+			const tenantService = new TenantService({ token });
+			return tenantService.tenantUpdate(_id, tenant);
 		}
 	},
 	tenantRemove: {
@@ -50,8 +50,8 @@ const tenantsMutationFields = {
 			}
 		},
 		async resolve (parent, {tenantId}, { token }) {
-			const tenantsService = new TenantsService({ token });
-			return tenantsService.tenantRemove(tenantId);
+			const tenantService = new TenantService({ token });
+			return tenantService.tenantRemove(tenantId);
 		}
 	}
 };

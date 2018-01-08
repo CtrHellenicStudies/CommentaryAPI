@@ -9,7 +9,7 @@ import { SettingsType, SettingsInputType } from '../types/settings';
 import RemoveType from '../types/remove';
 
 // logic
-import SettingsService from '../logic/Settings/settings';
+import SettingService from '../logic/Settings/settings';
 
 const settingsMutationFields = {
 
@@ -22,8 +22,8 @@ const settingsMutationFields = {
 			}
 		},
 		async resolve (parent, {settingsId}, { token }) {
-			const settingsService = new SettingsService({ token });
-			return settingsService.settingsRemove(settingsId);
+			const settingService = new SettingService({ token });
+			return settingService.settingsRemove(settingsId);
 		}
 	},
 	settingsUpdate: {
@@ -38,8 +38,8 @@ const settingsMutationFields = {
 			}
 		},
 		async resolve (parent, {settingsId, settings}, { token }) {
-			const settingsService = new SettingsService({ token });
-			return settingsService.settingsUpdate(settingsId, settings);
+			const settingService = new SettingService({ token });
+			return settingService.settingsUpdate(settingsId, settings);
 		}
 	},
 	settingsCreate: {
@@ -51,8 +51,8 @@ const settingsMutationFields = {
 			}
 		},
 		async resolve (parent, {settings}, { token }) {
-			const settingsService = new SettingsService({ token });
-			return settingsService.settingsCreate(settings);
+			const settingService = new SettingService({ token });
+			return settingService.settingsCreate(settings);
 		}
 	}
 };

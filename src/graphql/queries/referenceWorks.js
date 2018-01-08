@@ -8,7 +8,7 @@ import { GraphQLString, GraphQLList } from 'graphql';
 import { ReferenceWorkType } from '../types/referenceWork';
 
 // logic
-import ReferenceWorksService from '../logic/ReferenceWorks/referenceWorks';
+import ReferenceWorkService from '../logic/ReferenceWorks/referenceWorks';
 
 
 const referenceWorkQueryFields = {
@@ -24,8 +24,8 @@ const referenceWorkQueryFields = {
 			}
 		},
 		async resolve (parent, { tenantId, id }, { token }) {
-			const referenceWorksService = new ReferenceWorksService(token);
-			const referenceWorks = await referenceWorksService.referenceWorksGet(id, tenantId);
+			const referenceWorkService = new ReferenceWorkService(token);
+			const referenceWorks = await referenceWorkService.referenceWorksGet(id, tenantId);
 			return referenceWorks;
 		}
 	},

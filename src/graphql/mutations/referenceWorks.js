@@ -8,7 +8,7 @@ import { ReferenceWorkType, ReferenceWorkInputType} from '../types/referenceWork
 import RemoveType from '../types/remove';
 
 // logic
-import ReferenceWorksService from '../logic/ReferenceWorks/referenceWorks';
+import ReferenceWorkService from '../logic/ReferenceWorks/referenceWorks';
 
 const referenceWorksMutationFields = {
 	referenceWorkRemove: {
@@ -20,8 +20,8 @@ const referenceWorksMutationFields = {
 			}
 		},
 		async resolve (parent, {referenceWorkId}, { token }) {
-			const referenceWorksService = new ReferenceWorksService({ token });
-			return referenceWorksService.referenceWorkRemove(referenceWorkId);
+			const referenceWorkService = new ReferenceWorkService({ token });
+			return referenceWorkService.referenceWorkRemove(referenceWorkId);
 		}
 	},
 	referenceWorkUpdate: {
@@ -36,8 +36,8 @@ const referenceWorksMutationFields = {
 			}
 		},
 		async resolve (parent, {referenceWorkId, referenceWork}, { token }) {
-			const referenceWorksService = new ReferenceWorksService({ token });
-			return referenceWorksService.referenceWorkUpdate(referenceWorkId, referenceWork);
+			const referenceWorkService = new ReferenceWorkService({ token });
+			return referenceWorkService.referenceWorkUpdate(referenceWorkId, referenceWork);
 		}
 	},
 	referenceWorkCreate: {
@@ -49,8 +49,8 @@ const referenceWorksMutationFields = {
 			}
 		},
 		async resolve (parent, {referenceWork}, { token }) {
-			const referenceWorksService = new ReferenceWorksService({ token });
-			return referenceWorksService.referenceWorkCreate(referenceWork);
+			const referenceWorkService = new ReferenceWorkService({ token });
+			return referenceWorkService.referenceWorkCreate(referenceWork);
 		}
 	}
 };

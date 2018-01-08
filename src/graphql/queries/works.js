@@ -7,7 +7,7 @@ import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 import { WorkType } from '../types/work';
 
 // logic
-import WorksService from '../logic/Works/works';
+import WorkService from '../logic/Works/works';
 
 
 const workQueryFields = {
@@ -23,8 +23,8 @@ const workQueryFields = {
 			},
 		},
 		async resolve (parent, { _id, tenantId }, { token }) {
-			const worksService = new WorksService(token);
-			const works = worksService.worksGet(_id, tenantId);
+			const workService = new WorkService(token);
+			const works = workService.worksGet(_id, tenantId);
 			return works;
 		},
 	},

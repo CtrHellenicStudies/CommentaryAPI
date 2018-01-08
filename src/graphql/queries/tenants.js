@@ -7,7 +7,7 @@ import { GraphQLString, GraphQLList } from 'graphql';
 import { TenantType } from '../types/tenants';
 
 // logicd
-import TenantsService from '../logic/Tenants/tenants';
+import TenantService from '../logic/Tenants/tenants';
 
 
 const tenantsQueryFields = {
@@ -20,8 +20,8 @@ const tenantsQueryFields = {
 			},
 		},
 		async resolve (parent, { tenantId }, { token }) {
-			const tenantsService = new TenantsService(token);
-			const tenants = await tenantsService.tenantsGet(tenantId);
+			const tenantService = new TenantService(token);
+			const tenants = await tenantService.tenantsGet(tenantId);
 			return tenants;
 		},
 	},
@@ -34,8 +34,8 @@ const tenantsQueryFields = {
 			},
 		},
 		async resolve (parent, { subdomain }, { token }) {
-			const tenantsService = new TenantsService(token);
-			const tenant = await tenantsService.tenantBySubdomainGet(subdomain);
+			const tenantService = new TenantService(token);
+			const tenant = await tenantService.tenantBySubdomainGet(subdomain);
 			return tenant;
 		},
 	},

@@ -9,7 +9,7 @@ import { WorkType, WorkInputType } from '../types/work';
 import RemoveType from '../types/remove';
 
 // logic
-import WorksService from '../logic/Works/works';
+import WorkService from '../logic/Works/works';
 
 const worksMutationFields = {
 	workCreate: {
@@ -21,8 +21,8 @@ const worksMutationFields = {
 			}
 		},
 		async resolve (parent, { work }, { token }) {
-			const worksService = new WorksService({ token });
-			return worksService.workInsert(work);
+			const workService = new WorkService({ token });
+			return workService.workInsert(work);
 		}
 	},
 	workUpdate: {
@@ -37,8 +37,8 @@ const worksMutationFields = {
 			}
 		},
 		async resolve (parent, { _id, work }, { token }) {
-			const worksService = new WorksService({ token });
-			return worksService.workUpdate(_id, work);
+			const workService = new WorkService({ token });
+			return workService.workUpdate(_id, work);
 		}
 	},
 	workRemove: {
@@ -50,8 +50,8 @@ const worksMutationFields = {
 			}
 		},
 		async resolve (parent, {workId}, { token }) {
-			const worksService = new WorksService({ token });
-			return worksService.workRemove(workId);
+			const workService = new WorkService({ token });
+			return workService.workRemove(workId);
 		}
 	}
 };

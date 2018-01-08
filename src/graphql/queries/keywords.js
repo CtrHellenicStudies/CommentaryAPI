@@ -8,7 +8,7 @@ import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 import { KeywordType } from '../types/keyword';
 
 // logic
-import KeywordsService from '../logic/Keywords/keywords';
+import KeywordService from '../logic/Keywords/keywords';
 
 const keywordQueryFields = {
 	keywords: {
@@ -29,8 +29,8 @@ const keywordQueryFields = {
 			}
 		},
 		async resolve (parent, { tenantId, id, slug, queryParam}, { token }) {
-			const keywordsService = new KeywordsService(token);
-			const keywords = await keywordsService.keywordsGet(id, tenantId, slug, queryParam);
+			const keywordService = new KeywordService(token);
+			const keywords = await keywordService.keywordsGet(id, tenantId, slug, queryParam);
 			return keywords;
 		},
 	},

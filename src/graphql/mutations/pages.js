@@ -9,7 +9,7 @@ import { PageType, PageInputType} from '../types/page';
 import RemoveType from '../types/remove';
 
 // logic
-import PagesService from '../logic/pages';
+import PageService from '../logic/pages';
 
 const pagesMutationFields = {
 	pageRemove: {
@@ -21,8 +21,8 @@ const pagesMutationFields = {
 			}
 		},
 		async resolve (parent, {pageId}, { token }) {
-			const pagesService = new PagesService({ token });
-			return pagesService.pageRemove(pageId);
+			const pageService = new PageService({ token });
+			return pageService.pageRemove(pageId);
 		}
 	},
 	pageUpdate: {
@@ -37,8 +37,8 @@ const pagesMutationFields = {
 			}
 		},
 		async resolve (parent, {pageId, page}, { token }) {
-			const pagesService = new PagesService({ token });
-			return pagesService.pageUpdate(pageId, page);
+			const pageService = new PageService({ token });
+			return pageService.pageUpdate(pageId, page);
 		}
 	},
 	pageCreate: {
@@ -50,8 +50,8 @@ const pagesMutationFields = {
 			}
 		},
 		async resolve (parent, {page}, { token }) {
-			const pagesService = new PagesService({ token });
-			return pagesService.pageCreate(page);
+			const pageService = new PageService({ token });
+			return pageService.pageCreate(page);
 		}
 	}
 };

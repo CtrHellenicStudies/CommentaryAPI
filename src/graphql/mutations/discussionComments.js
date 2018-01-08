@@ -24,8 +24,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {discussionCommentId, discussionCommentStatus}, { token }) {
-			const discussionCommentsService = new DiscussionCommentService({ token });
-			return discussionCommentsService.discussionCommentUpdateStatus(discussionCommentId, discussionCommentStatus);
+			const discussionCommentService = new DiscussionCommentService({ token });
+			return discussionCommentService.discussionCommentUpdateStatus(discussionCommentId, discussionCommentStatus);
 		}
 	},
 	discussionCommentUpdate: {
@@ -40,8 +40,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {discussionCommentId, discussionContent}, { token }) {
-			const discussionCommentsService = new DiscussionCommentService({ token });
-			return discussionCommentsService.discussionCommentUpdate(discussionCommentId, discussionContent);
+			const discussionCommentService = new DiscussionCommentService({ token });
+			return discussionCommentService.discussionCommentUpdate(discussionCommentId, discussionContent);
 		}
 	},
 	discussionCommentRemove: {
@@ -53,8 +53,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {discussionCommentId}, { token }) {
-			const discussionCommentsService = new TenantsService({ token });
-			return discussionCommentsService.discussionCommentRemove(discussionCommentId);
+			const discussionCommentService = new TenantService({ token });
+			return discussionCommentService.discussionCommentRemove(discussionCommentId);
 		}
 	},
 	discussionCommentReport: {
@@ -66,8 +66,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {discussionCommentId}, { token }) {
-			const discussionCommentsService = new DiscussionCommentService({ token });
-			return discussionCommentsService.discussionCommentReport(discussionCommentId);
+			const discussionCommentService = new DiscussionCommentService({ token });
+			return discussionCommentService.discussionCommentReport(discussionCommentId);
 		}
 	},
 	discussionCommentInsert: {
@@ -85,8 +85,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {commentId, discussionContent, tenantId}, { token }) {
-			const discussionCommentsService = new DiscussionCommentService({ token });
-			return discussionCommentsService.discussionCommentInsert(commentId, discussionContent, tenantId);
+			const discussionCommentService = new DiscussionCommentService({ token });
+			return discussionCommentService.discussionCommentInsert(commentId, discussionContent, tenantId);
 		}
 	},
 	discussionCommentUnreport: {
@@ -98,8 +98,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {discussionCommentId}, { token }) {
-			const discussionCommentsService = new DiscussionCommentService({ token });
-			return discussionCommentsService.discussionCommentUnreport(discussionCommentId);
+			const discussionCommentService = new DiscussionCommentService({ token });
+			return discussionCommentService.discussionCommentUnreport(discussionCommentId);
 		}
 	},
 	discussionCommentUpvote: {
@@ -111,8 +111,8 @@ const discussionCommentsMutationFields = {
 			}
 		},
 		async resolve (parent, {discussionCommentId}, { token }) {
-			const discussionCommentsService = new DiscussionCommentService({ token });
-			return discussionCommentsService.discussionCommentUpvote(discussionCommentId);
+			const discussionCommentService = new DiscussionCommentService({ token });
+			return discussionCommentService.discussionCommentUpvote(discussionCommentId);
 		}
 	}
 };

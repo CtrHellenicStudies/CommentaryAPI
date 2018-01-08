@@ -7,7 +7,7 @@ import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 import { SettingsType } from '../types/settings';
 
 // logic
-import SettingsService from '../logic/Settings/settings';
+import SettingService from '../logic/Settings/settings';
 
 const settingsQueryFields = {
 	settings: {
@@ -22,8 +22,8 @@ const settingsQueryFields = {
 			}
 		},
 		async resolve (parent, { _id, tenantId }, { token }) {
-			const settingsService = new SettingsService(token);
-			const settings = await settingsService.settingsGet(_id, tenantId);
+			const settingService = new SettingService(token);
+			const settings = await settingService.settingsGet(_id, tenantId);
 			return settings;
 		},
 	},

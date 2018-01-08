@@ -7,7 +7,7 @@ import { GraphQLID, GraphQLList, GraphQLInt, GraphQLString, } from 'graphql';
 import { TextNodeType } from '../types/textNode';
 
 // logic
-import TextNodesService from '../logic/TextNodes/textNodes';
+import TextNodeService from '../logic/TextNodes/textNodes';
 
 
 const textNodeQueryFields = {
@@ -44,8 +44,8 @@ const textNodeQueryFields = {
 			},
 		},
 		async resolve (parent, { _id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo }, { token }) {
-			const textNodesService = new TextNodesService(token);
-			const textNodes = await TextNodesService.textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo);
+			const textNodeService = new TextNodeService(token);
+			const textNodes = await textNodeService.textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo);
 
 			return textNodes;
 		},

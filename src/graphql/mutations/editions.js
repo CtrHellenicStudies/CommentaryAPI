@@ -9,7 +9,7 @@ import {EditionsType, EditionsInputType} from '../types/editions';
 import RemoveType from '../types/remove';
 
 // logic
-import EditionsService from '../logic/Editions/editions';
+import EditionService from '../logic/Editions/editions';
 
 const editionMutationFields = {
 	editionsInsert: {
@@ -24,8 +24,8 @@ const editionMutationFields = {
 			}
 		},
 		async resolve (parent, { edition, multiline }, { token }) {
-			const editionsService = new EditionsService({ token });
-			return editionsService.editionInsert(edition, multiline);
+			const editionService = new EditionService({ token });
+			return editionService.editionInsert(edition, multiline);
 		}
 	},
 	editionsRemove: {
@@ -40,8 +40,8 @@ const editionMutationFields = {
 			}
 		},
 		async resolve (parent, { edition, multiline }, { token }) {
-			const editionsService = new EditionsService({ token });
-			return editionsService.removeEdition(edition, multiline);
+			const editionService = new EditionService({ token });
+			return editionService.removeEdition(edition, multiline);
 		}
 	},
 };
