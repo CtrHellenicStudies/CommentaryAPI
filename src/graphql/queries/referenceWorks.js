@@ -24,7 +24,7 @@ const referenceWorkQueryFields = {
 			}
 		},
 		async resolve (parent, { tenantId, id }, { token }) {
-			const referenceWorkService = new ReferenceWorksService(token);
+			const referenceWorksService = new ReferenceWorksService(token);
 			const referenceWorks = await referenceWorksService.referenceWorksGet(id, tenantId);
 			return referenceWorks;
 		}

@@ -21,7 +21,7 @@ const editionsQueryFields = {
 		},
 		async resolve (parent, { editionId }, { token }) {
 			const editionService = new EditionService(token);
-			const editions = await editionsService.editionsGet(editionId);
+			const editions = await editionService.editionsGet(editionId);
 			return editions;
 		},
 	},
