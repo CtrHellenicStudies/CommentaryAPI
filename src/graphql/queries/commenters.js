@@ -21,7 +21,9 @@ const commenterQueryFields = {
 		},
 		async resolve (parent, { tenantId }, { token }) {
 			const commenterService = new CommenterService(token);
-			const commenters = commenterService.commentersQuery(tenantId);
+			return commenterService.commentersQuery(tenantId).then(function(commenters) {
+				return commenters;
+			});
 		}
 	},
 };
