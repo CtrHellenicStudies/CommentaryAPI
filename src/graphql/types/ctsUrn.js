@@ -23,6 +23,9 @@ const CtsUrn = new GraphQLScalarType({
 		let result = null;
 		let value;
 		let ctsUrnParams = [];
+		let textGroupAndWork = [];
+		let textGroup = '';
+		let work = '';
 
 		switch (ast.kind) {
 		case 'StringValue':
@@ -30,9 +33,14 @@ const CtsUrn = new GraphQLScalarType({
 			ctsUrnParams = value.split(':');
 
 			if (ctsUrnParams.length) {
+				textGroupAndWork = ctsUrnParams[3].split('.');
+				textGroup = textGroupAndWork.shift();
+				work = textGroupAndWork.join('.');
+
 				result = {};
 				result.ctsNamespace = ctsUrnParams[2];
-				result.work = ctsUrnParams[3].split('.');
+				result.textGroup = textGroup;
+				result.work = work;
 				result.passage = ctsUrnParams[4].split('-');
 			}
 			break;
@@ -42,8 +50,13 @@ const CtsUrn = new GraphQLScalarType({
 		case 'ArrayValue':
 			if (ast.value.length === 3) {
 				result = {};
+				textGroupAndWork = ast.value[3].split('.');
+				textGroup = textGroupAndWork.shift();
+				work = textGroupAndWork.join('.');
+
 				result.ctsNamespace = ast.value[2];
-				result.work = ast.value[3].split('.');
+				result.textGroup = textGroup;
+				result.work = work;
 				result.passage = ast[4].split('-');
 			}
 			break;
