@@ -6,9 +6,11 @@ import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList, GraphQLBoolean } fro
 
 // types
 import CommentType from '../types/comment';
+import CtsUrnType from '../types/ctsUrn';
 
 // logic
 import CommentService from '../logic/Comments/comments';
+
 
 const commentQueryFields = {
 	comments: {
@@ -60,7 +62,7 @@ const commentQueryFields = {
 		description: 'Get list of comments via urn and paginated via skip/limit. Relates a scholion to the passage of text it comments on.',
 		args: {
 			urn: {
-				type: GraphQLString,
+				type: CtsUrnType,
 				required: true,
 			},
 			limit: {
@@ -73,7 +75,7 @@ const commentQueryFields = {
 		async resolve (parent, { urn, limit, skip }, { token }) {
 			const commentService = new CommentService(token);
 			const comments = await commentService.commentsGetURN(urn, limit, skip);
-			return comment;
+			return comments;
 		},
 	},
 	commentedOnBy: {

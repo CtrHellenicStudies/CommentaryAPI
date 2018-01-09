@@ -120,16 +120,24 @@ export default class CommentService extends PermissionsService {
 
 	/**
 	 * Get comments via a start URN and end URN
-	 * @param {string} urnStart - urn start range
-	 * @param {string} urnEnd - urn end range
+	 * @param {string} urn - urn start range
 	 * @param {number} limit - mongo orm limit
 	 * @param {number} skip - mongo orm skip
 	 * @returns {Object[]} array of comments
 	 */
-	commentsGetURN(urnStart, urnEnd, limit = 20, skip = 0) {
+	async commentsGetURN(urn, limit = 20, skip = 0) {
 		const args = {};
+		let comments = [];
+
+		if (!urn) {
+			return comments;
+		}
+
+		console.log('urn', urn);
+
 		const options = prepareGetCommentsOptions(skip, limit);
 
-		return Comments.find(args).limit(options.limit).sort(options.sort).exec();
+		comments = await Comments.find(args).limit(options.limit).sort(options.sort).exec();
+		return comments;
 	}
 }

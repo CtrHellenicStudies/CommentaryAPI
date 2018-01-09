@@ -42,10 +42,12 @@ export default class CommentService extends PermissionsService {
 			getURN(comment).then(function(urns) {
 				comment.urn = urns;
 				Comments.create(comment, function(err, inserted) {
+
 					if (err) {
 						console.log(err);
 						rejected(1);
 					}
+					
 					resolve(inserted);
 				});
 			});
@@ -78,20 +80,22 @@ export default class CommentService extends PermissionsService {
 	 * @returns {object} promise
 	 */
 	addRevision(commentId, revision) {
-	
+
 		if (this.userIsNobody) {
 			throw AuthenticationError();
 		}
-		return new Promise(function(resolve, rejected) { 
+		return new Promise(function(resolve, rejected) {
 			Comments.findOne({ _id: commentId }).exec().then(function(comment) {
 				const revisionId = new mongoose.mongo.ObjectId();
 				revision._id = revisionId;
 				comment.revisions.push(revision);
 				Comments.update({_id: commentId}, comment, function(err, updated) {
+
 					if (err) {
 						console.log(err);
 						rejected(1);
 					}
+
 					resolve(updated._id);
 				});
 			});
@@ -104,24 +108,26 @@ export default class CommentService extends PermissionsService {
 	 * @returns {object} promise
 	 */
 	removeRevision(commentId, revision) {
-		
+
 		if (this.userIsNobody) {
 			throw AuthenticationError();
 		}
-		return new Promise(function(resolve, rejected) { 
+		return new Promise(function(resolve, rejected) {
 			Comments.findOne({ _id: commentId }).exec().then(function(comment) {
 				const revisionId = new mongoose.mongo.ObjectId();
 				revision._id = revisionId;
 				comment.revisions.pull(revision);
 				Comments.update({_id: commentId}, comment, function(err, updated) {
+
 					if (err) {
 						console.log(err);
 						rejected(1);
 					}
+
 					resolve(updated._id);
 				});
 			});
 		});
 	}
-	
+
 }
