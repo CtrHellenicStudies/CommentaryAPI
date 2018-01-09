@@ -133,7 +133,12 @@ export default class CommentService extends PermissionsService {
 			return comments;
 		}
 
-		console.log('urn', urn);
+		args.lemmaCitation = {
+			collection: `urn:cts:${urn.ctsNamespace}`,
+			textGroup: urn.textGroup,
+			work: urn.work,
+			passage: urn.passage.join('-'),
+		};
 
 		const options = prepareGetCommentsOptions(skip, limit);
 
