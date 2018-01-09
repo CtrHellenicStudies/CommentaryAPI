@@ -8,6 +8,8 @@ import {
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
 import { GraphQLDateTime } from 'graphql-iso-date';
+import _ from 'underscore';
+
 import { CommenterType, CommenterInputType } from './commenter';
 import { WorkType, WorkInputType } from './work';
 import { Subwork, SubworkInput } from './subworks';
@@ -220,6 +222,18 @@ const CommentType = new GraphQLObjectType({
 		},
 		revisions: {
 			type: new GraphQLList(RevisionType),
+		},
+		latestRevision: {
+			type: RevisionType,
+			description: 'Returns only the latest revision of the array of revisions',
+			resolve (parent) {
+				parent.revisions.sort((a, b) => (
+					new Date(b.created) - new Date(a.created)
+				));
+				const latestRevision = parent.revisions[0];
+
+				return latestRevision;
+			},
 		},
 		discussionComments: {
 			type: new GraphQLList(DiscussionCommentType),
