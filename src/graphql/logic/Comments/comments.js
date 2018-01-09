@@ -119,7 +119,7 @@ export default class CommentService extends PermissionsService {
 	}
 
 	/**
-	 * Get comments via a start URN and end URN
+	 * Get comments via an input URN
 	 * @param {string} urn - urn start range
 	 * @param {number} limit - mongo orm limit
 	 * @param {number} skip - mongo orm skip
@@ -129,16 +129,42 @@ export default class CommentService extends PermissionsService {
 		const args = {};
 		let comments = [];
 
-		if (!urn) {
-			return comments;
-		}
-
+		// set the lemma citation from the input cts urn
 		args.lemmaCitation = {
 			collection: `urn:cts:${urn.ctsNamespace}`,
 			textGroup: urn.textGroup,
 			work: urn.work,
 			passage: urn.passage.join('-'),
 		};
+
+		const options = prepareGetCommentsOptions(skip, limit);
+
+		comments = await Comments.find(args).limit(options.limit).sort(options.sort).exec();
+		return comments;
+	}
+
+	/**
+	 * Get comments via an input URN and commenterId
+	 * @param {string} urn - urn start range
+	 * @param {string} commenterId - commenterId
+	 * @param {number} limit - mongo orm limit
+	 * @param {number} skip - mongo orm skip
+	 * @returns {Object[]} array of comments
+	 */
+	async commentsGetCommentedOnBy(urn, commenterIds, limit = 20, skip = 0) {
+		const args = {};
+		let comments = [];
+
+		// set the lemma citation from the input cts urn
+		args.lemmaCitation = {
+			collection: `urn:cts:${urn.ctsNamespace}`,
+			textGroup: urn.textGroup,
+			work: urn.work,
+			passage: urn.passage.join('-'),
+		};
+
+		// set the commenter id of input commenterIds
+		args['commenters._id'] = commenterIds;
 
 		const options = prepareGetCommentsOptions(skip, limit);
 

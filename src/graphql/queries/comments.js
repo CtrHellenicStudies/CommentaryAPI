@@ -2,7 +2,9 @@
  * Queries for comments
  */
 
-import { GraphQLID, GraphQLInt, GraphQLString, GraphQLList, GraphQLBoolean } from 'graphql';
+import {
+	GraphQLID, GraphQLInt, GraphQLString, GraphQLList, GraphQLBoolean, GraphQLNonNull
+} from 'graphql';
 
 // types
 import CommentType from '../types/comment';
@@ -62,8 +64,7 @@ const commentQueryFields = {
 		description: 'Get list of comments via urn and paginated via skip/limit. Relates a scholion to the passage of text it comments on.',
 		args: {
 			urn: {
-				type: CtsUrnType,
-				required: true,
+				type: new GraphQLNonNull(CtsUrnType),
 			},
 			limit: {
 				type: GraphQLInt,
@@ -83,12 +84,10 @@ const commentQueryFields = {
 		description: 'Get list of comments provided at a and paginated via skip/limit. Relates a passage of text to a scholion commenting on it.',
 		args: {
 			urn: {
-				type: GraphQLString,
-				required: true,
+				type: new GraphQLNonNull(CtsUrnType),
 			},
-			commenterId: {
-				type: GraphQLString,
-				required: true,
+			commenterIds: {
+				type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
 			},
 			limit: {
 				type: GraphQLInt,
@@ -97,9 +96,9 @@ const commentQueryFields = {
 				type: GraphQLInt,
 			},
 		},
-		async resolve (parent, { urn, commenterId, limit, skip }, { token }) {
+		async resolve (parent, { urn, commenterIds, limit, skip }, { token }) {
 			const commentService = new CommentService(token);
-			const comments = await commentService.commentsGetCommentedOnBy(urn, commenterId, limit, skip);
+			const comments = await commentService.commentsGetCommentedOnBy(urn, commenterIds, limit, skip);
 			return comments;
 		},
 	},
