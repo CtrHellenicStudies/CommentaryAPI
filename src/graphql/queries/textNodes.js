@@ -2,6 +2,7 @@
  * Queries for textNodes
  */
 import { GraphQLID, GraphQLList, GraphQLInt, GraphQLString, } from 'graphql';
+import GraphQLJSON from 'graphql-type-json';
 
 // types
 import { TextNodeType } from '../types/textNode';
@@ -27,6 +28,9 @@ const textNodeQueryFields = {
 			skip: {
 				type: GraphQLInt,
 			},
+			// urn: {
+			// 	type: GraphQLJSON,
+			// },
 			workSlug: {
 				type: GraphQLString,
 			},

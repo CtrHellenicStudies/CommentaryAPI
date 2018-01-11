@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import slugify from 'slugify';
 
+// import { resolveURN } from './helper';
 import TextNodes from '../../../models/textNodes';
 import PermissionsService from '../PermissionsService';
 import { AuthenticationError } from '../../errors/index';
@@ -80,11 +81,15 @@ export default class TextNodesService extends PermissionsService {
 	 * @returns {Object[]} array of text nodes
 	 */
 	textNodesGet(_id, tenantId, limit, skip, workSlug, subworkN, editionId, lineFrom, lineTo) {
+		// const args = resolveURN(urn);
 		const args = {};
 		const options = {};
 
 		if (_id) {
 			args._id = new mongoose.Types.ObjectID(_id);
+		}
+		if (tenantId) {
+			args.tenantId = tenantId;
 		}
 		if (editionId) {
 			args['text.edition'] = editionId;
