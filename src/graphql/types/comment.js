@@ -124,6 +124,25 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLDateTime,
 		},
 	},
+	lemmaCitation: {
+		type: new GraphQLInputObjectType({
+			name: 'LemmaCitationInputType',
+			fields: {
+				corpus: {
+					type: GraphQLString
+				},
+				textGroup: {
+					type: GraphQLString
+				},
+				work: {
+					type: GraphQLString
+				},
+				passage: {
+					type: GraphQLString
+				},
+			}
+		}),
+	},
 });
 /**
  * Comment model type
@@ -249,6 +268,25 @@ const CommentType = new GraphQLObjectType({
 		},
 		updated: {
 			type: GraphQLDateTime,
+		},
+		lemmaCitation: {
+			type: new GraphQLObjectType({
+				name: 'LemmaCitationType',
+				fields: {
+					corpus: {
+						type: GraphQLString
+					},
+					textGroup: {
+						type: GraphQLString
+					},
+					work: {
+						type: GraphQLString
+					},
+					passage: {
+						type: GraphQLString
+					},
+				}
+			}),
 		},
 	},
 });

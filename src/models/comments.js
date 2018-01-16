@@ -172,6 +172,22 @@ const CommentsModel = new mongoose.Schema({
 		type: Date,
 		optional: true,
 	},
+	lemmaCitation: {
+		type: new mongoose.Schema({
+			corpus: {
+				type: String
+			},
+			textGroup: {
+				type: String
+			},
+			work: {
+				type: String
+			},
+			passage: {
+				type: String
+			}
+		})
+	}
 });
 
 

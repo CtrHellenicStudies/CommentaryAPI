@@ -15,6 +15,7 @@ router.post('/login', (req, res) => {
 
 	if (username && password) return loginPWD(res, username, password);
 
+	console.log(accessToken, network);
 	if (accessToken && network) return loginOAuth2(res, accessToken, network);
 
 	if (oauthToken && oauthTokenSecret && network) return loginOAuth1(res, oauthToken, oauthTokenSecret, network);
