@@ -18,11 +18,17 @@ export default class DiscussionCommentService extends PermissionsService {
 	 * @param {string} tenantId - the id of the current tenant
 	 * @returns {Object[]} array of discussion comments
 	 */
-	discussionCommentsGet(tenantId) {
+	discussionCommentsGet(tenantId, commentId, userId) {
 
 		const args = {};
 		if (tenantId) {
 			args.tenantId = tenantId;
+		}
+		if (commentId) {
+			args.commentId = commentId;
+		}
+		if (userId) {
+			args.userId = userId;
 		}
 
 		return DiscussionComments.find(args).exec();

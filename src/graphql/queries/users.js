@@ -18,10 +18,13 @@ const userQueryFields = {
 			_id: {
 				type: GraphQLString,
 			},
+			tenantId: {
+				type: GraphQLString
+			},
 		},
-		async resolve (parent, { _id }, { token }) {
+		async resolve (parent, { _id, tenantId }, { token }) {
 			const userService = new UserService(token);
-			const users = await userService.usersGet(_id);
+			const users = await userService.usersGet(_id, tenantId);
 			return users;
 		},
 	},

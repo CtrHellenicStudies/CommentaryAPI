@@ -12,15 +12,16 @@ export default class UserService extends PermissionsService {
 	/**
 	 * Get users (admin method)
 	 * @param {string} _id - id of user
+	 * @param {string} tenantId - id of tenants
 	 * @returns {Object[]} array of users
 	 */
-	usersGet(_id) {
+	usersGet(_id, tenantId, userId) {
 		const args = {};
 
 		if (_id) {
 			args._id = _id;
 		}
-		User.find(args, {
+		return User.find(args, {
 			username: 1,
 			emails: 1,
 			profile: 1,
