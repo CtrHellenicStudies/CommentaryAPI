@@ -15,11 +15,14 @@ export default class UserService extends PermissionsService {
 	 * @param {string} tenantId - id of tenants
 	 * @returns {Object[]} array of users
 	 */
-	usersGet(_id, tenantId, userId) {
+	usersGet(id, tenantId) {
 		const args = {};
 
-		if (_id) {
-			args._id = _id;
+		if (id) {
+			args._id = mongoose.Types.ObjectId(id);
+		}
+		if (tenantId) {
+			args.tenantId = tenantId;
 		}
 		return User.find(args, {
 			username: 1,

@@ -32,6 +32,7 @@ const UserSchema = new Schema({
 		type: Boolean,
 		defualt: false,
 	},
+	roles: [String],
 	resetPasswordToken: String,
 	resetPasswordExpires: Date
 });

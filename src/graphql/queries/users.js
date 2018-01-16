@@ -1,7 +1,7 @@
 /**
  * Queries for users
  */
-import { GraphQLString, GraphQLList } from 'graphql';
+import { GraphQLString, GraphQLList, GraphQLID } from 'graphql';
 
 // types
 import UserType from '../types/user';
@@ -15,16 +15,16 @@ const userQueryFields = {
 		type: new GraphQLList(UserType),
 		description: 'Get list of users',
 		args: {
-			_id: {
-				type: GraphQLString,
+			id: {
+				type: GraphQLID,
 			},
 			tenantId: {
 				type: GraphQLString
 			},
 		},
-		async resolve (parent, { _id, tenantId }, { token }) {
+		async resolve (parent, { id, tenantId }, { token }) {
 			const userService = new UserService(token);
-			const users = await userService.usersGet(_id, tenantId);
+			const users = await userService.usersGet(id, tenantId);
 			return users;
 		},
 	},

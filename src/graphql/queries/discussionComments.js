@@ -16,7 +16,7 @@ const discussionCommentQueryFields = {
 		description: 'Get list of all discussion comments',
 		args: {
 			tenantId: {
-				type: GraphQLID,
+				type: GraphQLString,
 			},
 			commentId: {
 				type: GraphQLString
