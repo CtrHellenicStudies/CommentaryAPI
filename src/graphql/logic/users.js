@@ -25,6 +25,7 @@ export default class UserService extends PermissionsService {
 			args.tenantId = tenantId;
 		}
 		return User.find(args, {
+			_id: 1,
 			username: 1,
 			emails: 1,
 			profile: 1,

@@ -12,7 +12,7 @@ import TextNodeService from '../logic/TextNodes/textNodes';
 
 
 const textNodeQueryFields = {
-	textNodes: {
+	textNodesAhcip: {
 		type: new GraphQLList(TextNodeType),
 		description: 'List textNodes for reading environment',
 		args: {
