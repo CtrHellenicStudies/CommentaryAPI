@@ -27,8 +27,11 @@ const discussionCommentQueryFields = {
 		},
 		async resolve (parent, { tenantId, commentId, userId }, { token }) {
 			const dicussionCommentService = new DiscussionCommentService(token);
-			const discussionComments = await dicussionCommentService.discussionCommentsGet(tenantId, commentId, userId);
-			return discussionComments;
+			return dicussionCommentService.discussionCommentsGet(tenantId, commentId, userId)
+			.then(function(comments) {
+				console.log(comments);
+				return comments;
+			});
 		},
 	},
 };
