@@ -19,6 +19,32 @@ import { DiscussionCommentType, DiscussionCommentInputType } from './discussionC
 import { RevisionType, RevisionInputType } from './revision';
 
 
+const PassageType = new GraphQLObjectType({
+	name: 'PassageType',
+	description: 'A passage in the lemma citation of the comment',
+	fields: {
+		index: {
+			type: GraphQLInt,
+		},
+		location: {
+			type: new GraphQLList(GraphQLInt),
+		},
+	},
+});
+
+
+const PassageInputType = new GraphQLInputObjectType({
+	name: 'PassageInputType',
+	description: 'A passage in the lemma citation of the comment',
+	fields: {
+		index: {
+			type: GraphQLInt,
+		},
+		location: {
+			type: new GraphQLList(GraphQLInt),
+		},
+	},
+});
 
 /**
  * Comment input type
@@ -137,8 +163,11 @@ const CommentInputType = new GraphQLInputObjectType({
 				work: {
 					type: GraphQLString
 				},
-				passage: {
-					type: GraphQLString
+				passageFrom: {
+					type: PassageInputType,
+				},
+				passageTo: {
+					type: PassageInputType,
 				},
 			}
 		}),
@@ -282,8 +311,11 @@ const CommentType = new GraphQLObjectType({
 					work: {
 						type: GraphQLString
 					},
-					passage: {
-						type: GraphQLString
+					passageFrom: {
+						type: PassageType,
+					},
+					passageTo: {
+						type: PassageType,
 					},
 				}
 			}),

@@ -12,6 +12,16 @@ import { DiscussionCommentsModel } from './discussionComments';
 import { RevisionModel } from './revision';
 
 
+const PassageModel = new mongoose.Schema({
+	n: {
+		type: Number,
+	},
+	location: {
+		type: [Number],
+	},
+});
+
+
 const CommentsModel = new mongoose.Schema({
 	_id: {
 		type: String
@@ -183,9 +193,12 @@ const CommentsModel = new mongoose.Schema({
 			work: {
 				type: String
 			},
-			passage: {
-				type: String
-			}
+			passageFrom: {
+				type: PassageModel,
+			},
+			passageTo: {
+				type: PassageModel,
+			},
 		})
 	}
 });
