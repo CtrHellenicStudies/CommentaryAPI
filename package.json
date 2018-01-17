@@ -95,7 +95,8 @@
     "start": "npm run server",
     "db:seed": "babel-node scripts/run-db-seed.js",
     "db:clear": "babel-node scripts/run-db-clear.js",
-    "db:setup": "npm run db:clear && npm run db:seed"
+    "db:setup": "npm run db:clear && npm run db:seed",
+    "jsdoc": "jsdoc src -r -c .jsdoc.json -d docs"
   },
   "repository": {
     "type": "git",
@@ -110,6 +111,17 @@
     "*.{js,jsx}": [
       "eslint --fix",
       "git add"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/docs/",
+      "!<rootDir>/public/",
+      "!<rootDir>/build/",
+      "!<rootDir>/coverage/",
+      "!<rootDir>/k8s/"
     ]
   },
   "author": "The Center for Hellenic Studies",

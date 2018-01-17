@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: graphql/logic/Comments/helper.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: graphql/logic/Comments/helper.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Comments from '../../../models/comments';
+import Commenters from '../../../models/commenters';
+import Works from '../../../models/works';
+import Tenants from '../../../models/tenants';
+import Books from '../../../models/books';
+
+/**
+ * Prepare options to comment query
+ * @param {number} skip - number of comments to skip
+ * @param {number} limit - limit of comments to show
+ */
+
+const COMMENT_ID_LENGTH = 7;
+function prepareGetCommentsOptions(limit, skip, sortRecent) {
+
+  const options = {
+    sort: {
+      'work.order': 1,
+      'subwork.n': 1,
+      lineFrom: 1,
+      nLines: -1,
+    }
+  };
+
+  if (skip) {
+    options.skip = skip;
+  } else {
+    options.skip = 0;
+  }
+  if (limit) {
+    if (limit > 100) {
+      options.limit = 100;
+    }
+    options.limit = limit;
+  } else {
+    options.limit = 30;
+  }
+  if (sortRecent) {
+    options.sort = { updated: -1 };
+  }
+  return options;
+}
+const _getCommentURN = comment => new Promise(function(resolve, rejected) {
+  Works.findOne({ slug: comment.work.slug }).exec().then(function(work) {
+    Tenants.findOne({_id: comment.tenantId}).then(function(tenant) {
+      const urnPrefixV1 = 'urn:cts:CHS.Commentary';
+      const urnPrefixV2 = `urn:cts:CHS:Commentaries. ${tenant.subdomain.toUpperCase()}`;
+        // Use work tlg if it exists, otherwise, search for subwork tlg number
+        // Failing either, just use creator
+      let urnTLG = work.tlgCreator;
+      if (work.tlg &amp;&amp; work.tlg.length) {
+        urnTLG += `.${work.tlg}`;
+      } else {
+        work.subworks.forEach((subwork) => {
+          if (
+                subwork.n === comment.subwork.n
+              &amp;&amp; subwork.tlgNumber
+              &amp;&amp; subwork.tlgNumber.length
+            ) {
+            urnTLG += `.${subwork.tlgNumber}`;
+          }
+        });
+      }
+          //
+      urnTLG += '.chsCommentary';
+      const workTitle = comment.work.title.replace(' ', '');
+
+      let urnComment = `${workTitle}.${comment.subwork.title}.${comment.lineFrom}`;
+
+      if (typeof comment.lineTo !== 'undefined' &amp;&amp; comment.lineFrom !== comment.lineTo) {
+        urnComment += `-${comment.subwork.title}.${comment.lineTo}`;
+      }
+
+      const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
+      const ret = {
+        v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
+        v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`};
+      resolve(ret);
+    });
+  });
+});
+
+const _getAnnotationURN = comment => new Promise(function(resolve, rejected) {
+  Books.findOne({ 'chapters.url': comment.bookChapterUrl }).exec().then(function(book) {
+    Tenants.findOne({_id: comment.tenantId}).exec().then(function(tenant) {
+      const chapter = _.find(book.chapters, c => c.url === comment.bookChapterUrl);
+      const urnPrefixV1 = 'urn:cts:CHS.Annotations';
+      const urnPrefixV2 = `urn:cts:CHS:Annotations. ${tenant.subdomain.toUpperCase()}`;
+      const urnBook = `${book.authorURN}.${book.slug}`;
+      const urnComment = `${chapter.n}.${comment.paragraphN}`;
+      const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
+      
+      const ret = {
+        v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
+        v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`
+      };
+      resolve(ret);
+    });
+  });
+});
+function getURN(comment) {
+  if (comment.isAnnotation) {
+    return _getAnnotationURN(comment);
+  }
+
+  return _getCommentURN(comment);
+}
+function prepareNotification(comment) {
+  
+  const commenterId = comment.commenters[0]._id;
+  const userAvatar = Commenters.findOne({_id: commenterId}, {'avatar.src': 1});
+  
+  const avatar = userAvatar &amp;&amp; userAvatar.avatar ? userAvatar.avatar.src : '/images/default_user.jpg';
+
+  const lines = comment.lineTo !== comment.lineFrom ? 
+  `lines ${comment.lineFrom} - ${comment.lineTo}` :
+  `${comment.lineTo}`;
+
+  const notification = {
+    message: `${comment.commenters[0].name} updated a comment on ${comment.work.title} ${comment.subwork.title}, ${lines}`,
+    avatar: {src: avatar},
+    created: new Date(),
+    _id: new ObjectID().toString(),
+    slug: commentId
+  };
+  return notification;
+
+}
+function prepareEmailList(comment) {
+
+  const notification = prepareNotification(comment);
+  const updateUser = { $push: {'subscriptions.notifications': notification} };
+
+  const query = {
+    $or: [
+      {
+        $and:
+        [
+          {'subscriptions.bookmarks.work.slug': comment.work.slug},
+          {'subscriptions.bookmarks.subwork.slug': comment.subwork.slug},
+          {'subscriptions.bookmarks.lineFrom': {$gte: comment.lineFrom}},
+          {'subscriptions.bookmarks.lineTo': {$lte: comment.lineTo}}
+        ]
+      },
+      {
+        'subscriptions.commenters': { $elemMatch: {_id: commenterId} }
+      }
+    ]
+  };
+  const options = { multi: true };
+  const subscribedUsers = Meteor.users.update(query, updateUser, notification, options);
+  
+  // send notification email
+  const emailListQuery = {
+    $and: [
+      {
+        $or: [
+          {
+            $and:
+            [
+              {'subscriptions.bookmarks.work.slug': comment.work.slug},
+              {'subscriptions.bookmarks.subwork.slug': comment.subwork.slug},
+              {'subscriptions.bookmarks.lineFrom': {$gte: comment.lineFrom}},
+              {'subscriptions.bookmarks.lineTo': {$lte: comment.lineTo}}
+            ]
+          },
+          {
+            'subscriptions.commenters': { $elemMatch: {_id: commenterId} }
+          }
+        ]
+      },
+      {
+        batchNotification: 'immediately'
+      },
+      {
+        emails: { $exists: true }
+      }
+    ]
+  };
+
+  const emailList = Meteor.users.find(emailListQuery);
+  
+}
+function sendUpdateNotification(comment) {
+
+
+  // add notification
+  const emailList = prepareEmailList(comment);
+  emailList.forEach((subscribedUser) => {
+
+    let username = 'Commentary User';
+    if (subscribedUser.profile.name) {
+      username = subscribedUser.profile.name;
+    } else if (subscribedUser.username) {
+      username = subscribedUser.username;
+    }
+
+    const from = 'no-reply@ahcip.chs.harvard.edu';
+    const to = user.emails[0].address;
+    const subject = 'New Notification';
+    const text = `
+    Dear ${username},
+
+    ${comment.commenters[0].name} has updated a comment on the ${comment.work.title}.
+
+    Please review your notification at A Homer Commentary in Progress (http://ahcip.chs.harvard.edu).
+
+    You can change how often you receive these emails in your account settings.
+    `;
+
+    Email.send({ from, to, subject, text });
+
+  });
+
+}
+export { 
+  prepareGetCommentsOptions,
+  getURN,
+  prepareEmailList
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addRevision">addRevision</a></li><li><a href="global.html#annotationsGet">annotationsGet</a></li><li><a href="global.html#ArgumentError">ArgumentError</a></li><li><a href="global.html#AuthenticationError">AuthenticationError</a></li><li><a href="global.html#bookByChapter">bookByChapter</a></li><li><a href="global.html#BookInputType">BookInputType</a></li><li><a href="global.html#bookInsert">bookInsert</a></li><li><a href="global.html#bookRemove">bookRemove</a></li><li><a href="global.html#booksGet">booksGet</a></li><li><a href="global.html#BookType">BookType</a></li><li><a href="global.html#bookUpdate">bookUpdate</a></li><li><a href="global.html#Collection">Collection</a></li><li><a href="global.html#CollectionSchema">CollectionSchema</a></li><li><a href="global.html#COMMENT_ID_LENGTH">COMMENT_ID_LENGTH</a></li><li><a href="global.html#CommenterInputType">CommenterInputType</a></li><li><a href="global.html#commenterInsert">commenterInsert</a></li><li><a href="global.html#commenterRemove">commenterRemove</a></li><li><a href="global.html#commentersQuery">commentersQuery</a></li><li><a href="global.html#CommenterType">CommenterType</a></li><li><a href="global.html#commenterUpdate">commenterUpdate</a></li><li><a href="global.html#CommentInputType">CommentInputType</a></li><li><a href="global.html#commentInsert">commentInsert</a></li><li><a href="global.html#commentRemove">commentRemove</a></li><li><a href="global.html#commentsGet">commentsGet</a></li><li><a href="global.html#commentsGetByUrnsList">commentsGetByUrnsList</a></li><li><a href="global.html#commentsGetCommentedOnBy">commentsGetCommentedOnBy</a></li><li><a href="global.html#commentsGetMore">commentsGetMore</a></li><li><a href="global.html#commentsGetURN">commentsGetURN</a></li><li><a href="global.html#CommentType">CommentType</a></li><li><a href="global.html#commentUpdate">commentUpdate</a></li><li><a href="global.html#count">count</a></li><li><a href="global.html#create">create</a></li><li><a href="global.html#createAnnotation">createAnnotation</a></li><li><a href="global.html#CtsUrn">CtsUrn</a></li><li><a href="global.html#dbSetup">dbSetup</a></li><li><a href="global.html#deleteAnnotation">deleteAnnotation</a></li><li><a href="global.html#DiscussionCommentInputType">DiscussionCommentInputType</a></li><li><a href="global.html#discussionCommentInsert">discussionCommentInsert</a></li><li><a href="global.html#discussionCommentRemove">discussionCommentRemove</a></li><li><a href="global.html#discussionCommentReport">discussionCommentReport</a></li><li><a href="global.html#discussionCommentsGet">discussionCommentsGet</a></li><li><a href="global.html#DiscussionCommentType">DiscussionCommentType</a></li><li><a href="global.html#discussionCommentUnreport">discussionCommentUnreport</a></li><li><a href="global.html#discussionCommentUpdate">discussionCommentUpdate</a></li><li><a href="global.html#discussionCommentUpdateStatus">discussionCommentUpdateStatus</a></li><li><a href="global.html#discussionCommentUpvote">discussionCommentUpvote</a></li><li><a href="global.html#editionInsert">editionInsert</a></li><li><a href="global.html#editionsGet">editionsGet</a></li><li><a href="global.html#EditionsInputType">EditionsInputType</a></li><li><a href="global.html#editionsRemove">editionsRemove</a></li><li><a href="global.html#EditionsType">EditionsType</a></li><li><a href="global.html#File">File</a></li><li><a href="global.html#FileSchema">FileSchema</a></li><li><a href="global.html#generateJWT">generateJWT</a></li><li><a href="global.html#getActivityFeed">getActivityFeed</a></li><li><a href="global.html#getAuthedUser">getAuthedUser</a></li><li><a href="global.html#getAuthors">getAuthors</a></li><li><a href="global.html#getCollection">getCollection</a></li><li><a href="global.html#getCollections">getCollections</a></li><li><a href="global.html#getItem">getItem</a></li><li><a href="global.html#getItems">getItems</a></li><li><a href="global.html#getManifest">getManifest</a></li><li><a href="global.html#getManifests">getManifests</a></li><li><a href="global.html#getMaxLine">getMaxLine</a></li><li><a href="global.html#getProject">getProject</a></li><li><a href="global.html#getProjects">getProjects</a></li><li><a href="global.html#getUserProjects">getUserProjects</a></li><li><a href="global.html#handleMongooseError">handleMongooseError</a></li><li><a href="global.html#hasAnnotationPermission">hasAnnotationPermission</a></li><li><a href="global.html#hasAnnotationRevisionPermission">hasAnnotationRevisionPermission</a></li><li><a href="global.html#Item">Item</a></li><li><a href="global.html#ItemSchema">ItemSchema</a></li><li><a href="global.html#jwtAuthenticate">jwtAuthenticate</a></li><li><a href="global.html#KeywordInputType">KeywordInputType</a></li><li><a href="global.html#keywordInsert">keywordInsert</a></li><li><a href="global.html#keywordRemove">keywordRemove</a></li><li><a href="global.html#keywordsGet">keywordsGet</a></li><li><a href="global.html#KeywordType">KeywordType</a></li><li><a href="global.html#keywordUpdate">keywordUpdate</a></li><li><a href="global.html#loginOAuth1">loginOAuth1</a></li><li><a href="global.html#loginOAuth2">loginOAuth2</a></li><li><a href="global.html#loginPWD">loginPWD</a></li><li><a href="global.html#MongooseDuplicateKeyError">MongooseDuplicateKeyError</a></li><li><a href="global.html#MongooseGeneralError">MongooseGeneralError</a></li><li><a href="global.html#MongooseValidationError">MongooseValidationError</a></li><li><a href="global.html#pageCreate">pageCreate</a></li><li><a href="global.html#PageInputType">PageInputType</a></li><li><a href="global.html#pageRemove">pageRemove</a></li><li><a href="global.html#pagesGet">pagesGet</a></li><li><a href="global.html#PageType">PageType</a></li><li><a href="global.html#pageUpdate">pageUpdate</a></li><li><a href="global.html#PermissionError">PermissionError</a></li><li><a href="global.html#PositionInputType">PositionInputType</a></li><li><a href="global.html#PositionType">PositionType</a></li><li><a href="global.html#Project">Project</a></li><li><a href="global.html#ProjectError">ProjectError</a></li><li><a href="global.html#ProjectSchema">ProjectSchema</a></li><li><a href="global.html#referenceWorkCreate">referenceWorkCreate</a></li><li><a href="global.html#ReferenceWorkInputType">ReferenceWorkInputType</a></li><li><a href="global.html#referenceWorkRemove">referenceWorkRemove</a></li><li><a href="global.html#referenceWorksGet">referenceWorksGet</a></li><li><a href="global.html#ReferenceWorkType">ReferenceWorkType</a></li><li><a href="global.html#referenceWorkUpdate">referenceWorkUpdate</a></li><li><a href="global.html#remove">remove</a></li><li><a href="global.html#removeRevision">removeRevision</a></li><li><a href="global.html#RevisionInputType">RevisionInputType</a></li><li><a href="global.html#RevisionType">RevisionType</a></li><li><a href="global.html#rewriteChapter">rewriteChapter</a></li><li><a href="global.html#rewriteSubworks">rewriteSubworks</a></li><li><a href="global.html#RootMutations">RootMutations</a></li><li><a href="global.html#RootQuery">RootQuery</a></li><li><a href="global.html#RootSubscription">RootSubscription</a></li><li><a href="global.html#settingsCreate">settingsCreate</a></li><li><a href="global.html#settingsGet">settingsGet</a></li><li><a href="global.html#SettingsInputType">SettingsInputType</a></li><li><a href="global.html#settingsRemove">settingsRemove</a></li><li><a href="global.html#SettingsType">SettingsType</a></li><li><a href="global.html#settingsUpdate">settingsUpdate</a></li><li><a href="global.html#Subwork">Subwork</a></li><li><a href="global.html#SubworkInput">SubworkInput</a></li><li><a href="global.html#tenantBySubdomainGet">tenantBySubdomainGet</a></li><li><a href="global.html#tenantCreate">tenantCreate</a></li><li><a href="global.html#TenantInputType">TenantInputType</a></li><li><a href="global.html#tenantRemove">tenantRemove</a></li><li><a href="global.html#tenantsGet">tenantsGet</a></li><li><a href="global.html#TenantType">TenantType</a></li><li><a href="global.html#tenantUpdate">tenantUpdate</a></li><li><a href="global.html#textNodeCreate">textNodeCreate</a></li><li><a href="global.html#TextNodeInputType">TextNodeInputType</a></li><li><a href="global.html#textNodeRemove">textNodeRemove</a></li><li><a href="global.html#textNodesGet">textNodesGet</a></li><li><a href="global.html#TextNodeType">TextNodeType</a></li><li><a href="global.html#textNodeUpdate">textNodeUpdate</a></li><li><a href="global.html#translationAddAuthor">translationAddAuthor</a></li><li><a href="global.html#translationGet">translationGet</a></li><li><a href="global.html#translationRemove">translationRemove</a></li><li><a href="global.html#TranslationType">TranslationType</a></li><li><a href="global.html#translationUpdate">translationUpdate</a></li><li><a href="global.html#translationUpdateAuthor">translationUpdateAuthor</a></li><li><a href="global.html#update">update</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#userGetPublicById">userGetPublicById</a></li><li><a href="global.html#UserInputType">UserInputType</a></li><li><a href="global.html#UserProfileInputType">UserProfileInputType</a></li><li><a href="global.html#UserProfileType">UserProfileType</a></li><li><a href="global.html#userRemove">userRemove</a></li><li><a href="global.html#UserSchema">UserSchema</a></li><li><a href="global.html#usersGet">usersGet</a></li><li><a href="global.html#usersGetPublicById">usersGetPublicById</a></li><li><a href="global.html#UserType">UserType</a></li><li><a href="global.html#userUpdate">userUpdate</a></li><li><a href="global.html#userUpdatePosition">userUpdatePosition</a></li><li><a href="global.html#WorkInputType">WorkInputType</a></li><li><a href="global.html#workInsert">workInsert</a></li><li><a href="global.html#workRemove">workRemove</a></li><li><a href="global.html#worksGet">worksGet</a></li><li><a href="global.html#WorkType">WorkType</a></li><li><a href="global.html#workUpdate">workUpdate</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jan 17 2018 11:17:50 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
