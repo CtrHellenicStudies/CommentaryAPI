@@ -193,12 +193,15 @@ const CommentsModel = new mongoose.Schema({
 			work: {
 				type: String
 			},
-			passageFrom: {
-				type: PassageModel,
+			passsage: {
+				type: String
+			},
+			passsageFrom: {
+				type: String
 			},
 			passageTo: {
-				type: PassageModel,
-			},
+				type: String
+			}
 		})
 	}
 });

@@ -14,9 +14,10 @@ const CtsUrn = new GraphQLScalarType({
 	},
 
 	serialize(value) {
-		const result = `urn:cts:${value.ctsNamespace}:${value.work.join('.')}:${value.passage.join('-')}`;
-
-		return result;
+		const result = `urn:cts:${value.ctsNamespace}`;
+		const resultWork = value.work ? `:${value.work.join('.')}` : '';
+		const resultPassage = value.passage ? `:${value.passage.join('-')}` : '';
+		return result + resultWork + resultPassage;
 	},
 
 	parseLiteral(ast) {
@@ -26,6 +27,7 @@ const CtsUrn = new GraphQLScalarType({
 		let textGroupAndWork = [];
 		let textGroup = '';
 		let work = '';
+		console.log(ast);
 
 		switch (ast.kind) {
 		case 'StringValue':
@@ -33,15 +35,18 @@ const CtsUrn = new GraphQLScalarType({
 			ctsUrnParams = value.split(':');
 
 			if (ctsUrnParams.length) {
-				textGroupAndWork = ctsUrnParams[3].split('.');
-				textGroup = textGroupAndWork.shift();
-				work = textGroupAndWork.join('.');
+				console.log(ctsUrnParams.length > 3);
+				if (ctsUrnParams.length > 3) {
+					textGroupAndWork = ctsUrnParams[3].split('.');
+					textGroup = textGroupAndWork.shift();
+					work = textGroupAndWork.join('.');
+				}
 
 				result = {};
 				result.ctsNamespace = ctsUrnParams[2];
 				result.textGroup = textGroup;
 				result.work = work;
-				result.passage = ctsUrnParams[4].split('-');
+				result.passage = ctsUrnParams[4] ? ctsUrnParams[4].split('-') : '1.1-1.2';
 			}
 			break;
 		case 'ObjectValue':

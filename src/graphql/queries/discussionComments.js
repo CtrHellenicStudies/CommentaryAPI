@@ -29,7 +29,6 @@ const discussionCommentQueryFields = {
 			const dicussionCommentService = new DiscussionCommentService(token);
 			return dicussionCommentService.discussionCommentsGet(tenantId, commentId, userId)
 			.then(function(comments) {
-				console.log(comments);
 				return comments;
 			});
 		},

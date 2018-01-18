@@ -163,12 +163,9 @@ const CommentInputType = new GraphQLInputObjectType({
 				work: {
 					type: GraphQLString
 				},
-				passageFrom: {
-					type: PassageInputType,
-				},
-				passageTo: {
-					type: PassageInputType,
-				},
+				passage: {
+					type: GraphQLString
+				}
 			}
 		}),
 	},
@@ -311,12 +308,9 @@ const CommentType = new GraphQLObjectType({
 					work: {
 						type: GraphQLString
 					},
-					passageFrom: {
-						type: PassageType,
-					},
-					passageTo: {
-						type: PassageType,
-					},
+					passage: {
+						type: GraphQLString
+					}
 				}
 			}),
 		},
