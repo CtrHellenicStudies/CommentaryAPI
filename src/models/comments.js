@@ -193,6 +193,9 @@ const CommentsModel = new mongoose.Schema({
 			work: {
 				type: String
 			},
+			passage: {
+				type: String
+			},
 			passageFrom: {
 				type: String
 			},
@@ -267,15 +270,16 @@ function getURN(comment) {
 	return _getCommentURN(comment);
 }
 
+// hooks:
 CommentsModel.pre('insert', function(userId, doc) {
 	doc.urn = getURN(doc);
 });
 
-CommentsModel.pre('update', function(userId, doc, fieldNames, modifier, options) {
-	if (modifier) {
-		modifier.$set.urn = getURN(doc);
-	}
-});
+// CommentsModel.pre('update', function(userId, doc, fieldNames, modifier, options) {
+// 	if(modifier) {
+// 		modifier.$set.urn = getURN(doc);
+// 	}
+// });
 
 const Comments = mongoose.model('Comments', CommentsModel);
 

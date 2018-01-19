@@ -10,7 +10,7 @@ function commentUpdate(id, comment) {
 				console.log(err);
 				rejected1(1);
 			}
-			console.log(_id, updated);
+			console.log(id, updated);
 			resolve1(updated);
 		});
 	});
@@ -31,6 +31,10 @@ export async function passage() {
 
 						lemmaCitation.passageFrom = cutted[0];
 						lemmaCitation.passageTo = cutted[1];
+						if (lemmaCitation.collection) {
+							lemmaCitation.corpus = lemmaCitation.collection;
+							delete lemmaCitation.collection;
+						}
 						delete lemmaCitation.passage;
 
 						comment.lemmaCitation = lemmaCitation;
