@@ -12,6 +12,7 @@ import cookieParser from 'cookie-parser';
 
 // dotenv
 import dotenvSetup from './dotenv';
+// import { passage } from './migrations/passage';
 
 // mongoDB
 import dbSetup, { storeSetup } from './mongoose';
@@ -92,12 +93,16 @@ function listen() {
 		console.info(`Application listening on port ${app.get('port')}`);
 	});
 }
-
 db.on('error', console.error)
   .on('disconnected', dbSetup)
   .once('open', () => {
 	console.info(`Connected to mongodb ( host: ${db.host}, port: ${db.port}, name: ${db.name} )`);
 
-    // START application:
+	// START application:
 	listen();
+	// setTimeout(function() {
+	// 	passage().then(function() {
+	//    		console.log('Migration done!');
+	// 	   });
+	// }, 3000);
 });

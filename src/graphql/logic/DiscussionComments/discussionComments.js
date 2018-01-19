@@ -30,7 +30,6 @@ export default class DiscussionCommentService extends PermissionsService {
 		if (userId) {
 			args.userId = userId;
 		}
-		console.log(userId, commentId, tenantId);
 
 		return DiscussionComments.find(args).exec();
 	}

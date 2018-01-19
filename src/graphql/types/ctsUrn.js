@@ -27,7 +27,6 @@ const CtsUrn = new GraphQLScalarType({
 		let textGroupAndWork = [];
 		let textGroup = '';
 		let work = '';
-		console.log(ast);
 
 		switch (ast.kind) {
 		case 'StringValue':
@@ -35,7 +34,6 @@ const CtsUrn = new GraphQLScalarType({
 			ctsUrnParams = value.split(':');
 
 			if (ctsUrnParams.length) {
-				console.log(ctsUrnParams.length > 3);
 				if (ctsUrnParams.length > 3) {
 					textGroupAndWork = ctsUrnParams[3].split('.');
 					textGroup = textGroupAndWork.shift();
