@@ -51,6 +51,7 @@ const keywordsMutationFields = {
 		async resolve (parent, {keyword}, { token }) {
 			const keywordService = new KeywordService({ token });
 			return keywordService.keywordInsert(keyword).then(function(insertedKeyword) {
+				console.log(insertedKeyword);
 				return insertedKeyword;
 			});
 		}
