@@ -149,28 +149,28 @@ const CommentInputType = new GraphQLInputObjectType({
 		updated: {
 			type: GraphQLDateTime,
 		},
-	},
-	lemmaCitation: {
-		type: new GraphQLInputObjectType({
-			name: 'LemmaCitationInputType',
-			fields: {
-				corpus: {
-					type: GraphQLString
-				},
-				textGroup: {
-					type: GraphQLString
-				},
-				work: {
-					type: GraphQLString
-				},
-				passageFrom: {
-					type: GraphQLString
-				},
-				passageTo: {
-					type: GraphQLString
+		lemmaCitation: {
+			type: new GraphQLInputObjectType({
+				name: 'LemmaCitationInputType',
+				fields: {
+					corpus: {
+						type: GraphQLString
+					},
+					textGroup: {
+						type: GraphQLString
+					},
+					work: {
+						type: GraphQLString
+					},
+					passageFrom: {
+						type: GraphQLString
+					},
+					passageTo: {
+						type: GraphQLString
+					}
 				}
-			}
-		}),
+			}),
+		}
 	},
 });
 /**

@@ -194,7 +194,8 @@ const CommentsModel = new mongoose.Schema({
 				type: String
 			},
 			passage: {
-				type: String
+				type: String,
+				optional: true
 			},
 			passageFrom: {
 				type: String
@@ -210,29 +211,11 @@ const CommentsModel = new mongoose.Schema({
 const COMMENT_ID_LENGTH = 7;
 
 const _getCommentURN = (comment) => {
-	const work = Works.findOne({ slug: comment.work.slug });
 	const tenant = Tenants.findOne({_id: comment.tenantId});
 	const urnPrefixV1 = 'urn:cts:CHS.Commentary';
 	const urnPrefixV2 = `urn:cts:CHS:Commentaries. ${tenant.subdomain.toUpperCase()}`;
 	// Use work tlg if it exists, otherwise, search for subwork tlg number
 	// Failing either, just use creator
-	let urnTLG = work.tlgCreator;
-	if (work.tlg && work.tlg.length) {
-		urnTLG += `.${work.tlg}`;
-	} else {
-		work.subworks.forEach((subwork) => {
-			if (
-					subwork.n === comment.subwork.n
-				&& subwork.tlgNumber
-				&& subwork.tlgNumber.length
-			) {
-				urnTLG += `.${subwork.tlgNumber}`;
-			}
-		});
-	}
-
-	//
-	urnTLG += '.chsCommentary';
 	const workTitle = comment.work.title.replace(' ', '');
 
 	let urnComment = `${workTitle}.${comment.subwork.title}.${comment.lineFrom}`;
