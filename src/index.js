@@ -100,9 +100,4 @@ db.on('error', console.error)
 
 	// START application:
 	listen();
-	// setTimeout(function() {
-	// 	passage().then(function() {
-	//    		console.log('Migration done!');
-	// 	   });
-	// }, 3000);
 });

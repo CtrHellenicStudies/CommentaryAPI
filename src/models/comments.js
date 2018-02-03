@@ -193,15 +193,11 @@ const CommentsModel = new mongoose.Schema({
 			work: {
 				type: String
 			},
-			passage: {
-				type: String,
-				optional: true
-			},
 			passageFrom: {
-				type: String
+				type: [Number],
 			},
 			passageTo: {
-				type: String
+				type: [Number],
 			}
 		})
 	}

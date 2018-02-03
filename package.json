@@ -59,6 +59,7 @@
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
     "uuid": "^3.1.0",
+    "winston": "^2.4.0",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
