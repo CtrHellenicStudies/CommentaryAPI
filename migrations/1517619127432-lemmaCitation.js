@@ -50,9 +50,15 @@ const tlgMappingForWorks = [{
  */
 export async function up () {
 	winston.info('Starting comment lemmaCitation migration');
-	// update all comments
+	// update all comments except annotations
 	const comments = await this('Comments').find();
 	comments.forEach(async (comment) => {
+
+		// do not process annotations -- but this couldn't be added to the query easily
+		if (comment.isAnnotation) {
+			return;
+		}
+
 		const lemmaCitation = {
 			corpus: 'greekLit',
 			textGroup: null,
@@ -68,9 +74,22 @@ export async function up () {
 				&& comment.work.slug === mapping.slug
 			) {
 				lemmaCitation.textGroup = mapping.tlgAuthor;
-				lemmaCitation.work = mapping.tlg;
+
+				if (comment.work.slug === 'homeric-hymns') {
+					if (comment.subwork.title.length === 1) {
+						lemmaCitation.work = `tlg00${comment.subwork.n}`;
+					} else if (comment.subwork.title.length === 2) {
+						lemmaCitation.work = `tlg0${comment.subwork.n}`;
+					}
+				} else {
+					lemmaCitation.work = mapping.tlg;
+				}
 			}
 		});
+
+		if (!lemmaCitation.work) {
+			console.log(`Review error migrating comment ${comment._id} manually`);
+		}
 
 		// set passageFrom and passageTo
 		if (comment.subwork) {
