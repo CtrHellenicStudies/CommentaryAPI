@@ -50,7 +50,7 @@ const tlgMappingForWorks = [{
  */
 export async function up () {
 	winston.info('Starting comment lemmaCitation migration');
-  // update all comments
+	// update all comments
 	const comments = await this('Comments').find();
 	comments.forEach(async (comment) => {
 		const lemmaCitation = {
@@ -61,7 +61,7 @@ export async function up () {
 			passageTo: null,
 		};
 
-    // set tlg information for urns
+		// set tlg information for urns
 		tlgMappingForWorks.forEach((mapping) => {
 			if (
 				comment.work
@@ -72,7 +72,7 @@ export async function up () {
 			}
 		});
 
-    // set passageFrom and passageTo
+		// set passageFrom and passageTo
 		if (comment.subwork) {
 			lemmaCitation.passageFrom = [comment.subwork.n, comment.lineFrom];
 			if ('lineTo' in comment && comment.lineTo) {
@@ -80,7 +80,7 @@ export async function up () {
 			}
 		}
 
-    // update comments
+		// update comments
 		const update = await this('Comments').update({
 			_id: comment._id,
 		}, {
@@ -105,9 +105,9 @@ export async function down () {
 	winston.info('Reverting comment lemmaCitation migration');
 	const comments = await this('Comments').find();
 
-  // update all comments
+	// update all comments
 	comments.forEach(async (comment) => {
-    // set tlg information for urns
+		// set tlg information for urns
 		tlgMappingForWorks.forEach((mapping) => {
 			if (
 				comment.lemmaCitation
@@ -117,19 +117,21 @@ export async function down () {
 			}
 		});
 
-    // set subwork
-		comment.subwork = {
-			title: comment.lemmaCitation.passageFrom[0],
-			n: comment.lemmaCitation.passageFrom[0],
-		};
+		if (comment.lemmaCitation.passageFrom && comment.lemmaCitation.passageFrom.length) {
+		// set subwork
+			comment.subwork = {
+				title: comment.lemmaCitation.passageFrom[0],
+				n: comment.lemmaCitation.passageFrom[0],
+			};
 
-    // set linefrom, lineto
-		comment.lineFrom = comment.lemmaCitation.passageFrom[1];
-		if (comment.lemmaCitation.passageTo && comment.lemmaCitation.passageTo.length) {
-			comment.lineTo = comment.lemmaCitation.passageTo[1];
+			// set linefrom, lineto
+			comment.lineFrom = comment.lemmaCitation.passageFrom[1];
+			if (comment.lemmaCitation.passageTo && comment.lemmaCitation.passageTo.length) {
+				comment.lineTo = comment.lemmaCitation.passageTo[1];
+			}
 		}
 
-    // update comments
+		// update comments
 		const update = await this('Comments').update({
 			_id: comment._id,
 		}, {
