@@ -75,21 +75,6 @@ const CommentInputType = new GraphQLInputObjectType({
 		users: {
 			type: new GraphQLList(GraphQLString),
 		},
-		work: {
-			type: WorkInputType
-		},
-		subwork: {
-			type: SubworkInput
-		},
-		lineFrom: {
-			type: GraphQLInt,
-		},
-		lineTo: {
-			type: GraphQLInt,
-		},
-		lineLetter: {
-			type: GraphQLString,
-		},
 		bookChapterUrl: {
 			type: GraphQLString,
 		},
@@ -163,14 +148,14 @@ const CommentInputType = new GraphQLInputObjectType({
 						type: GraphQLString
 					},
 					passageFrom: {
-						type: GraphQLString
+						type: new GraphQLList(GraphQLInt),
 					},
 					passageTo: {
-						type: GraphQLString
+						type: new GraphQLList(GraphQLInt),
 					}
-				}
+				},
 			}),
-		}
+		},
 	},
 });
 /**
@@ -212,21 +197,6 @@ const CommentType = new GraphQLObjectType({
 		},
 		users: {
 			type: new GraphQLList(GraphQLString),
-		},
-		work: {
-			type: WorkType
-		},
-		subwork: {
-			type: Subwork
-		},
-		lineFrom: {
-			type: GraphQLInt,
-		},
-		lineTo: {
-			type: GraphQLInt,
-		},
-		lineLetter: {
-			type: GraphQLString,
 		},
 		bookChapterUrl: {
 			type: GraphQLString,
@@ -312,12 +282,12 @@ const CommentType = new GraphQLObjectType({
 						type: GraphQLString
 					},
 					passageFrom: {
-						type: GraphQLString
+						type: new GraphQLList(GraphQLInt),
 					},
 					passageTo: {
-						type: GraphQLString
-					}
-				}
+						type: new GraphQLList(GraphQLInt),
+					},
+				},
 			}),
 		},
 	},
