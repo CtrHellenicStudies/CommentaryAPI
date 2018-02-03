@@ -184,7 +184,7 @@ const CommentsModel = new mongoose.Schema({
 	},
 	lemmaCitation: {
 		type: new mongoose.Schema({
-			corpus: {
+			ctsNamespace: {
 				type: String
 			},
 			textGroup: {

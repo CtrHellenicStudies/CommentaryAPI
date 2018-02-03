@@ -60,7 +60,7 @@ export async function up () {
 		}
 
 		const lemmaCitation = {
-			corpus: 'greekLit',
+			ctsNamespace: 'greekLit',
 			textGroup: null,
 			work: null,
 			passageFrom: null,

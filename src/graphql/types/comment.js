@@ -153,7 +153,7 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: new GraphQLInputObjectType({
 				name: 'LemmaCitationInputType',
 				fields: {
-					corpus: {
+					ctsNamespace: {
 						type: GraphQLString
 					},
 					textGroup: {
@@ -302,7 +302,7 @@ const CommentType = new GraphQLObjectType({
 			type: new GraphQLObjectType({
 				name: 'LemmaCitationType',
 				fields: {
-					corpus: {
+					ctsNamespace: {
 						type: GraphQLString
 					},
 					textGroup: {
