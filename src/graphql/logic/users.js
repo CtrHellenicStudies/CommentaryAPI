@@ -65,6 +65,7 @@ export default class UserService extends PermissionsService {
 		}
 		throw new AuthenticationError();
 	}
+	
 	/**
 	 * Remove a user
 	 * @param {string} userId - id of user
@@ -76,6 +77,7 @@ export default class UserService extends PermissionsService {
 		}
 		throw new AuthenticationError();
 	}
+
 	/**
 	 * Get the user information of the user currently logged in to Meteor
 	 * @returns {Object} the user data for the currently logged in user
@@ -83,6 +85,7 @@ export default class UserService extends PermissionsService {
 	getAuthedUser() {
 		return this.user;
 	}
+
 	/**
 	 * Get a user's public information by their id
 	 * @param {string} _id - id of user
@@ -106,6 +109,7 @@ export default class UserService extends PermissionsService {
 				recentPositions: 1,
 			}).exec();
 	}
+
 	/**
 	 * Get multiple users' public information by their id
 	 * @param {string[]} userIds - an array of user ids
@@ -137,6 +141,7 @@ export default class UserService extends PermissionsService {
 		}).exec();
 
 	}
+
 	/**
 	 * Update the most recent position of given users
 	 * @param {Object} position - position information about where a user was most
