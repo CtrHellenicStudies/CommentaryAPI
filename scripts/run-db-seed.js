@@ -28,7 +28,7 @@ db.on('error', console.error)
 
 		// generate projects with users
 		try {
-			ids.projects = await generateProjects(10, ids.users);
+			ids.projects = await generateProjects(1, ids.users);
 		} catch (err) {
 			console.error(err);
 		}
