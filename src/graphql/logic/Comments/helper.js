@@ -15,9 +15,10 @@ function prepareGetCommentsOptions(limit, skip, sortRecent) {
 
 	const options = {
 		sort: {
-			'work.order': 1,
-			'subwork.n': 1,
-			lineFrom: 1,
+			'lemmaCitation.ctsNamespace': 1,
+			'lemmaCitation.textGroup': 1,
+			'lemmaCitation.work': 1,
+			'lemmaCitation.passageFrom': 1, // TODO: test sorting on array value or if not need to store index from textserver
 			nLines: -1,
 		}
 	};
@@ -44,7 +45,7 @@ const _getCommentURN = comment => new Promise(function(resolve, rejected) {
 	Works.findOne({ slug: comment.work.slug }).exec().then(function(work) {
 		Tenants.findOne({_id: comment.tenantId}).then(function(tenant) {
 			const urnPrefixV1 = 'urn:cts:CHS.Commentary';
-			const urnPrefixV2 = `urn:cts:CHS:Commentaries. ${tenant.subdomain.toUpperCase()}`;
+			const urnPrefixV2 = `urn:cts:CHS:Commentaries.${tenant.subdomain.toUpperCase()}`;
 				// Use work tlg if it exists, otherwise, search for subwork tlg number
 				// Failing either, just use creator
 			const workTitle = comment.work.title.replace(' ', '');
@@ -69,11 +70,11 @@ const _getAnnotationURN = comment => new Promise(function(resolve, rejected) {
 		Tenants.findOne({_id: comment.tenantId}).exec().then(function(tenant) {
 			const chapter = _.find(book.chapters, c => c.url === comment.bookChapterUrl);
 			const urnPrefixV1 = 'urn:cts:CHS.Annotations';
-			const urnPrefixV2 = `urn:cts:CHS:Annotations. ${tenant.subdomain.toUpperCase()}`;
+			const urnPrefixV2 = `urn:cts:CHS:Annotations.${tenant.subdomain.toUpperCase()}`;
 			const urnBook = `${book.authorURN}.${book.slug}`;
 			const urnComment = `${chapter.n}.${comment.paragraphN}`;
 			const urnCommentId = `${JSON.stringify(comment._id).slice(-COMMENT_ID_LENGTH)}`;
-			
+
 			const ret = {
 				v1: `${urnPrefixV1}:${urnComment}.${urnCommentId}`,
 				v2: `${urnPrefixV2}:${urnComment}.${urnCommentId}`
@@ -90,13 +91,13 @@ function getURN(comment) {
 	return _getCommentURN(comment);
 }
 function prepareNotification(comment) {
-	
+
 	const commenterId = comment.commenters[0]._id;
 	const userAvatar = Commenters.findOne({_id: commenterId}, {'avatar.src': 1});
-	
+
 	const avatar = userAvatar && userAvatar.avatar ? userAvatar.avatar.src : '/images/default_user.jpg';
 
-	const lines = comment.lineTo !== comment.lineFrom ? 
+	const lines = comment.lineTo !== comment.lineFrom ?
 	`lines ${comment.lineFrom} - ${comment.lineTo}` :
 	`${comment.lineTo}`;
 
@@ -133,7 +134,7 @@ function prepareEmailList(comment) {
 	};
 	const options = { multi: true };
 	const subscribedUsers = Meteor.users.update(query, updateUser, notification, options);
-	
+
 	// send notification email
 	const emailListQuery = {
 		$and: [
@@ -163,7 +164,7 @@ function prepareEmailList(comment) {
 	};
 
 	const emailList = Meteor.users.find(emailListQuery);
-	
+
 }
 function sendUpdateNotification(comment) {
 
@@ -197,9 +198,8 @@ function sendUpdateNotification(comment) {
 	});
 
 }
-export { 
+export {
 	prepareGetCommentsOptions,
 	getURN,
 	prepareEmailList
 };
-

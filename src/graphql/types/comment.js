@@ -75,21 +75,6 @@ const CommentInputType = new GraphQLInputObjectType({
 		users: {
 			type: new GraphQLList(GraphQLString),
 		},
-		work: {
-			type: WorkInputType
-		},
-		subwork: {
-			type: SubworkInput
-		},
-		lineFrom: {
-			type: GraphQLInt,
-		},
-		lineTo: {
-			type: GraphQLInt,
-		},
-		lineLetter: {
-			type: GraphQLString,
-		},
 		bookChapterUrl: {
 			type: GraphQLString,
 		},

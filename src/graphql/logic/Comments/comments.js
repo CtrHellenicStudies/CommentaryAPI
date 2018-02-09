@@ -22,58 +22,59 @@ export default class CommentService extends PermissionsService {
 	 * @param {boolean} sortRecent - if should sort in the recent sequence
 	 * @returns {Object[]} array of comments
 	 */
-	commentsGet(queryParam, limit, skip, sortRecent) {
+	async commentsGet(queryParam, limit, skip, sortRecent) {
 
+		// prepare options for comments query
 		const options = prepareGetCommentsOptions(limit, skip);
+
+		// parse query for database from query params
 		let query;
 		if (queryParam === null || queryParam === undefined) {
 			query = {};
 		} else {
 			query = JSON.parse(queryParam);
 		}
-		query.isAnnotation = {$ne: true};
-		return new Promise(function(resolve, reject) {
-			Comments.find(query)
+
+		// only query comments that are not annotations
+		query.isAnnotation = { $ne: true };
+
+		// query comments
+		const comments = await Comments.find(query)
 			.limit(options.limit)
 			.sort(options.sort)
-			.skip(options.skip)
-			.exec()
-			.then(function(comments) {
-				const promises = [];
-				for (let i = 0; i < comments.length; i += 1) {
-					const queryCommenters = { $or: [] };
-					const queryReferenceWorks = { $or: [] };
-					for (let j = 0; j < comments[i].commenters.length; j += 1) {
-						queryCommenters.$or.push({slug: comments[i].commenters[j].slug});
-					}
-					for (let j = 0; j < comments[i].referenceWorks.length; j += 1) {
-						queryReferenceWorks.$or.push({_id: comments[i].referenceWorks[j].referenceWorkId});
-					}
-					// if (queryReferenceWorks.$or.length > 0) {
-					// 	promises.push(new Promise(function(resolveNew, rejectNew) {
-					// 		const currentComment = comments[i];
-					// 		ReferenceWorks.find(queryReferenceWorks).exec().then(function(referenceWorks) {
-					// 			currentComment.referenceWorks = referenceWorks;
-					// 			for (let k = 0; k < referenceWorks.length; k += 1) {
-					// 				currentComment.referenceWorks[k] = referenceWorks[k];
-					// 			}
-					// 			resolveNew(1);
-					// 		});
-					// 	}));
-					// }
-					promises.push(new Promise(function(resolveNew, rejectNew) {
-						const currentComment = comments[i];
-						Commenters.find(queryCommenters).exec().then(function(commenters) {
-							currentComment.commenters = commenters;
-							resolveNew(1);
-						});
-					}));
-				}
-				Promise.all(promises).then(function() {
-					resolve(comments);
-				});
-			});
-		});
+			.skip(options.skip);
+
+		// Do subqueries for all found comments
+		for (let i = 0; i < comments.length; i += 1) {
+			const queryCommenters = { };
+			const queryReferenceWorks = { };
+
+			// subquery for commenters
+			if (comments[i].commenters.length) {
+				queryCommenters.$or = [];
+			}
+			for (let j = 0; j < comments[i].commenters.length; j += 1) {
+				queryCommenters.$or.push({slug: comments[i].commenters[j].slug});
+			}
+
+			// subquery for reference works
+			if (comments[i].referenceWorks.length) {
+				queryReferenceWorks.$or = [];
+			}
+			for (let j = 0; j < comments[i].referenceWorks.length; j += 1) {
+				queryReferenceWorks.$or.push({_id: comments[i].referenceWorks[j].referenceWorkId});
+			}
+
+			// set commenters on current comment
+			const commenters = await Commenters.find(queryCommenters); 
+			comments[i].commenters = commenters;
+
+			// set referenceWorks on current comment
+			const referenceWorks = await ReferenceWorks.find(queryReferenceWorks);
+			comments[i].referenceWorks = referenceWorks;
+		}
+
+		return comments;
 	}
 	/**
 	 *
@@ -125,17 +126,19 @@ export default class CommentService extends PermissionsService {
 	 * @param {number} skip - mongo orm skip
 	 * @returns {Object[]} array of comments
 	 */
-	async commentsGetURN(urn, limit = 20, skip = 0) {
-		const args = {};
+	async commentsGetByURN(urn, limit = 20, skip = 0) {
+		const args = {
+			'lemmaCitation.ctsNamespace': urn.ctsNamespace,
+			'lemmaCitation.textGroup': urn.textGroup,
+			'lemmaCitation.work': urn.work,
+		};
+
 		let comments = [];
 
-		// set the lemma citation from the input cts urn
-		args.lemmaCitation = {
-			collection: `urn:cts:${urn.ctsNamespace}`,
-			textGroup: urn.textGroup,
-			work: urn.work,
-			passage: urn.passage.join('-'),
-		};
+		args['lemmaCitation.passageFrom'] = urn.passage[0];
+		if (urn.passage.length > 1) {
+			args['lemmaCitation.passageTo'] = urn.passage[1];
+		}
 
 		const options = prepareGetCommentsOptions(skip, limit);
 
@@ -152,16 +155,17 @@ export default class CommentService extends PermissionsService {
 	 * @returns {Object[]} array of comments
 	 */
 	async commentsGetCommentedOnBy(urn, commenterIds, limit = 20, skip = 0) {
-		const args = {};
+		const args = {
+			'lemmaCitation.ctsNamespace': urn.ctsNamespace,
+			'lemmaCitation.textGroup': urn.textGroup,
+			'lemmaCitation.work': urn.work,
+		};
 		let comments = [];
 
-		// set the lemma citation from the input cts urn
-		args.lemmaCitation = {
-			collection: `urn:cts:${urn.ctsNamespace}`,
-			textGroup: urn.textGroup,
-			work: urn.work,
-			passage: urn.passage.join('-'),
-		};
+		args['lemmaCitation.passageFrom'] = urn.passage[0];
+		if (urn.passage.length > 1) {
+			args['lemmaCitation.passageTo'] = urn.passage[1];
+		}
 
 		// set the commenter id of input commenterIds
 		args['commenters._id'] = commenterIds;
