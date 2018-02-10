@@ -66,7 +66,7 @@ export default class CommentService extends PermissionsService {
 			}
 
 			// set commenters on current comment
-			const commenters = await Commenters.find(queryCommenters); 
+			const commenters = await Commenters.find(queryCommenters);
 			comments[i].commenters = commenters;
 
 			// set referenceWorks on current comment
