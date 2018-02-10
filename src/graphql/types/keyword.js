@@ -5,7 +5,6 @@ import {
 	GraphQLInputObjectType,
 } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
-import { Subwork, SubworkInput } from './subworks';
 
 /**
  * Keyword type
@@ -34,37 +33,6 @@ const KeywordType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		count: {
-			type: GraphQLInt,
-		},
-		work: {
-			type: new GraphQLObjectType({
-				name: 'WorkKeywords',
-				fields: {
-					order: {
-						type: GraphQLInt
-					},
-					title: {
-						type: GraphQLString
-					},
-					slug: {
-						type: GraphQLString
-					}
-				}
-			}),
-		},
-		subwork: {
-			type: Subwork,
-		},
-		lineFrom: {
-			type: GraphQLInt,
-		},
-		lineTo: {
-			type: GraphQLInt,
-		},
-		lineLetter: {
-			type: GraphQLString,
-		},
-		nLines: {
 			type: GraphQLInt,
 		},
 		tenantId: {
@@ -100,37 +68,6 @@ const KeywordInputType = new GraphQLInputObjectType({
 			type: GraphQLString,
 		},
 		count: {
-			type: GraphQLInt,
-		},
-		work: {
-			type: new GraphQLInputObjectType({
-				name: 'WorkInputKeywords',
-				fields: {
-					order: {
-						type: GraphQLInt
-					},
-					title: {
-						type: GraphQLString
-					},
-					slug: {
-						type: GraphQLString
-					}
-				}
-			}),
-		},
-		subwork: {
-			type: SubworkInput,
-		},
-		lineFrom: {
-			type: GraphQLInt,
-		},
-		lineTo: {
-			type: GraphQLInt,
-		},
-		lineLetter: {
-			type: GraphQLString,
-		},
-		nLines: {
 			type: GraphQLInt,
 		},
 		tenantId: {

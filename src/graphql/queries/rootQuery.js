@@ -7,15 +7,11 @@ import userQueryFields from './users';
 import annotationQueryFields from './annotations';
 import bookQueryFields from './books';
 import pagesQueryFields from './pages';
-import editionsQueryFields from './editions';
 import settingsQueryFields from './settings';
-import workQueryFields from './works';
 import tenantsQueryFields from './tenants';
 import keywordQueryFields from './keywords';
 import referenceWorkQueryFields from './referenceWorks';
 import discussionCommentQueryFields from './discussionComments';
-import translationsQueryFields from './translation';
-import textNodeQueryFields from './textNodes';
 
 /**
  * Root Queries
@@ -31,17 +27,12 @@ const RootQuery = new GraphQLObjectType({
 		...annotationQueryFields,
 		...bookQueryFields,
 		...pagesQueryFields,
-		...editionsQueryFields,
 		...settingsQueryFields,
-		...workQueryFields,
 		...tenantsQueryFields,
 		...keywordQueryFields,
 		...referenceWorkQueryFields,
 		...discussionCommentQueryFields,
 		...commentQueryFields,
-		...translationsQueryFields,
-		...textNodeQueryFields
-
 	},
 });
 
