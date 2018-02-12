@@ -8,7 +8,7 @@ import {
 
 // types
 import CommentType from '../types/comment';
-import CtsUrnType from '../../modules/cts/graphql/types/CtsUrn';
+// import CtsUrnType from '../../modules/cts/graphql/types/CtsUrn';
 
 // logic
 import CommentService from '../logic/Comments/comments';
@@ -64,7 +64,7 @@ const commentQueryFields = {
 		description: 'Get list of comments via urn and paginated via skip/limit. Relates a scholion to the passage of text it comments on.',
 		args: {
 			urn: {
-				type: new GraphQLNonNull(CtsUrnType),
+				type: new GraphQLNonNull(GraphQLString),
 			},
 			limit: {
 				type: GraphQLInt,
@@ -84,7 +84,7 @@ const commentQueryFields = {
 		description: 'Get list of comments provided at a and paginated via skip/limit. Relates a passage of text to a scholion commenting on it.',
 		args: {
 			urn: {
-				type: new GraphQLNonNull(CtsUrnType),
+				type: new GraphQLNonNull(GraphQLString),
 			},
 			commenterIds: {
 				type: new GraphQLNonNull(new GraphQLList(GraphQLString)),

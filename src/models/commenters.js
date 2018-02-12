@@ -32,27 +32,27 @@ const CommentersModel = new mongoose.Schema({
 			type: String,
 			optional: true,
 		},
-	
+
 		filename: {
 			type: String,
 			optional: true,
 		},
-	
+
 		type: {
 			type: String,
 			optional: true,
 		},
-	
+
 		size: {
 			type: Number,
 			optional: true,
 		},
-	
+
 		directive: {
 			type: String,
 			optional: true,
 		},
-	
+
 		key: {
 			type: String,
 			optional: true,
@@ -87,21 +87,6 @@ const CommentersModel = new mongoose.Schema({
 		type: [Object],
 		optional: true,
 		blackbox: true,
-	},
-
-	nCommentsIliad: {
-		type: Number,
-		optional: true,
-	},
-
-	nCommentsOdyssey: {
-		type: Number,
-		optional: true,
-	},
-
-	nCommentsHymns: {
-		type: Number,
-		optional: true,
 	},
 
 	nCommentsKeywords: {

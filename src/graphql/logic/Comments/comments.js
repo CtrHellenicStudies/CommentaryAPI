@@ -7,6 +7,7 @@ import { AuthenticationError } from '../../errors/index';
 import PermissionsService from '../PermissionsService';
 
 import { prepareGetCommentsOptions, getURN } from './helper';
+import { parseValueUrn } from '../../../modules/cts/lib/parseUrn';
 
 /**
  * Logic-layer service for dealing with comments
@@ -66,7 +67,7 @@ export default class CommentService extends PermissionsService {
 			}
 
 			// set commenters on current comment
-			const commenters = await Commenters.find(queryCommenters); 
+			const commenters = await Commenters.find(queryCommenters);
 			comments[i].commenters = commenters;
 
 			// set referenceWorks on current comment
@@ -92,7 +93,8 @@ export default class CommentService extends PermissionsService {
 		const options = prepareGetCommentsOptions(limit, skip);
 		return Comments.find(args).limit(options.limit).skip(options.skip);
 	}
-		/**
+
+	/**
 	 * Get comments for admin interface
 	 * @param {string} queryParam - query describing comments to get
 	 * @param {number} limit - mongo orm limit
@@ -127,23 +129,27 @@ export default class CommentService extends PermissionsService {
 	 * @returns {Object[]} array of comments
 	 */
 	async commentsGetByURN(urn, limit = 20, skip = 0) {
+		// parse input urn
+		const parsedUrn = parseValueUrn(urn);
+
+		// set comment query args
 		const args = {
-			'lemmaCitation.ctsNamespace': urn.ctsNamespace,
-			'lemmaCitation.textGroup': urn.textGroup,
-			'lemmaCitation.work': urn.work,
+			'lemmaCitation.ctsNamespace': parsedUrn.ctsNamespace,
+			'lemmaCitation.textGroup': parsedUrn.textGroup,
+			'lemmaCitation.work': parsedUrn.work,
 		};
 
-		let comments = [];
-
-		args['lemmaCitation.passageFrom'] = urn.passage[0];
-		if (urn.passage.length > 1) {
-			args['lemmaCitation.passageTo'] = urn.passage[1];
+		// set comment query passage range
+		args['lemmaCitation.passageFrom'] = parsedUrn.passage[0];
+		if (parsedUrn.passage.length > 1) {
+			args['lemmaCitation.passageTo'] = parsedUrn.passage[1];
 		}
 
+		// parse query options (sort, etc)
 		const options = prepareGetCommentsOptions(skip, limit);
 
-		comments = await Comments.find(args).limit(options.limit).sort(options.sort).exec();
-		return comments;
+		// return comments
+		return Comments.find(args).limit(options.limit).sort(options.sort).exec();
 	}
 
 	/**
@@ -155,24 +161,31 @@ export default class CommentService extends PermissionsService {
 	 * @returns {Object[]} array of comments
 	 */
 	async commentsGetCommentedOnBy(urn, commenterIds, limit = 20, skip = 0) {
-		const args = {
-			'lemmaCitation.ctsNamespace': urn.ctsNamespace,
-			'lemmaCitation.textGroup': urn.textGroup,
-			'lemmaCitation.work': urn.work,
-		};
-		let comments = [];
+		// parse input urn
+		console.log(urn);
+		const parsedUrn = parseValueUrn(urn);
+		console.log(parsedUrn);
 
-		args['lemmaCitation.passageFrom'] = urn.passage[0];
-		if (urn.passage.length > 1) {
-			args['lemmaCitation.passageTo'] = urn.passage[1];
+		// set comment query args
+		const args = {
+			'lemmaCitation.ctsNamespace': parsedUrn.ctsNamespace,
+			'lemmaCitation.textGroup': parsedUrn.textGroup,
+			'lemmaCitation.work': parsedUrn.work,
+		};
+
+		// set comment query passage range
+		args['lemmaCitation.passageFrom'] = parsedUrn.passage[0];
+		if (parsedUrn.passage.length > 1) {
+			args['lemmaCitation.passageTo'] = parsedUrn.passage[1];
 		}
 
 		// set the commenter id of input commenterIds
 		args['commenters._id'] = commenterIds;
 
+		// parse query options (sort, etc)
 		const options = prepareGetCommentsOptions(skip, limit);
 
-		comments = await Comments.find(args).limit(options.limit).sort(options.sort).exec();
-		return comments;
+		// return comments
+		return Comments.find(args).limit(options.limit).sort(options.sort).exec();
 	}
 }

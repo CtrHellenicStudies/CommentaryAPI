@@ -11,8 +11,6 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 import _ from 'underscore';
 
 import { CommenterType, CommenterInputType } from './commenter';
-import { WorkType, WorkInputType } from './work';
-import { Subwork, SubworkInput } from './subworks';
 import { ReferenceWorkType, ReferenceWorkInputType } from './referenceWork';
 import { KeywordType, KeywordInputType } from './keyword';
 import { DiscussionCommentType, DiscussionCommentInputType } from './discussionComment';
@@ -197,21 +195,6 @@ const CommentType = new GraphQLObjectType({
 		},
 		users: {
 			type: new GraphQLList(GraphQLString),
-		},
-		work: {
-			type: WorkType
-		},
-		subwork: {
-			type: Subwork
-		},
-		lineFrom: {
-			type: GraphQLInt,
-		},
-		lineTo: {
-			type: GraphQLInt,
-		},
-		lineLetter: {
-			type: GraphQLString,
 		},
 		bookChapterUrl: {
 			type: GraphQLString,

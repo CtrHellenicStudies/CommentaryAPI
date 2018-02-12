@@ -68,18 +68,6 @@ const CommenterType = new GraphQLObjectType({
 		nCommentsTotal: {
 			type: GraphQLInt,
 		},
-		nCommentsWorks: {
-			type: new GraphQLList(GraphQLJSON),
-		},
-		nCommentsIliad: {
-			type: GraphQLInt,
-		},
-		nCommentsOdyssey: {
-			type: GraphQLInt,
-		},
-		nCommentsHymns: {
-			type: GraphQLInt,
-		},
 		nCommentsKeywords: {
 			type: new GraphQLList(GraphQLJSON),
 		},
@@ -145,15 +133,6 @@ const CommenterInputType = new GraphQLInputObjectType({
 		},
 		nCommentsWorks: {
 			type: new GraphQLList(GraphQLJSON),
-		},
-		nCommentsIliad: {
-			type: GraphQLInt,
-		},
-		nCommentsOdyssey: {
-			type: GraphQLInt,
-		},
-		nCommentsHymns: {
-			type: GraphQLInt,
 		},
 		nCommentsKeywords: {
 			type: new GraphQLList(GraphQLJSON),

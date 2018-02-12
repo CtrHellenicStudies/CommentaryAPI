@@ -8,15 +8,11 @@ import bookMutationFields from './books';
 import commenterMutationFields from './commenters';
 import commentMutationFields from './comments';
 import discussionCommentsMutationFields from './discussionComments';
-import editionMutationFields from './editions';
 import keywordsMutationFields from './keywords';
 import pagesMutationFields from './pages';
 import referenceWorksMutationFields from './referenceWorks';
 import settingsMutationFields from './settings';
 import tenantsMutationFields from './tenants';
-import textNodeMutationFields from './textNodes';
-import translationsMutationFields from './translations';
-import worksMutationFields from './works';
 
 /**
  * Root mutations
@@ -34,15 +30,11 @@ const RootMutations = new GraphQLObjectType({
 		...commenterMutationFields,
 		...commentMutationFields,
 		...discussionCommentsMutationFields,
-		...editionMutationFields,
 		...keywordsMutationFields,
 		...pagesMutationFields,
 		...referenceWorksMutationFields,
 		...settingsMutationFields,
 		...tenantsMutationFields,
-		...textNodeMutationFields,
-		...translationsMutationFields,
-		...worksMutationFields
 	},
 });
 

@@ -3,6 +3,9 @@ const serializeUrn = (value) => {
 	if (!value) {
 		return '';
 	}
+	if (typeof value === 'string') {
+		return value;
+	}
 
 	let result = 'urn:cts';
 
@@ -23,6 +26,18 @@ const serializeUrn = (value) => {
 	} else {
 		return result;
 	}
+
+	/** version, exemplar, and translation are optional but must be in order */
+	if ('version' in value && value.version && value.version.length) {
+		result = `${result}.${value.version}`;
+		if ('exemplar' in value && value.exemplar && value.exemplar.length) {
+			result = `${result}.${value.exemplar}`;
+			if ('translation' in value && value.translation && value.translation.length) {
+				result = `${result}.${value.translation}`;
+			}
+		}
+	}
+
 
 	if ('passage' in value && value.passage && value.passage.length) {
 		result = `${result}:`;
