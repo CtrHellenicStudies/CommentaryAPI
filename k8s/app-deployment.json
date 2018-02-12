@@ -2,9 +2,9 @@
   "kind":"Deployment",
   "apiVersion":"extensions/v1beta1",
   "metadata": {
-    "name":"ahcip-api-app-dep",
+    "name":"ahcip-api-deployment",
     "labels": {
-      "name":"ahcip-api-app-dep"
+      "name":"ahcip-api-deployment"
     }
   },
   "spec":{
@@ -12,30 +12,25 @@
     "template": {
       "metadata": {
         "labels": {
-          "name":"ahcip-api-app-pod"
+          "name":"ahcip-api-pod"
         }
       },
       "spec": {
         "containers": [
           {
-            "name": "ahcip-api-app-cont",
-            "image": "us.gcr.io/archimedes-01201/ahcip-api-app:test",
-            "ports": [
-              {
-                "name": "http-server",
-                "containerPort": 3002
-              }
-            ],
+            "name": "ahcip-api-app",
+            "image": "us.gcr.io/archimedes-01201/ahcip-api:NEW_IMAGE_TAG",
             "env": [
               {
                 "name": "NODE_ENV",
-                "value": "production"
+                "value": "production" 
               },
               {
                 "name": "SESSION_SECRET",
                 "valueFrom": {
                   "secretKeyRef": {
-                    "name": "session-secret",
+                    "name": "secrets",
+                    "key": "session"
                   }
                 }
               },
@@ -43,39 +38,49 @@
                 "name": "JWT_SECRET",
                 "valueFrom": {
                   "secretKeyRef": {
-                    "name": "jwt-secret",
+                    "name": "secrets",
+                    "key": "jwt"
                   }
                 }
               },
               {
                 "name": "DB_HOST",
-                "value": "db.chs.orphe.us"
+                "value": "localhost"
               },
               {
                 "name": "DB_NAME",
-                "valueFrom": "ahcip"
+                "value": "ahcip-api"
               },
               {
-                "name": "WS_SERVER_PORT",
-                "value": 80
+                "name": "REDIS_HOST",
+                "value": "localhost"
               },
               {
-                "name": "WS_SERVER_HOST",
-                "value": "ws.chs.orphe.us"
-              },
-              {
-                "name": "WS_SERVER_URI",
-                "value": "subscriptions"
-              },
-              {
-                "name": "DEFAULT_LANGUAGE",
-                "value": "en"
-              },
-              {
-                "name": "AWS_BUCKET",
-                "value": "iiif-orpheus"
+                "name": "REDIS_PORT",
+                "value": "6379"
               }
             ]
+          }, {
+            "name": "ahcip-api-redis",
+            "image": "redis:4.0"
+          }, {
+            "name": "ahcip-api-mongo",
+            "image": "mongo:3.0",
+            "volumeMounts": [
+              {
+                "name": "mongo-disk",
+                "mountPath": "/data/db"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "mongo-disk",
+            "gcePersistentDisk": {
+              "pdName": "ahcip-api-mongo-disk",
+              "fsType": "ext4"
+            }
           }
         ]
       }

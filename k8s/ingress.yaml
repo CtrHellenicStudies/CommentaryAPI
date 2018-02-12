@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ahcip-chs-ingress
+spec:
+  # tls:
+  # - secretName: orpheus-certchain
+  rules:
+  - host: ahcip.chs.oprhe.us
+    http:
+      paths:
+      - backend:
+          serviceName: ahcip-api-service
+          servicePort: 3002
