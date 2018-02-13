@@ -48,6 +48,7 @@
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "passport-local-mongoose": "^4.0.0",
+    "pm2": "^2.9.3",
     "pre-commit": "^1.2.2",
     "react-autocomplete": "^1.5.10",
     "react-s3-uploader": "^4.2.0",
@@ -99,6 +100,9 @@
     "db:seed": "babel-node scripts/run-db-seed.js",
     "db:clear": "babel-node scripts/run-db-clear.js",
     "db:setup": "npm run db:clear && npm run db:seed",
+    "build": "babel src -d build",
+    "execute": "yarn pm2 start build/index.js --name express",
+    "build-and-execute": "concurrently \"yarn execute\" \"yarn build\"",
     "jsdoc": "jsdoc src -r -c .jsdoc.json -d docs"
   },
   "repository": {
