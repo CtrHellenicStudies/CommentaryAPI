@@ -7,7 +7,6 @@ import jwt from 'jsonwebtoken';
  */
 const generateJWT = (user) => {
 	const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-	console.log(user.canEditCommenters);
 	return { success: true,
 		token: `JWT ${token}`,
 		username: user.username,
