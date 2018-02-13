@@ -22,7 +22,7 @@ import RootMutation from './graphql/mutations/rootMutation';
  * via example Schema stitching from the repo mentioned here:
  * https://dev-blog.apollodata.com/graphql-schema-stitching-8af23354ac37
  */
-const createRemoteSchema = async (uri) => {
+const createRemoteSchema = async (uri: string) => {
 	const fetcher = createApolloFetch({uri});
 	return makeRemoteExecutableSchema({
 		schema: await introspectSchema(fetcher),
