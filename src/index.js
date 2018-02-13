@@ -38,6 +38,9 @@ import OrpheusEmail from './email';
 // Routes
 import authenticationRouter from './authentication/routes';
 
+// Health Check
+
+import healthCheck from './health-check';
 
 // environment variables setup
 dotenvSetup();
@@ -87,6 +90,8 @@ OrpheusEmail.setupTransport();
 
 // Routes
 app.use('/auth', authenticationRouter);
+
+app.use('/', healthCheck);
 
 function listen() {
 	app.listen(app.get('port'), () => {
