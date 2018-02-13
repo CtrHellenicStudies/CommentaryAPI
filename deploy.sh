@@ -12,7 +12,12 @@ read -p "Please make sure, that you have docker running (sudo systemctl start do
 rm -rf build
 yarn
 yarn build
+mkdir temp
+mv ./build ./temp
+mkdir -p ./build/build
+mv ./temp ./build/build
 cp Dockerfile ./build/Dockerfile
+cp package.json ./build/package.json
 cd build
 
 docker build -t ahcip-api . # Build docker image

@@ -7,4 +7,4 @@ RUN rm -rf node_modules
 RUN rm -rf client/node_modules
 RUN yarn install
 
-CMD ["yarn", "start"]
+CMD ["yarn", "execute"]
