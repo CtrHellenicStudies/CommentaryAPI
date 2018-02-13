@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ahcip-chs-ingress
+  name: ahcip-api-ingress
 spec:
   # tls:
   # - secretName: orpheus-certchain

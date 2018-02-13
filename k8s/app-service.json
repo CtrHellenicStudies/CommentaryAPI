@@ -2,7 +2,7 @@
   "kind": "Service",
   "apiVersion": "v1",
   "metadata": {
-    "name": "ahcip-chs-service"
+    "name": "ahcip-api-service"
   },
   "spec": {
     "ports": [
@@ -13,7 +13,7 @@
       }
     ],
     "selector": {
-      "name": "ahcip-chs-pod"
+      "name": "ahcip-api-pod"
     },
     "sessionAffinity": "ClientIP",
     "type": "NodePort"
