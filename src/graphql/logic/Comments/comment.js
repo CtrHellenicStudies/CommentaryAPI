@@ -32,12 +32,14 @@ export default class CommentService extends PermissionsService {
 	 * @returns {object} promise
 	 */
 	commentInsert(comment) {
+		console.log(comment);
 		if (this.userIsNobody) {
 			throw AuthenticationError();
 		}
 		let commentId;
 		let ret;
 		comment._id = new mongoose.mongo.ObjectId();
+		console.log(comment._id);
 		return new Promise(function(resolve, rejection) {
 			getURN(comment).then(function(urns) {
 				comment.urn = urns;
@@ -45,6 +47,7 @@ export default class CommentService extends PermissionsService {
 
 					if (err) {
 						console.log(err);
+						console.log('problem');
 						rejected(1);
 					}
 					
