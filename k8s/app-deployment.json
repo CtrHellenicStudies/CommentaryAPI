@@ -48,6 +48,10 @@
                 "value": "localhost"
               },
               {
+                "name": "DB_PORT",
+                "value": "27017"
+              },
+              {
                 "name": "DB_NAME",
                 "value": "ahcip-api"
               },
