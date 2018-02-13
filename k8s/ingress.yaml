@@ -12,3 +12,6 @@ spec:
       - backend:
           serviceName: ahcip-api-service
           servicePort: 3002
+  backend:
+    serviceName: ahcip-api-service
+    servicePort: 3002
