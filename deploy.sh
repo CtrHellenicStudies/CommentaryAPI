@@ -10,12 +10,13 @@ echo "Building docker image..."
 read -p "Please make sure, that you have docker running (sudo systemctl start docker), you've added user to docker group (sudo gpasswd -a \$USER docker) and you kubernetes perrmisions are valid for kubectl command, and then hit enter"
 
 rm -rf build
+rm -rf temp
 yarn
 yarn build
 mkdir temp
 mv ./build ./temp
-mkdir -p ./build/build
-mv ./temp ./build/build
+mkdir build
+mv ./temp/* ./build/
 cp Dockerfile ./build/Dockerfile
 cp package.json ./build/package.json
 cd build
@@ -39,5 +40,6 @@ kubectl apply -f ./k8s/
 sed -i "s/$VERSION/NEW_IMAGE_TAG/g" ./k8s/app-deployment.json
 
 rm -rf build
+rm -rf temp
 
 echo "Deployed with sha: $VERSION"
