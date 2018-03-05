@@ -13,7 +13,7 @@ export default class SettingsService extends PermissionsService {
 	 * @param {string} tenantId - id of current tenant
 	 * @returns {Object[]} array of settings
 	 */
-	settingsGet(_id, tenantId) {
+	async settingsGet(_id, tenantId) {
 
 		const args = {};
 
@@ -24,9 +24,28 @@ export default class SettingsService extends PermissionsService {
 		if (_id) {
 			args._id = _id;
 		}
-		const promise = Settings.find(args).exec();
-		return promise;
+
+		const settings = await Settings.find(args);
+		return settings;
 	}
+
+	/**
+	 * Get settings
+	 * @param {string} tenantId - id of current tenant
+	 * @returns {Object} array of settings
+	 */
+	async settingsGetByTenantId(tenantId) {
+
+		if (!tenantId) {
+			return null;
+		}
+
+		const args = { tenantId };
+
+		const settings = await Settings.findOne(args);
+		return settings;
+	}
+
 	/**
 	 * Update a settings
 	 * @param {string} _id - id of settings
@@ -47,6 +66,7 @@ export default class SettingsService extends PermissionsService {
 		}
 		throw new AuthenticationError();
 	}
+
 	/**
 	 * Remove a settings
 	 * @param {string} settingsId - id of settings

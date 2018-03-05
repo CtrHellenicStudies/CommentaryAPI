@@ -9,12 +9,18 @@ import {
 import GraphQLJSON from 'graphql-type-json';
 import { GraphQLDateTime } from 'graphql-iso-date';
 
+import { SettingsType } from '../types/settings';
+
+// logic
+import SettingService from '../logic/Settings/settings';
+
+
 /**
  * Tenant model type
  * @type {GraphQLObjectType}
  */
 const TenantType = new GraphQLObjectType({
-	name: 'Tenant',
+	name: 'TenantType',
 	description: 'Tenant db record',
 	fields: {
 		_id: {
@@ -25,7 +31,15 @@ const TenantType = new GraphQLObjectType({
 		},
 		isAnnotation: {
 			type: GraphQLBoolean,
-		}
+		},
+		settings: {
+			type: SettingsType,
+			async resolve(parent, args, { token }) {
+				const settingService = new SettingService(token);
+				const settings = await settingService.settingsGetByTenantId(parent._id);
+				return settings;
+			}
+		},
 	},
 });
 
