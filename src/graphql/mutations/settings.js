@@ -26,20 +26,18 @@ const settingsMutationFields = {
 			return settingService.settingsRemove(settingsId);
 		}
 	},
+
 	settingsUpdate: {
 		type: SettingsType,
 		description: 'Update a settings',
 		args: {
-			settingsId: {
-				type: new GraphQLNonNull(GraphQLString)
-			},
 			settings: {
 				type: SettingsInputType
 			}
 		},
-		async resolve (parent, {settingsId, settings}, { token }) {
+		async resolve (parent, { settings }, { token }) {
 			const settingService = new SettingService({ token });
-			return settingService.settingsUpdate(settingsId, settings);
+			return settingService.settingsUpdate(settings);
 		}
 	},
 	settingsCreate: {

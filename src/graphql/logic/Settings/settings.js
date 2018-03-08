@@ -48,23 +48,18 @@ export default class SettingsService extends PermissionsService {
 
 	/**
 	 * Update a settings
-	 * @param {string} _id - id of settings
 	 * @param {Object} settings - setting to update
 	 * @returns {boolean} result from mongo orm update
 	 */
-	settingsUpdate(_id, settings) {
-		if (this.userIsAdmin) {
-			return new Promise(function(resolve, rejected) {
-				Settings.update({_id: _id}, settings, function(err, updated) {
-					if (err) {
-						console.log(err);
-						rejected(1);
-					}
-					resolve(updated);
-				});
-			});
+	async settingsUpdate(settings) {
+
+		if (!this.userIsAdmin) {
+			throw new AuthenticationError();
 		}
-		throw new AuthenticationError();
+
+		const result = await Settings.update({_id: settings._id}, { $set: settings });
+
+		return result;
 	}
 
 	/**
@@ -72,29 +67,24 @@ export default class SettingsService extends PermissionsService {
 	 * @param {string} settingsId - id of settings
 	 * @returns {boolean} result from mongo orm remove
 	 */
-	settingsRemove(settingsId) {
-		if (this.userIsAdmin) {
-			return Settings.find({_id: settingsId}).remove().exec();
+	async settingsRemove(settingsId) {
+		if (!this.userIsAdmin) {
+			throw new AuthenticationError();
 		}
-		throw new AuthenticationError();
+		return await Settings.find({_id: settingsId}).remove().exec();
 	}
+
 	/**
 	 * Create a settings
 	 * @param {Object} settings - candidate settings record to create
 	 * @returns {Object} newly created setting
 	 */
-	settingsCreate(settings) {
-		if (this.userIsAdmin) {
-			return new Promise(function(resolve, rejection) {
-				Settings.create(settings, function(err, inserted) {
-					if (err) {
-						console.log(err);
-						rejected(1);
-					}
-					resolve(inserted);
-				});
-			});
+	async settingsCreate(settings) {
+		if (!this.userIsAdmin) {
+			throw new AuthenticationError();
 		}
-		throw new AuthenticationError();
+		const newSettings = new Settings(settings);
+		const result = await newSettings.save();
+		return result;
 	}
 }
