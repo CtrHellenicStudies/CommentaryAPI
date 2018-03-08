@@ -94,6 +94,9 @@ const SettingsInputType = new GraphQLInputObjectType({
 	name: 'SettingsInputType',
 	description: 'Settings',
 	fields: {
+		_id: {
+			type: GraphQLString,
+		},
 		name: {
 			type: GraphQLString,
 		},

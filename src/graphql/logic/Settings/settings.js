@@ -1,6 +1,6 @@
 import Settings from '../../../models/settings';
 import PermissionsService from '../PermissionsService';
-import { AuthenticationError } from '../../errors/index';
+import { PermissionError } from '../../errors';
 
 /**
  * Logic-layer service for dealing with settings
@@ -54,10 +54,14 @@ export default class SettingsService extends PermissionsService {
 	async settingsUpdate(settings) {
 
 		if (!this.userIsAdmin) {
-			throw new AuthenticationError();
+			throw new PermissionError();
 		}
 
-		const result = await Settings.update({_id: settings._id}, { $set: settings });
+		const result = await Settings.update({
+			_id: settings._id,
+		}, {
+			$set: settings,
+		});
 
 		return result;
 	}
@@ -69,7 +73,7 @@ export default class SettingsService extends PermissionsService {
 	 */
 	async settingsRemove(settingsId) {
 		if (!this.userIsAdmin) {
-			throw new AuthenticationError();
+			throw new PermissionError();
 		}
 		return await Settings.find({_id: settingsId}).remove().exec();
 	}
@@ -81,7 +85,7 @@ export default class SettingsService extends PermissionsService {
 	 */
 	async settingsCreate(settings) {
 		if (!this.userIsAdmin) {
-			throw new AuthenticationError();
+			throw new PermissionError();
 		}
 		const newSettings = new Settings(settings);
 		const result = await newSettings.save();
