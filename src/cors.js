@@ -23,10 +23,16 @@ export default function corsSetup(app, redisClient) {
 			});
 
 			if (isAllowed) {
-				callback(null, true);
+				// callback(null, true);
 			} else {
-				callback(new Error('Not allowed by CORS'));
+				// callback(new Error('Not allowed by CORS'));
 			}
+
+			/**
+			 * For the moment, add permissive CORS so that external applications may
+			 * reuse data from the Commentaries
+			 */
+			callback(null, true);
 		},
 		credentials: true,
 	};
