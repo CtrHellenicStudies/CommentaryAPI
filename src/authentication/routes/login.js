@@ -41,7 +41,6 @@ export const loginPWD = async (res, username, password) => {
  */
 export const loginOAuth2 = async (res, accessToken, network) => {
 
-	console.log(accessToken);
 	try {
 		const { url, userIdField } = providers[network];
 		const profile = await validateTokenOAuth2(accessToken, url);
@@ -64,9 +63,6 @@ export const loginOAuth2 = async (res, accessToken, network) => {
  * @param  {String} network     Name of network (e.g. facebook)
  */
 export const loginOAuth1 = async (res, oauthToken, oauthTokenSecret, network) => {
-
-	console.log(oauthToken);
-	console.log(oauthTokenSecret);
 	try {
 		const { url, userIdField } = providers[network];
 		const profile = await validateTokenOAuth1(network, oauthToken, oauthTokenSecret, url);

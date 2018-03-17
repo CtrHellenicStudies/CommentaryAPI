@@ -12,9 +12,7 @@ import OrpheusEmail from '../../email';
 
 
 export const registerPWD = (res, username, password) => {
-	console.log(res);
-	console.log(username);
-	console.log(password);
+
 	User.register(new User({
 		username,
 	}), password, (err, account) => {
