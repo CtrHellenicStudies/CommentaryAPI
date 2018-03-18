@@ -23,7 +23,8 @@ export const registerPWD = async (res, username, password) => {
 		}
 
 		// send verification email
-		OrpheusEmail.sendVerificationEmail(username);
+		// For development purposes, don't send orpheus email
+		// OrpheusEmail.sendVerificationEmail(username);
 
 		return res.json(generateJWT(user));
 	});

@@ -28,13 +28,12 @@ const userQueryFields = {
 			return users;
 		},
 	},
-	getAuthedUser: {
+	userProfile: {
 		type: UserType,
-		description: 'Return a single users account by their login token',
-		async resolve (parent, _, { token }) {
+		description: 'Get user document for currently signed-in user',
+		async resolve(obj, _, { token }) {
 			const userService = new UserService(token);
-			const user = userService.getAuthedUser();
-			return user;
+			return await userService.getProfile();
 		},
 	},
 	userGetPublicById: {

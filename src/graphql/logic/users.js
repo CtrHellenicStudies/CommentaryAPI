@@ -21,9 +21,11 @@ export default class UserService extends PermissionsService {
 		if (id) {
 			args._id = mongoose.Types.ObjectId(id);
 		}
+
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
+
 		return User.find(args, {
 			_id: 1,
 			username: 1,
@@ -54,7 +56,7 @@ export default class UserService extends PermissionsService {
 	userUpdate(_id, user) {
 		if (this.userIsAdmin) {
 			return new Promise(function(resolve, rejected) {
-				User.update({_id: _id}, user, function(err, updated) {
+				User.update({ _id }, user, function(err, updated) {
 					if (err) {
 						console.log(err);
 						rejected(1);
@@ -65,7 +67,7 @@ export default class UserService extends PermissionsService {
 		}
 		throw new AuthenticationError();
 	}
-	
+
 	/**
 	 * Remove a user
 	 * @param {string} userId - id of user
@@ -79,12 +81,15 @@ export default class UserService extends PermissionsService {
 	}
 
 	/**
-	 * Get the user information of the user currently logged in to Meteor
-	 * @returns {Object} the user data for the currently logged in user
+	 * Get user profile
+	 * @returns {Object} currently logged in user profile
 	 */
-	getAuthedUser() {
-		return this.user;
+	async getProfile() {
+		const _id = mongoose.Types.ObjectId(this.userId);
+		const user = await User.findOne({ _id, });
+		return user;
 	}
+
 
 	/**
 	 * Get a user's public information by their id

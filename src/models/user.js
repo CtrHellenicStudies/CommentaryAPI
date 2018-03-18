@@ -45,7 +45,7 @@ UserSchema.plugin(passportLocalMongoose);
 UserSchema.plugin(timestamp);
 
 // Statics
-// // this method is needed for dataloader to work
+// this method is needed for dataloader to work
 UserSchema.statics.findById = function findById(_id, cb) {
 	return User.findOne({ _id }, cb); // eslint-disable-line
 };
@@ -75,7 +75,12 @@ UserSchema.statics.generatePasswordResetToken = async function generatePasswordR
 
 UserSchema.statics.resetPassword = async function resetPassword(resetPasswordToken, newPassword) {
 	try {
-		const user = await User.findOne({ resetPasswordToken, resetPasswordExpires: { $gt: Date.now() } }); // eslint-disable-line
+		const user = await User.findOne({ // eslint-disable-line
+			resetPasswordToken,
+			resetPasswordExpires: {
+				$gt: Date.now()
+			}
+		}); // eslint-disable-line
 		if (user) {
 			// second value must be passed - workaround for model bug
 			return new Promise((resolve, reject) => {

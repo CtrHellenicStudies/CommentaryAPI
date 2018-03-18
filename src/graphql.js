@@ -47,9 +47,17 @@ if (process.env.NODE_ENV === 'production') {
 /**
  * For each graphql request add token from authorization headers
  */
-const getGraphQLContext = req => ({
-	token: req.headers.authorization
-});
+const getGraphQLContext = (req) => {
+	let token;
+
+	if ('authorization' in req.headers) {
+		token = req.headers.authorization.replace('JWT ', '');
+	}
+
+	return {
+		token,
+	};
+};
 
 /**
  * Set up the graphQL HTTP endpoint

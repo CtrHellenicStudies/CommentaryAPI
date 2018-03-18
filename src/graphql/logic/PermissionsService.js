@@ -14,10 +14,9 @@ export default class PermissionsService {
 		if (token !== 'null' && token) {
 			this.token = token;
 			const decoded = jsonwebtoken.decode(token);
+
 			if (decoded) {
-				this.userId = decoded.userId;
-				this.userName = decoded.userName;
-				this.userAvatar = decoded.userAvatar;
+				this.userId = decoded._id;
 			}
 		}
 	}
