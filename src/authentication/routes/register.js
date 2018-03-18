@@ -11,15 +11,16 @@ import { validateTokenOAuth1, validateTokenOAuth2 } from '../../authentication';
 import OrpheusEmail from '../../email';
 
 
-export const registerPWD = (res, username, password) => {
-
-	User.register(new User({
+export const registerPWD = async (res, username, password) => {
+	const newUser = await new User({
 		username,
-	}), password, (err, account) => {
+	});
+
+	User.register(newUser, password, (err, user) => {
 		if (err) {
+			console.error(err);
 			return res.status(200).send(err);
 		}
-		const user = { _id: account._id };
 
 		// send verification email
 		OrpheusEmail.sendVerificationEmail(username);

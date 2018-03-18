@@ -21,6 +21,7 @@ export const loginPWD = async (res, username, password) => {
 			'emails.address': username,
 		}],
 	});
+
 	if (user) {
 		user.authenticate(password, (_, isValid, message) => {
 			if (isValid) {
@@ -50,7 +51,7 @@ export const loginOAuth2 = async (res, accessToken, network) => {
 		}
 		return res.status(401).send({error: 'User not found'});
 	} catch (err) {
-		console.log('err', err);
+		console.error(err);
 		res.status(500).send();
 	}
 };
