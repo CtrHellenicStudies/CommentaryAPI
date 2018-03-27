@@ -10,6 +10,7 @@ const Schema = mongoose.Schema;
  * @type {Schema}
  */
 const UserSchema = new Schema({
+	_id: String, // has to be specified as String to avoid ObjectID validation on save for records created before `passport-local-mongoose`
 	username: String,
 	name: String,
 	email: String,
