@@ -5,5 +5,8 @@ dotenvSetup();
 
 module.exports = {
 	collectCoverage: true,
-	collectCoverageFrom: ['api/**/*.js']
+	collectCoverageFrom: [
+		'**/*.{js,jsx}',
+		'!**/node_modules/**'
+	]
 };

@@ -10,7 +10,7 @@ test:
     - chmod 755 /usr/local/bin/yarn
     - yarn install
   script:
-    - npm run test-client-ci
+    - yarn test
 
 deploy:
   image: google/cloud-sdk:latest
