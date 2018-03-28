@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
  * @type {Schema}
  */
 const UserSchema = new Schema({
-	_id: String, // has to be specified as String to avoid ObjectID validation on save for records created before `passport-local-mongoose`
+	_id: String, // has to be String to be backward compatible on records created before using `passport-local-mongoose`
 	username: String,
 	name: String,
 	email: String,
@@ -100,6 +100,17 @@ UserSchema.statics.resetPassword = async function resetPassword(resetPasswordTok
 		throw err;
 	}
 };
+
+UserSchema.pre('save', function(next) {
+	if (!this._id) {
+		// this will become the hex representation (String type, 24 bytes without timestamp) of the 12 bytes ObjectId object
+		// which is less good
+		// but to be backward compatible with user _id created before v2, it has to be String type
+		// until we do a migration on user table to make sure all user._id are ObjectID type
+		this._id = mongoose.Types.ObjectId();
+	}
+	next();
+});
 
 
 /**
