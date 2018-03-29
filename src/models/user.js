@@ -65,10 +65,14 @@ UserSchema.statics.generatePasswordResetToken = async function generatePasswordR
 	try {
 		const buf = await crypto.randomBytes(48);
 		const token = buf.toString('hex');
-		return User.findOneAndUpdate({ username }, { // eslint-disable-line
-			resetPasswordToken: token,
-			resetPasswordExpires: Date.now() + 3600000, // 1 hour
-		});
+		return User.findOneAndUpdate(// eslint-disable-line
+			{ username }, 
+			{ 
+				resetPasswordToken: token,
+				resetPasswordExpires: Date.now() + 3600000, // 1 hour
+			},
+			{new: true}
+		);
 	} catch (err) {
 		throw err;
 	}
@@ -87,6 +91,9 @@ UserSchema.statics.resetPassword = async function resetPassword(resetPasswordTok
 			return new Promise((resolve, reject) => {
 				user.setPassword(newPassword, (err, userWithNewPassword) => {
 					if (err) reject(err);
+					// remove PasswordResetToken and Expires after a successful reset
+					userWithNewPassword.resetPasswordToken = undefined;
+					userWithNewPassword.resetPasswordExpires = undefined;
 					userWithNewPassword.save((saveErr) => {
 						if (saveErr) reject(saveErr);
 						resolve(userWithNewPassword);
