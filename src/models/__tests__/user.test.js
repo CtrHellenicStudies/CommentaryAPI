@@ -4,7 +4,7 @@ import Users from '.././user'; // variable name has to be the same as defined in
 
 describe('User model ...', () => {
 
-	it('should be able to findOne document', () => {
+	it('should be able to findOne document', async () => {
 		// SETUP
 		const _userRegisteredByPassportLocalMongoose = {
 			_id: '5abbf3c3d3919a112db3a9bf',
@@ -21,14 +21,12 @@ describe('User model ...', () => {
 		mockingoose.Users.toReturn(_userRegisteredByPassportLocalMongoose, 'findOne');
 
 		// RUN
-		Users
-			.findOne()
-			.then((r) => {
-				// CHECK
-				expect(r.toObject()).toHaveProperty('_id');
-				expect(r.toObject()).toHaveProperty('username');
-				expect(r).toBeInstanceOf(Users);
-			});
+		const oneUser = await Users.findOne();
+		
+		// CHECK
+		expect(oneUser.toObject()).toHaveProperty('_id');
+		expect(oneUser.toObject()).toHaveProperty('username');
+		expect(oneUser).toBeInstanceOf(Users);
 	});
 
 });
