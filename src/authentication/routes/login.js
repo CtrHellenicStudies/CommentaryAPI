@@ -23,12 +23,26 @@ export const loginPWD = async (res, username, password) => {
 	});
 
 	if (user) {
-		user.authenticate(password, (_, isValid, message) => {
+		user.authenticate(password, async (_, isValid, message) => {
 			if (isValid) {
 				return res.json(generateJWT(user));
 			}
+
+			// user document salt field check
+			if (message.name === 'NoSaltValueStoredError') {
+				const userWithResetToken = await User.generatePasswordResetToken(username);
+				if (userWithResetToken && userWithResetToken.resetPasswordToken) {
+					// send password reset email
+					// For development purposes, don't send orpheus email
+					// OrpheusEmail.sendPasswordResetEmail(username);
+					return res.json({ passwordResetTokenGenerated: true});
+				}
+				return res.json({ passwordResetTokenGenerated: false});
+			}
+
 			return res.status(401).send(message);
 		});
+		
 	} else {
 		return res.status(401).send({error: 'User not found'});
 	}

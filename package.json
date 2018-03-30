@@ -86,8 +86,6 @@
     "faker": "^4.1.0",
     "faucet": "^0.0.1",
     "flow-bin": "^0.51.0",
-    "istanbul-api": "1.2.2",
-    "istanbul-reports": "1.1.4",
     "jest": "^22.4.3",
     "mockingoose": "^2.9.1",
     "nodemon": "^1.11.0",
