@@ -8,6 +8,7 @@ test:
   before_script:
     - npm i -g yarn
     - chmod 755 /usr/local/bin/yarn
+    - rm yarn.lock
     - yarn install
   script:
     - yarn test
