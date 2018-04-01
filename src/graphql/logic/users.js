@@ -19,7 +19,9 @@ export default class UserService extends PermissionsService {
 		const args = {};
 
 		if (id) {
-			args._id = mongoose.Types.ObjectId(id);
+			// Do not try to cast to ObjectID because mongoose schema specifies _id for
+			// users collection as string
+			args._id = id;
 		}
 
 		if (tenantId) {
