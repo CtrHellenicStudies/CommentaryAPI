@@ -87,7 +87,9 @@ export default class UserService extends PermissionsService {
 	 * @returns {Object} currently logged in user profile
 	 */
 	async getProfile() {
-		const _id = mongoose.Types.ObjectId(this.userId);
+			// Do not try to cast to ObjectID because mongoose schema specifies _id for
+			// users collection as string
+		const _id = this.userId;
 		const user = await User.findOne({ _id, });
 		return user;
 	}
