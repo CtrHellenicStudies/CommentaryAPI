@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
 
-import {getURL} from '../../mongoose';
-import User from '.././user';
+import {getURL} from '../../../mongoose';
+import User from '../../../models/user';
 
-describe('Integration - Auth ...', () => {
+describe('Integration - Authentication routes ...', () => {
 	// SETUP & TEARDOWN
 	beforeEach(() => {
 		// check mongoose connection
 		if (mongoose.connection.readyState === 0) {
 			mongoose.connect(getURL());
+			console.info('Connected to MongoDB host: ', getURL());
 		}
 	});
 	afterEach(() => {
@@ -22,8 +23,14 @@ describe('Integration - Auth ...', () => {
 
 	it('should be able to fetch one user', async () => {
 		// SETUP
+		const testUser = new User({
+			username: 'testUser',
+		});
+		await testUser.save();
+
 		// RUN 
 		const oneUser = await User.findOne();
+		
 		// CHECK
 		expect(oneUser).toBeInstanceOf(User);
 		expect(oneUser.toObject()).toHaveProperty('_id');

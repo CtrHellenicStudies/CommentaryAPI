@@ -4,6 +4,10 @@ stages:
 
 test:
   image: node:8-wheezy
+  services: 
+    - mongo
+  variables:
+    DB_HOST: mongo
   stage: test
   before_script:
     - npm i -g yarn

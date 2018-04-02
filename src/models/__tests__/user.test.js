@@ -2,7 +2,7 @@ import mockingoose from 'mockingoose';
 import mongoose from 'mongoose';
 import Users from '.././user'; // variable name has to be the same as defined in model, eg. `Users` in `mongoose.model('Users', UserSchema); `
 
-describe('User model ...', () => {
+describe('Unit - User model ...', () => {
 
 	it('should be able to findOne document', async () => {
 		// SETUP
