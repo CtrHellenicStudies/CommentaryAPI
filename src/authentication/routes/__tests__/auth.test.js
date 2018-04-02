@@ -7,8 +7,11 @@ describe('Integration - Authentication routes ...', () => {
 	// SETUP & TEARDOWN
 	beforeEach(() => {
 		// check mongoose connection
+		const options = {
+			useMongoClient: true
+		};
 		if (mongoose.connection.readyState === 0) {
-			mongoose.connect(getURL());
+			mongoose.connect(getURL(), options);
 			console.info('Connected to MongoDB host: ', getURL());
 		}
 	});
