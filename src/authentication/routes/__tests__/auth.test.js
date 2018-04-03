@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 import {getURL} from '../../../mongoose';
 import User from '../../../models/user';
+import { loginPWD } from '.././login';
 
 describe('Integration - Authentication routes ...', () => {
 	// SETUP & TEARDOWN
@@ -85,8 +86,35 @@ describe('Integration - Authentication routes ...', () => {
 				expect(isValid).toBeInstanceOf(User);
 				expect(isValid.toObject()).toHaveProperty('_id');
 				expect(isValid.toObject()).toHaveProperty('username');
+				expect(isValid.toObject()).not.toHaveProperty('resetPasswordToken');
+				expect(isValid.toObject()).not.toHaveProperty('resetPasswordExpires');
 				done();
 			});
 		});
 	});
+
+	it('login of a User instance without Hash and Salt should trigger generateResetPassword for that User instance', async (done) => {
+		// SETUP
+		const username = 'testUserWithoutHashAndSalt';
+		const userWithoutHashAndSalt = await new User({
+			username: username,
+		}).save();
+
+		// RUN
+		loginPWD({
+			json: () => {},
+		}, username, '').then(async () => {
+
+			// CHECK
+			const userAfterLoginTriggerGenerateToken = await User.findOne({ username: username });
+			expect(userAfterLoginTriggerGenerateToken).toBeInstanceOf(User);
+			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('_id');
+			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('username');
+			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordToken');
+			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordExpires');
+		}).catch((error) => {
+		});
+		done();
+	});
+
 });
