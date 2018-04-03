@@ -11,8 +11,8 @@ describe('Integration - Authentication routes ...', () => {
 			useMongoClient: true
 		};
 		if (mongoose.connection.readyState === 0) {
+			console.info('Testing on MongoDB host: ', getURL());
 			mongoose.connect(getURL(), options);
-			console.info('Connected to MongoDB host: ', getURL());
 		}
 	});
 	afterEach(() => {
@@ -24,6 +24,7 @@ describe('Integration - Authentication routes ...', () => {
 		done();
 	});
 
+	// TESTS
 	it('should be able to fetch one user', async () => {
 		// SETUP
 		const testUser = new User({
@@ -40,4 +41,23 @@ describe('Integration - Authentication routes ...', () => {
 		expect(oneUser.toObject()).toHaveProperty('username');
 	});
 
+	it('generateResetPassword should generate resetPasswordToken and resetPasswordExpires for a User instance.', async () => {
+		// SETUP
+		const username = 'userBeforeGeneratePasswordResetToken';
+		const userBeforeGeneratePasswordResetToken = await new User({
+			username: username,
+		}).save();
+		
+		// RUN
+		await User.generatePasswordResetToken(username);
+
+		// CHECK
+		const userAfterGeneratePasswordResetToken = await User.findOne({ username: username });
+		expect(userAfterGeneratePasswordResetToken).toBeInstanceOf(User);
+		expect(userAfterGeneratePasswordResetToken.toObject()).toHaveProperty('_id');
+		expect(userAfterGeneratePasswordResetToken.toObject()).toHaveProperty('username');
+		expect(userAfterGeneratePasswordResetToken.toObject()).toHaveProperty('resetPasswordToken');
+		expect(userAfterGeneratePasswordResetToken.toObject()).toHaveProperty('resetPasswordExpires');
+		
+	});
 });
