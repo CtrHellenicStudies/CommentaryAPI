@@ -8,7 +8,8 @@ describe('Integration - Authentication routes ...', () => {
 	beforeEach(() => {
 		// check mongoose connection
 		const options = {
-			useMongoClient: true
+			useMongoClient: true,
+			keepAlive: 1
 		};
 		if (mongoose.connection.readyState === 0) {
 			console.info('Testing on MongoDB host: ', getURL());
@@ -43,7 +44,7 @@ describe('Integration - Authentication routes ...', () => {
 
 	it('generateResetPassword should generate resetPasswordToken and resetPasswordExpires for a User instance.', async () => {
 		// SETUP
-		const username = 'userBeforeGeneratePasswordResetToken';
+		const username = 'testUserBeforeGeneratePasswordResetToken';
 		const userBeforeGeneratePasswordResetToken = await new User({
 			username: username,
 		}).save();
@@ -59,5 +60,33 @@ describe('Integration - Authentication routes ...', () => {
 		expect(userAfterGeneratePasswordResetToken.toObject()).toHaveProperty('resetPasswordToken');
 		expect(userAfterGeneratePasswordResetToken.toObject()).toHaveProperty('resetPasswordExpires');
 		
+	});
+
+	it('resetPassword should reset the password to the correct new password then remove resetPasswordToken and resetPasswordExpires', async (done) => {
+		// SETUP
+		const username = 'testUserResetPassword';
+		const oldPassword = 'oldPassword';
+		const newPassword = 'newPassword';
+		const newUser = await new User({
+			username,
+		});
+		// register a new user
+		User.register(newUser, oldPassword, async (err, userRegistered) => {
+
+			// RUN
+			// generate password reset token
+			const userWithToken = await User.generatePasswordResetToken(username);
+			// reset password
+			const userAfterReset = await User.resetPassword(userWithToken.resetPasswordToken, newPassword);
+
+			// CHECK
+			// login with new password
+			userAfterReset.authenticate(newPassword, async (_, isValid, message) => {
+				expect(isValid).toBeInstanceOf(User);
+				expect(isValid.toObject()).toHaveProperty('_id');
+				expect(isValid.toObject()).toHaveProperty('username');
+				done();
+			});
+		});
 	});
 });
