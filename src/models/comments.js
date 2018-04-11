@@ -196,11 +196,17 @@ const CommentsModel = new mongoose.Schema({
 			passageFrom: {
 				type: [Number],
 			},
+			subreferenceIndexFrom: {
+				type: Number,
+			},
 			passageTo: {
 				type: [Number],
-			}
-		})
-	}
+			},
+			subreferenceIndexTo: {
+				type: Number,
+			},
+		}),
+	},
 });
 
 
