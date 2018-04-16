@@ -152,10 +152,10 @@ const CommentInputType = new GraphQLInputObjectType({
 						type: new GraphQLList(GraphQLInt)
 					},
 					subreferenceIndexFrom: {
-						type: new GraphQLList(GraphQLInt)
+						type: GraphQLInt,
 					},
 					subreferenceIndexTo: {
-						type: new GraphQLList(GraphQLInt)
+						type: GraphQLInt,
 					},
 				},
 			}),
@@ -292,10 +292,10 @@ const CommentType = new GraphQLObjectType({
 						type: new GraphQLList(GraphQLInt),
 					},
 					subreferenceIndexFrom: {
-						type: new GraphQLList(GraphQLInt)
+						type: GraphQLInt,
 					},
 					subreferenceIndexTo: {
-						type: new GraphQLList(GraphQLInt)
+						type: GraphQLInt,
 					},
 				},
 			}),
