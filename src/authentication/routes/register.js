@@ -8,25 +8,23 @@ import User from '../../models/user';
 import { validateTokenOAuth1, validateTokenOAuth2 } from '../../authentication';
 
 // email
-import OrpheusEmail from '../../email';
+import EmailManager from '../../email';
 
 
-export const registerPWD = async (res, username, password) => {
-	const newUser = await new User({
+export const registerPWD = (res, username, password) => {
+	User.register(new User({
 		username,
-	});
-
-	User.register(newUser, password, (err, user) => {
+		name: username,
+		email: username,
+	}), password, (err, account) => {
 		if (err) {
-			console.error(err);
 			return res.status(200).send(err);
 		}
 
 		// send verification email
-		// For development purposes, don't send orpheus email
-		// OrpheusEmail.sendVerificationEmail(username);
+		// EmailManager.sendVerificationEmail(username);
 
-		return res.json(generateJWT(user));
+		return res.json(generateJWT(account));
 	});
 };
 
