@@ -82,6 +82,9 @@ const CommenterInputType = new GraphQLInputObjectType({
 	name: 'CommenterInputType',
 	description: 'A commenter in the commentary',
 	fields: {
+		_id: {
+			type: GraphQLString,
+		},
 		tenantId: {
 			type: GraphQLString,
 		},
