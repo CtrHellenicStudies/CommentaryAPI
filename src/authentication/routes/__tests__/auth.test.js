@@ -17,13 +17,10 @@ describe('Integration - Authentication routes ...', () => {
 			mongoose.connect(getURL(), options);
 		}
 	});
-	afterEach(() => {
-		// TODO: clean up
-	});
 
-	afterAll((done) => {
-		mongoose.disconnect();
-		done();
+	afterAll(async () => {
+		await User.remove({});
+		await mongoose.disconnect();
 	});
 
 	// TESTS
