@@ -65,9 +65,10 @@ const getGraphQLContext = (req) => {
  */
 const setupGraphQL = async (app) => {
 	const chsTextserverSchema = await createRemoteSchema(process.env.TEXTSERVER_URL || 'http://text.chs.orphe.us/graphql');
+	const chswebAPISchema = await createRemoteSchema(process.env.CHSWEBAPI_URL || 'http://chsweb-api.chs.orphe.us/graphql');
 
 	const schema = mergeSchemas({
-		schemas: [RootSchema, chsTextserverSchema],
+		schemas: [RootSchema, chsTextserverSchema, chswebAPISchema],
 	});
 
 	app.use('/graphql', jwtAuthenticate, graphqlExpress(req => ({
