@@ -41,5 +41,14 @@ export function jwtAuthenticate(req, res, next) {
 	})(req, res, next);
 }
 
+/**
+ * Password reset link used in password reset emails
+ */
+export function generatePasswordResetLink(passwordResetToken) {
+	// TODO: put ahcip reset password url in env vars
+	const resetPasswordAHCIPRoute = 'http://ahcip.chs.local/reset-password';
+	return `${resetPasswordAHCIPRoute}?token=${passwordResetToken}`;
+}
+
 // export strategies
 export { validateTokenOAuth1, validateTokenOAuth2 };

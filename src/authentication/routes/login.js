@@ -7,6 +7,9 @@ import User from '../../models/user';
 // authentication
 import { validateTokenOAuth1, validateTokenOAuth2 } from '../../authentication';
 
+// email
+import EmailManager from '../../email';
+
 /**
  * Login user with password and username
  * @param  {Object} res      Express response object
@@ -34,7 +37,7 @@ export const loginPWD = async (res, username, password) => {
 				if (userWithResetToken && userWithResetToken.resetPasswordToken) {
 					// send password reset email
 					// For development purposes, don't send orpheus email
-					// OrpheusEmail.sendPasswordResetEmail(username);
+					EmailManager.sendPasswordResetEmail(username, userWithResetToken.resetPasswordToken);
 					return res.json({ passwordResetTokenGenerated: true});
 				}
 				return res.json({ passwordResetTokenGenerated: false});

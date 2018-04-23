@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import path from 'path';
 import { EmailTemplate } from 'email-templates';
 // import hbs from 'nodemailer-express-handlebars';
+import { generatePasswordResetLink } from '../authentication';
 
 class OrpheusEmailClass {
 
@@ -76,6 +77,24 @@ class OrpheusEmailClass {
 				console.log('email', email);
 				this.transporter.sendMail(email);
 			});
+	}
+
+	sendPasswordResetEmail(username, passwordResetToken) {
+		const templateDir = path.resolve(__dirname, 'templates', 'passwordReset');
+		const template = new EmailTemplate(templateDir);
+
+		template.render({
+			passwordResetLink: generatePasswordResetLink(passwordResetToken),
+		}).then((results) => {
+			const email = {
+				from: this.from,
+				to: username,
+				subject: results.subject,
+				html: results.html,
+				text: results.text,
+			};
+			this.transporter.sendMail(email);
+		});
 	}
 }
 
