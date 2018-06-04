@@ -2,7 +2,12 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import { formatError } from 'apollo-errors';
 import { GraphQLSchema, execute, subscribe } from 'graphql';
 import {
-	makeRemoteExecutableSchema, mergeSchemas, introspectSchema
+	makeRemoteExecutableSchema, 
+	mergeSchemas, 
+	introspectSchema,
+	transformSchema,
+	RenameTypes,
+	RenameRootFields
 } from 'graphql-tools';
 import { createApolloFetch } from 'apollo-fetch';
 import { maskErrors } from 'graphql-errors';
@@ -66,9 +71,13 @@ const getGraphQLContext = (req) => {
 const setupGraphQL = async (app) => {
 	const chsTextserverSchema = await createRemoteSchema(process.env.TEXTSERVER_URL || 'http://text.chs.orphe.us/graphql');
 	const chswebAPISchema = await createRemoteSchema(process.env.CHSWEBAPI_URL || 'http://chsweb-api.chs.orphe.us/graphql');
+	const transformedChswebAPISchema = transformSchema(chswebAPISchema, [
+		new RenameTypes(typeName => `CHS_${typeName}`),
+		new RenameRootFields((op, fieldName) => `CHS_${fieldName}`),
+	]);
 
 	const schema = mergeSchemas({
-		schemas: [RootSchema, chsTextserverSchema, chswebAPISchema],
+		schemas: [RootSchema, chsTextserverSchema, transformedChswebAPISchema],
 	});
 
 	app.use('/graphql', jwtAuthenticate, graphqlExpress(req => ({
