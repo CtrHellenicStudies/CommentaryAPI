@@ -1,6 +1,8 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
+import winston from 'winston';
 import { EmailTemplate } from 'email-templates';
+
 // import hbs from 'nodemailer-express-handlebars';
 import { generatePasswordResetLink } from '../authentication';
 
@@ -16,7 +18,7 @@ class OrpheusEmailClass {
 		const smtpConfig = {
 			host: process.env.EMAIL_SMTP_HOST,
 			port: process.env.EMAIL_SMTP_PORT,
-			secure: process.env.EMAIL_SMTP_SECURE,
+			secure: (process.env.EMAIL_SMTP_PORT === 465), // only use secure mode when using secure port
 			auth: {
 				user: process.env.EMAIL_SMTP_USER,
 				pass: process.env.EMAIL_SMTP_PASSWORD
@@ -47,18 +49,26 @@ class OrpheusEmailClass {
 
 		const email = {
 			from: this.from,
-			to: 'test@archimedes.digital',
+			to: process.env.EMAIL_TO_TEST,
 			subject: 'Test',
 			html: '<b>Hello</b>',
 			text: 'results.text',
 		};
 
-		/*
-		transporter.sendMail(email, (error, info) => {
-			console.log('error', error);
-			console.log('info', info);
+		this.sendMail(email);
+	}
+
+	sendMail(email) {
+		if (process.env.NODE_ENV !== 'production') {
+			email.to = process.env.EMAIL_TO_TEST || 'test@archimedes.digital';
+		}
+		this.transporter.sendMail(email, (error, info) => {
+			if (error) { winston.error(e); }
+			winston.info('Email Info: ', info);
+			if (process.env.EMAIL_SMTP_HOST === 'smtp.ethereal.email') {
+				winston.info('Email Preview URL: %s', nodemailer.getTestMessageUrl(info));
+			}
 		});
-		*/
 	}
 
 	sendVerificationEmail(username) {
@@ -74,8 +84,7 @@ class OrpheusEmailClass {
 					// html: results.html,
 					text: results.text,
 				};
-				console.log('email', email);
-				this.transporter.sendMail(email);
+				this.sendMail(email);
 			});
 	}
 
@@ -93,7 +102,7 @@ class OrpheusEmailClass {
 				html: results.html,
 				text: results.text,
 			};
-			this.transporter.sendMail(email);
+			this.sendMail(email);
 		});
 	}
 }
