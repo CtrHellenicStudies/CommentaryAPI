@@ -22,7 +22,7 @@ export const registerPWD = (res, username, password) => {
 		}
 
 		// send verification email
-		// EmailManager.sendVerificationEmail(username);
+		EmailManager.sendVerificationEmail(username);
 
 		return res.json(generateJWT(account));
 	});

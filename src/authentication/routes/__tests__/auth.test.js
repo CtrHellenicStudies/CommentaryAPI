@@ -2,10 +2,12 @@ import mongoose from 'mongoose';
 
 import {getURL} from '../../../mongoose';
 import User from '../../../models/user';
-import { loginPWD } from '.././login';
+import { loginPWD } from '../login';
 
 describe('Integration - Authentication routes ...', () => {
 	// SETUP & TEARDOWN
+	const fakeRes = {json: raw => raw};
+
 	beforeEach(() => {
 		// check mongoose connection
 		const options = {
@@ -98,10 +100,7 @@ describe('Integration - Authentication routes ...', () => {
 		}).save();
 
 		// RUN
-		loginPWD({
-			json: () => {},
-		}, username, '').then(async () => {
-
+		loginPWD(fakeRes, username, '').then(async () => {
 			// CHECK
 			const userAfterLoginTriggerGenerateToken = await User.findOne({ username: username });
 			expect(userAfterLoginTriggerGenerateToken).toBeInstanceOf(User);
@@ -109,8 +108,8 @@ describe('Integration - Authentication routes ...', () => {
 			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('username');
 			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordToken');
 			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordExpires');
-		}).catch((error) => {
-		});
+			done();
+		}).catch(e => done());
 		done();
 	});
 
