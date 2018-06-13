@@ -26,7 +26,7 @@ export const loginPWD = async (res, username, password) => {
 	});
 
 	if (user) {
-		user.authenticate(password, async (_, isValid, message) => {
+		await user.authenticate(password, async (_, isValid, message) => {
 			if (isValid) {
 				return res.json(generateJWT(user));
 			}

@@ -109,8 +109,7 @@ describe('Integration - Authentication routes ...', () => {
 			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordToken');
 			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordExpires');
 			done();
-		}).catch(e => done());
-		done();
+		}).catch(e => done(e));
 	});
 
 });
