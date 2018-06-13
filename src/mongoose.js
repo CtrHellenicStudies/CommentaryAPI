@@ -36,18 +36,15 @@ const dbSetup = () => {
 	const url = getURL();
 
 	const options = {
-		server: {
-			socketOptions: {
-				keepAlive: 1
-			}
-		},
+		keepAlive: 1,
+		useMongoClient: true,
 	};
 
 	if (process.env.NODE_ENV === 'development') {
 		mongoose.set('debug', true);
 	}
 
-	return mongoose.connect(url, options).connection;
+	return mongoose.connect(url, options);
 };
 
 const storeSetup = (session) => {
