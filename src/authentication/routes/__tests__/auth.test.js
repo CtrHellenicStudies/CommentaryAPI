@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import request from 'supertest';
 
-import {getURL} from '../../../mongoose';
+import { app } from '../../../app';
+import { getURL } from '../../../mongoose';
 import User from '../../../models/user';
 import { loginPWD } from '../login';
 
@@ -92,24 +94,18 @@ describe('Integration - Authentication routes ...', () => {
 		});
 	});
 
-	it('login of a User instance without Hash and Salt should trigger generateResetPassword for that User instance', async (done) => {
+	it('login of a User instance without Hash and Salt should trigger generateResetPassword for that User instance', async () => {
 		// SETUP
 		const username = 'testUserWithoutHashAndSalt';
-		const userWithoutHashAndSalt = await new User({
-			username: username,
-		}).save();
+		const password = '123';
+		const userWithoutHashAndSalt = await new User({username, password}).save();
 
 		// RUN
-		loginPWD(fakeRes, username, '').then(async () => {
-			// CHECK
-			const userAfterLoginTriggerGenerateToken = await User.findOne({ username: username });
-			expect(userAfterLoginTriggerGenerateToken).toBeInstanceOf(User);
-			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('_id');
-			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('username');
-			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordToken');
-			expect(userAfterLoginTriggerGenerateToken.toObject()).toHaveProperty('resetPasswordExpires');
-			done();
-		}).catch(e => done(e));
+		const response = await request(app).post('/auth/login').send({username, password});
+
+		// CHECK
+		expect(response.status).toEqual(200);
+		expect(response.body.passwordResetTokenGenerated).toBeTruthy();
 	});
 
 });

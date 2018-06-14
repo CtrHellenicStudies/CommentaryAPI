@@ -19,7 +19,7 @@ router.post('/login', (req, res) => {
 
 	if (oauthToken && oauthTokenSecret && network) return loginOAuth1(res, oauthToken, oauthTokenSecret, network);
 
-	return res.status(400);
+	return res.status(400).send('Incorrect login parameters');
 });
 
 router.post('/register', (req, res) => {
@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
 
 	if (oauthToken && oauthTokenSecret && network) return registerOAuth1(res, oauthToken, oauthTokenSecret, network);
 
-	return res.status(400);
+	return res.status(400).send('Incorrect registration parameters');
 });
 
 router.post('/verify-token', jwtAuthenticate, (req, res) => {

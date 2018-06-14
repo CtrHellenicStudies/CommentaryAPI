@@ -57,6 +57,7 @@
     "request-promise": "^4.2.2",
     "slugify": "^1.2.6",
     "subscriptions-transport-ws": "^0.8.1",
+    "supertest": "^3.1.0",
     "twitter": "^1.7.1",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
