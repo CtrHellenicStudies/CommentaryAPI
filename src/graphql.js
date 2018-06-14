@@ -117,10 +117,10 @@ const setupGraphQL = async (app) => {
 	// conditional schema stitching
 	let schema = RootSchema;
 	if (process.env.NODE_ENV !== 'test') {
-		const validRemoteSchemaList = createRemoteSchemas();
+		const validRemoteSchemaList = await createRemoteSchemas();
 		if (validRemoteSchemaList.length > 0) {
 			schema = mergeSchemas({
-				schemas: [RootSchema, ...remoteSchemaList],
+				schemas: [RootSchema, ...validRemoteSchemaList],
 			});
 		} 
 	}
