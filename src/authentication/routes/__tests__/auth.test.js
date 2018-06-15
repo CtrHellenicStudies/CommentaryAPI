@@ -6,10 +6,8 @@ import { getURL } from '../../../mongoose';
 import User from '../../../models/user';
 import { loginPWD } from '../login';
 
-describe('Integration - Authentication routes ...', () => {
+describe('Authentication routes ...', () => {
 	// SETUP & TEARDOWN
-	const fakeRes = {json: raw => raw};
-
 	beforeEach(() => {
 		// check mongoose connection
 		const options = {
@@ -28,7 +26,22 @@ describe('Integration - Authentication routes ...', () => {
 	});
 
 	// TESTS
-	it('should be able to fetch one user', async () => {
+	it('register a user with username and password', async () => {
+		// SETUP
+		const username = 'registerUser';
+		const password = 'registerUser';
+
+		// RUN
+		const response = await request(app).post('/auth/register').send({username, password});
+
+		// CHECK
+		expect(response.error).toBeFalsy();
+		expect(response.body.success).toBeTruthy();
+		expect(response.body.userId).toBeTruthy();
+		expect(response.body.username).toBe(username);
+	});
+
+	it('fetch one user', async () => {
 		// SETUP
 		const testUser = new User({
 			username: 'testUser',
