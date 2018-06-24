@@ -50,6 +50,8 @@ const ItemSchema = new Schema({
 	files: {
 		type: Array,
 	}
+}, { 
+	versionKey: '_vk',
 });
 
 

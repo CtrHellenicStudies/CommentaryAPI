@@ -30,6 +30,8 @@ const CollectionSchema = new Schema({
 		index: true,
 		required: true,
 	},
+}, { 
+	versionKey: '_vk',
 });
 
 

@@ -38,6 +38,8 @@ const ProjectSchema = new Schema({
 			enum: ['admin', 'editor'],
 		},
 	}],
+}, { 
+	versionKey: '_vk',
 });
 
 

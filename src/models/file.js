@@ -47,6 +47,8 @@ const FileSchema = new Schema({
 	thumbPath: {
 		type: String,
 	},
+}, { 
+	versionKey: '_vk',
 });
 
 
