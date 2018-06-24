@@ -2,8 +2,8 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import { formatError } from 'apollo-errors';
 import { GraphQLSchema, execute, subscribe } from 'graphql';
 import {
-	makeRemoteExecutableSchema, 
-	mergeSchemas, 
+	makeRemoteExecutableSchema,
+	mergeSchemas,
 	introspectSchema,
 	transformSchema,
 	RenameTypes,
@@ -122,13 +122,24 @@ const setupGraphQL = async (app) => {
 			schema = mergeSchemas({
 				schemas: [RootSchema, ...validRemoteSchemaList],
 			});
-		} 
+		}
 	}
+
+	// no null validation rules
+	const validationRules = [
+		(context) => {
+			context._ast.definitions.forEach((definition) => {
+				definition.variableDefinitions = definition.variableDefinitions || [];
+			});
+			return true;
+		}
+	];
 
 	app.use('/graphql', jwtAuthenticate, graphqlExpress(req => ({
 		schema,
 		context: getGraphQLContext(req),
 		formatError,
+		validationRules,
 	})));
 
 	app.use('/graphiql', graphiqlExpress({
