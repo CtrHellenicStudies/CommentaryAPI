@@ -11,9 +11,9 @@ import { KeywordType } from '../types/keyword';
 import KeywordService from '../logic/Keywords/keywords';
 
 const keywordQueryFields = {
-	keywords: {
+	keyword: {
 		type: new GraphQLList(KeywordType),
-		description: 'Get list of keywords (tags)',
+		description: 'Get a keyword (tag) by id',
 		args: {
 			tenantId: {
 				type: GraphQLID,
@@ -30,7 +30,24 @@ const keywordQueryFields = {
 		},
 		async resolve (parent, { tenantId, id, slug, queryParam}, { token }) {
 			const keywordService = new KeywordService(token);
-			const keywords = await keywordService.keywordsGet(id, tenantId, slug, queryParam);
+			const keywords = await keywordService.getKeyword(id, tenantId, slug, queryParam);
+			return keywords;
+		},
+	},
+	keywords: {
+		type: new GraphQLList(KeywordType),
+		description: 'Get list of keywords (tags)',
+		args: {
+			tenantId: {
+				type: GraphQLID,
+			},
+			queryParam: {
+				type: GraphQLString
+			},
+		},
+		async resolve (parent, { tenantId, queryParam}, { token }) {
+			const keywordService = new KeywordService(token);
+			const keywords = await keywordService.getKeywords(tenantId, queryParam);
 			return keywords;
 		},
 	},

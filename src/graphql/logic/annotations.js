@@ -10,18 +10,36 @@ import { AuthenticationError } from '../errors/index';
  */
 export default class AnnotationService extends PermissionsService {
 	/**
+	 * Get an annotation
+	 * @param {string} id
+	 * @returns {Object} annotation
+	 */
+	async getAnnotation(id) {
+		const args = {
+			_id: id
+		};
+
+		if (!id) {
+			return null;
+		}
+
+		const annotation = await Comments.findOne(args);
+		return annotation;
+	}
+
+	/**
 	 * Get all annotation comments for a given book chapter url
 	 * @param {string} bookChapterUrl - the URL of the book chapter to be annotated
 	 * @returns {Object[]} cursor of comments
 	 */
-	annotationsGet(bookChapterUrl) {
+	async getAnnotations(bookChapterUrl) {
 		const args = {
 			bookChapterUrl,
 			isAnnotation: true,
 		};
 
-		const promise = Comments.find(args).sort({paragraphN: 1}).exec();
-		return promise;
+		const annotations = await Comments.find(args).sort({paragraphN: 1});
+		return annotations;
 	}
 
 	/**
