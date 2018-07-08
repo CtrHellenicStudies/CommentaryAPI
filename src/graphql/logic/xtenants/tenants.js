@@ -1,6 +1,6 @@
-import Tenants from '../../../models/tenants';
+import Tenants from '../../../models/tenant';
 import PermissionsService from '../PermissionsService';
-import { AuthenticationError } from '../../errors/index';
+import { AuthenticationError } from '../../errors';
 
 /**
  * Logic-layer service for dealing with tenants

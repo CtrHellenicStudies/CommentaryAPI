@@ -11,35 +11,38 @@ import { BookType } from '../types/book';
 import BookService from '../logic/books';
 
 const bookQueryFields = {
-	books: {
-		type: new GraphQLList(BookType),
-		description: 'Get list of all books',
+	book: {
+		type: BookType,
+		description: 'Get a book by id or slug',
 		args: {
-			bookId: {
+			_id: {
+				type: GraphQLID,
+			},
+			slug: {
 				type: GraphQLID,
 			},
 			chapterUrl: {
 				type: GraphQLString
 			},
 		},
-		async resolve (parent, { bookId, chapterUrl }, { token }) {
+		async resolve (parent, { _id, slug, chapterUrl }, { token }) {
 			const bookService = new BookService(token);
-			const books = await bookService.booksGet(bookId, chapterUrl);
-			return books;
+			const book = await bookService.booksGet(_id, slug, chapterUrl);
+			return book;
 		},
 	},
-	bookByChapter: {
-		type: BookType,
-		description: 'Get a book by the chapterUrl',
+	books: {
+		type: new GraphQLList(BookType),
+		description: 'Get list of all books',
 		args: {
 			chapterUrl: {
 				type: GraphQLString
-			}
+			},
 		},
 		async resolve (parent, { chapterUrl }, { token }) {
 			const bookService = new BookService(token);
-			const book = await bookService.bookByChapter(chapterUrl);
-			return book;
+			const books = await bookService.getBooks(chapterUrl);
+			return books;
 		},
 	},
 };

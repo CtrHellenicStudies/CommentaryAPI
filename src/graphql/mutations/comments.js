@@ -10,7 +10,7 @@ import { RevisionInputType } from '../types/revision';
 import RemoveType from '../types/remove';
 
 // logic
-import CommentService from '../logic/Comments/comment';
+import CommentService from '../logic/comments/comment';
 
 
 const commentMutationFields = {

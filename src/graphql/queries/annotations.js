@@ -12,7 +12,7 @@ import AnnotationService from '../logic/annotations';
 
 const annotationQueryFields = {
 	annotation: {
-		type: new GraphQLList(CommentType),
+		type: CommentType,
 		description: 'Get an annotation',
 		args: {
 			id: {
@@ -35,7 +35,7 @@ const annotationQueryFields = {
 		},
 		async resolve (parent, { bookChapterUrl }, { token }) {
 			const annotationService = new AnnotationService(token);
-			const annotations = await annotationService.getAnntoations(bookChapterUrl);
+			const annotations = await annotationService.getAnnotations(bookChapterUrl);
 			return annotations;
 		}
 	},

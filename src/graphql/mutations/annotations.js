@@ -10,8 +10,8 @@ import RemoveType from '../types/remove';
 import { RevisionInputType } from '../types/revision';
 
 // models
-import Comments from '../../models/comments';
-import Books from '../../models/books';
+import Comments from '../../models/comment';
+import Books from '../../models/book';
 
 // logic
 import AnnotationService from '../logic/annotations';

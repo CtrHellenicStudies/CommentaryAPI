@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-import Keywords from '../../../models/keywords';
+import Keywords from '../../../models/keyword';
 import PermissionsService from '../PermissionsService';
 
-import { AuthenticationError } from '../../errors/index';
+import { AuthenticationError } from '../../errors';
 
 /**
  * Logic-layer service for dealing with keywords
@@ -16,11 +16,8 @@ export default class KeywordsService extends PermissionsService {
 	 * @param {string} tenantId - id of tenant
 	 * @returns {boolean} result promise
 	 */
-	keywordsGet(id, tenantId, slug, queryParam) {
-		let args = {};
-		if (queryParam) {
-			args = JSON.parse(queryParam);
-		}
+	async getKeyword(id, tenantId, slug) {
+		const args = {};
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
@@ -30,7 +27,26 @@ export default class KeywordsService extends PermissionsService {
 		if (slug) {
 			args.slug = slug;
 		}
-		return	Keywords.find(args).sort({title: 1}).exec();
+		const keyword = await Keywords.findOne(args);
+		return keyword;
+	}
+
+	/**
+	 * Get tags (keywords) for tenant
+	 * @param {string} id - id of a tag
+	 * @param {string} tenantId - id of tenant
+	 * @returns {boolean} result promise
+	 */
+	async getKeywords(tenantId, queryParam) {
+		let args = {};
+		if (queryParam) {
+			args = JSON.parse(queryParam);
+		}
+		if (tenantId) {
+			args.tenantId = tenantId;
+		}
+		const keywords = await Keywords.find(args).sort({title: 1});
+		return keywords;
 	}
 
 	/**

@@ -10,7 +10,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { GraphQLDateTime } from 'graphql-iso-date';
 
 import CommentType from './comment';
-import Comments from '../../models/comments';
+import Comments from '../../models/comment';
 
 /**
  * Book input type for creating books

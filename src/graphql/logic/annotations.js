@@ -1,9 +1,8 @@
-
-import Comments from '../../models/comments';
-import Books from '../../models/books';
+import Comments from '../../models/comment';
+import Books from '../../models/book';
 
 import PermissionsService from './PermissionsService';
-import { AuthenticationError } from '../errors/index';
+import { AuthenticationError } from '../errors';
 
 /**
  * Logic-layer service for dealing with annotations

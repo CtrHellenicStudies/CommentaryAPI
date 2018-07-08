@@ -9,7 +9,7 @@ import { TenantType, TenantInputType } from '../types/tenants';
 import RemoveType from '../types/remove';
 
 // logic
-import TenantService from '../logic/Tenants/tenants';
+import TenantService from '../logic/tenants/tenants';
 
 const tenantsMutationFields = {
 	tenantCreate: {

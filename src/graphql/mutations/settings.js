@@ -9,7 +9,7 @@ import { SettingsType, SettingsInputType } from '../types/settings';
 import RemoveType from '../types/remove';
 
 // logic
-import SettingService from '../logic/Settings/settings';
+import SettingService from '../logic/settings/settings';
 
 const settingsMutationFields = {
 

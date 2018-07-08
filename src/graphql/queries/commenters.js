@@ -8,11 +8,11 @@ import { GraphQLString, GraphQLID, GraphQLList } from 'graphql';
 import { CommenterType } from '../types/commenter';
 
 // logic
-import CommenterService from '../logic/Commenters/commenters';
+import CommenterService from '../logic/commenters/commenters';
 
 const commenterQueryFields = {
 	commenter: {
-		type: new GraphQLList(CommenterType),
+		type: CommenterType,
 		description: 'Get a commenter',
 		args: {
 			id: {

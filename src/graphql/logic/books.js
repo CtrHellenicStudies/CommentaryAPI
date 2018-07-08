@@ -1,6 +1,6 @@
-import Books from '../../models/books';
+import Books from '../../models/book';
 import PermissionsService from './PermissionsService';
-import { AuthenticationError } from '../errors/index';
+import { AuthenticationError } from '../errors';
 
 /**
  * Logic-layer service for dealing with books
@@ -54,6 +54,7 @@ export default class BookService extends PermissionsService {
 		}
 		throw new AuthenticationError();
 	}
+
 	/**
 	 * Update a book record
 	 * @param {string} _id - id of book to be updated
@@ -88,25 +89,40 @@ export default class BookService extends PermissionsService {
 		}
 		throw new AuthenticationError();
 	}
+
 	/**
-	 * Get a book by the supplied chapter url
+	 * Get a book by supplied _id or chapter url
+	 * @param {string} _id - the id of the book
+	 * @param {string} slug - the slug of the book title
 	 * @param {string} chapterUrl - the URL of a chapter of the book
 	 * @returns {Object} promise
 	 */
-	bookByChapter(chapterUrl) {
-		const args = {
-			'chapters.url': chapterUrl,
-		};
-		const promise = Books.findOne(args).sort({slug: 1}).exec();
-		return promise;
+	async getBook(_id, slug, chapterUrl) {
+		const args = {};
+
+		if (_id) {
+			args._id = _id;
+		}
+
+		if (slug) {
+			args.slug = slug;
+		}
+
+		if (chapterUrl) {
+			args['chapters.url'] = chapterUrl;
+		}
+
+		const book = await Books.findOne(args);
+		return book;
 	}
+
 	/**
 	 * Get a book by supplied _id or chapter url
 	 * @param {string} _id - the id of the book
 	 * @param {string} chapterUrl - the URL of a chapter of the book
 	 * @returns {Object} promise
 	 */
-	booksGet(_id, chapterUrl) {
+	async getBooks(_id, chapterUrl) {
 		const args = {};
 
 		if (_id) {
@@ -116,7 +132,8 @@ export default class BookService extends PermissionsService {
 		if (chapterUrl) {
 			args['chapters.url'] = chapterUrl;
 		}
-		const promise = Books.find(args).sort({slug: 1, title: 1}).exec();
-		return promise;
+
+		const books = await Books.find(args).sort({ slug: 1, title: 1 });
+		return books;
 	}
 }

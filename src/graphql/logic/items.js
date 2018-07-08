@@ -47,15 +47,21 @@ const saveFiles = async (project, item, files) => {
 const saveManifest = async (project, item, files) => {
 	const images = [];
 	files.forEach((file) => {
-		let newImageName = file.name;
-		newImageName = newImageName.replace(`${file._id}-`, '');
+		if (file.type && file.type.startsWith('image')) {
+			let newImageName = file.name;
+			newImageName = newImageName.replace(`${file._id}-`, '');
 
-		images.push({
-			_id: file._id,
-			name: newImageName,
-			label: file.title,
-		});
+			images.push({
+				_id: file._id,
+				name: newImageName,
+				label: file.title,
+			});
+		}
 	});
+
+	if (!images.length) {
+		return null;
+	}
 
 	// update item manifest
 	const manifest = {
@@ -101,7 +107,7 @@ export default class ItemService extends PermissionsService {
 	 * @param {string} collectionId
 	 * @returns {number} count of items
 	 */
-	async count({ projectId, collectionId }) {
+	async count({ projectId, collectionId, textsearch }) {
 		const where = {};
 
 		if (!projectId && !collectionId) {
@@ -116,6 +122,10 @@ export default class ItemService extends PermissionsService {
 			where.collectionId = collectionId;
 		}
 
+		if (textsearch) {
+			where.$text = { $search: textsearch };
+		}
+
 		return await Item.count(where);
 	}
 
@@ -128,7 +138,7 @@ export default class ItemService extends PermissionsService {
 	 * @param {number} limit
 	 * @returns {Object[]} array of items
 	 */
-	async getItems({ projectId, collectionId, textsearch, offset, limit }) {
+	async getItems({ projectId, collectionId, textsearch, ids, offset, limit }) {
 		const args = {};
 
 		if (!projectId && !collectionId) {
@@ -143,8 +153,12 @@ export default class ItemService extends PermissionsService {
 			args.collectionId = collectionId;
 		}
 
+		if (ids) {
+			args._id = ids;
+		}
+
 		if (textsearch) {
-			args.title = /.*${textsearch}.*/;
+			args.$text = { $search: textsearch };
 		}
 
 		return await Item.find(args)
@@ -204,7 +218,7 @@ export default class ItemService extends PermissionsService {
 
 		await newItem.save();
 
-		if (files) {
+		if (files && files.length) {
 			await saveFiles(project, newItem, files);
 			await saveManifest(project, newItem, files);
 		}
@@ -235,7 +249,7 @@ export default class ItemService extends PermissionsService {
 		const updatedItem = await Item.findById(item._id);
 
 		// save files and add ids to item
-		if (files) {
+		if (files && files.length) {
 			await saveFiles(project, updatedItem, files);
 			await saveManifest(project, updatedItem, files);
 		}

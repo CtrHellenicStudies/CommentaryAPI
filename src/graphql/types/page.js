@@ -1,75 +1,31 @@
-import {
-	GraphQLObjectType,
-	GraphQLString,
-	GraphQLList,
-	GraphQLInputObjectType
-} from 'graphql';
+import { GraphQLList, GraphQLInt, GraphQLString, GraphQLID } from 'graphql';
+import createType from 'mongoose-schema-to-graphql';
 
-/**
- * Page model type
- * @type {GraphQLObjectType}
- */
-const PageType = new GraphQLObjectType({
+// models
+import Page from '../../models/page';
+
+// logic
+import PageService from '../logic/pages';
+
+
+const config = {
 	name: 'PageType',
-	description: 'A single page database entry',
-	fields: {
-		_id: {
-			type: GraphQLString
-		},
-		title: {
-			type: GraphQLString,
-		},
-		subtitle: {
-			type: GraphQLString,
-		},
-		headerImage: {
-			type: new GraphQLList(GraphQLString),
-		},
-		slug: {
-			type: GraphQLString,
-		},
-		byline: {
-			type: GraphQLString,
-		},
-		tenantId: {
-			type: GraphQLString,
-		},
-		content: {
-			type: GraphQLString,
-		},
-	},
-});
+	description: 'Page base query type',
+	class: 'GraphQLObjectType',
+	schema: Page.schema,
+	exclude: [],
+};
 
-/**
- * Page input type
- * @type {GraphQLInputObjectType}
- */
-const PageInputType = new GraphQLInputObjectType({
+const configInput = {
 	name: 'PageInputType',
-	description: 'A single page database entry',
-	fields: {
-		title: {
-			type: GraphQLString,
-		},
-		subtitle: {
-			type: GraphQLString,
-		},
-		headerImage: {
-			type: new GraphQLList(GraphQLString),
-		},
-		slug: {
-			type: GraphQLString,
-		},
-		byline: {
-			type: GraphQLString,
-		},
-		tenantId: {
-			type: GraphQLString,
-		},
-		content: {
-			type: GraphQLString,
-		},
-	},
-});
+	description: 'Page Schema base create input type',
+	class: 'GraphQLInputObjectType',
+	schema: Page.schema,
+	exclude: [],
+};
 
-export {PageType, PageInputType};
+const PageType = createType(config);
+const PageInputType = createType(configInput);
+
+export default PageType;
+export { PageInputType };

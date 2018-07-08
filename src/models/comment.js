@@ -1,15 +1,14 @@
 import _ from 'underscore';
 import mongoose from 'mongoose';
 
-import Works, { WorksModel} from './works';
-import Books from './books';
-import Tenants from './tenants';
-import { CommentersModel } from './commenters';
-import { SubworksModel } from './subworks';
-import { ReferenceWorksModel } from './referenceWorks';
-import { KeywordsModel } from './keywords';
-import { DiscussionCommentsModel } from './discussionComments';
+import Books from './book';
+import Tenants from './tenant';
+import { CommentersModel } from './commenter';
+import { ReferenceWorksModel } from './referenceWork';
+import { KeywordsModel } from './keyword';
+import { DiscussionCommentsModel } from './discussionComment';
 import { RevisionModel } from './revision';
+import LemmaCitation from './lemmaCitation';
 
 
 const PassageModel = new mongoose.Schema({
@@ -26,6 +25,7 @@ const CommentsModel = new mongoose.Schema({
 	_id: {
 		type: String
 	},
+
 	urn: {
 		type: new mongoose.Schema({
 			v1: {
@@ -68,27 +68,6 @@ const CommentsModel = new mongoose.Schema({
 		optional: true,
 	},
 
-	work: {
-		type: WorksModel,
-		optional: true,
-
-	},
-
-	subwork: {
-		type: SubworksModel,
-		optional: true,
-	},
-
-	lineFrom: {
-		type: Number,
-		optional: true,
-	},
-
-	lineTo: {
-		type: Number,
-		optional: true,
-	},
-
 	lineLetter: {
 		type: String,
 		optional: true,
@@ -118,10 +97,12 @@ const CommentsModel = new mongoose.Schema({
 		type: String,
 		optional: true,
 	},
+
 	revisions: {
 		type: [RevisionModel],
 		optional: true
 	},
+
 	referenceId: {
 		type: String,
 		optional: true,
@@ -182,30 +163,9 @@ const CommentsModel = new mongoose.Schema({
 		type: Date,
 		optional: true,
 	},
+
 	lemmaCitation: {
-		type: new mongoose.Schema({
-			ctsNamespace: {
-				type: String
-			},
-			textGroup: {
-				type: String
-			},
-			work: {
-				type: String
-			},
-			passageFrom: {
-				type: [Number],
-			},
-			subreferenceIndexFrom: {
-				type: Number,
-			},
-			passageTo: {
-				type: [Number],
-			},
-			subreferenceIndexTo: {
-				type: Number,
-			},
-		}),
+		type: LemmaCitation,
 	},
 });
 
@@ -215,7 +175,7 @@ const COMMENT_ID_LENGTH = 7;
 const _getCommentURN = (comment) => {
 	const tenant = Tenants.findOne({_id: comment.tenantId});
 	const urnPrefixV1 = 'urn:cts:CHS.Commentary';
-	const urnPrefixV2 = `urn:cts:CHS:Commentaries. ${tenant.subdomain.toUpperCase()}`;
+	const urnPrefixV2 = `urn:cts:CHS:Commentaries.${tenant.subdomain.toUpperCase()}`;
 	// Use work tlg if it exists, otherwise, search for subwork tlg number
 	// Failing either, just use creator
 	const workTitle = comment.work.title.replace(' ', '');
@@ -260,14 +220,7 @@ CommentsModel.pre('insert', function(userId, doc) {
 	doc.urn = getURN(doc);
 });
 
-// CommentsModel.pre('update', function(userId, doc, fieldNames, modifier, options) {
-// 	if(modifier) {
-// 		modifier.$set.urn = getURN(doc);
-// 	}
-// });
-
 const Comments = mongoose.model('Comments', CommentsModel);
 
 export default Comments;
-
 export { getURN };

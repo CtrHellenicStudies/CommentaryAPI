@@ -9,7 +9,7 @@ import { DiscussionCommentType, DiscussionCommentInputType} from '../types/discu
 import RemoveType from '../types/remove';
 
 // logic
-import DiscussionCommentService from '../logic/DiscussionComments/discussionComments';
+import DiscussionCommentService from '../logic/discussionComments/discussionComments';
 
 const discussionCommentsMutationFields = {
 	discussionCommentUpdateStatus: {

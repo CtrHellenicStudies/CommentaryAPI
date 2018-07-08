@@ -2,7 +2,7 @@ import mongoose, { Promise } from 'mongoose';
 
 import PermissionsService from './PermissionsService';
 import User from '../../models/user';
-import { AuthenticationError } from '../errors/index';
+import { AuthenticationError } from '../errors';
 
 /**
  * Logic-layer service for dealing with users

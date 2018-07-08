@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 import timestamp from 'mongoose-timestamp';
 import URLSlugs from 'mongoose-url-slugs';
 
@@ -10,12 +11,26 @@ const Schema = mongoose.Schema;
  * @type {Schema}
  */
 const ProjectSchema = new Schema({
+	_id: {
+		type: String,
+		default: shortid.generate
+	},
 	title: {
 		type: String,
-		unique: true,
 		required: true,
 		trim: true,
 		index: true,
+	},
+	subtitle: {
+		type: String,
+	},
+	status: {
+		type: String,
+		required: true,
+		enum: ['private', 'public'],
+	},
+	description: {
+		type: String,
 	},
 	hostname: {
 		unique: true,
@@ -24,12 +39,21 @@ const ProjectSchema = new Schema({
 		trim: true,
 		index: true,
 	},
-	description: {
+	email: {
+		type: String,
+	},
+	url: {
+		type: String,
+	},
+	address: {
+		type: String,
+	},
+	phone: {
 		type: String,
 	},
 	users: [{
 		userId: {
-			type: Schema.Types.ObjectId,
+			type: String,
 			ref: 'User',
 			index: true,
 		},
@@ -37,9 +61,11 @@ const ProjectSchema = new Schema({
 			type: String,
 			enum: ['admin', 'editor'],
 		},
+		status: {
+			type: String,
+			enum: ['private', 'public', 'pending'],
+		},
 	}],
-}, { 
-	versionKey: '_vk',
 });
 
 
@@ -54,7 +80,9 @@ const Project = mongoose.model('Project', ProjectSchema);
 ProjectSchema.plugin(timestamp);
 
 // add slug (slug)
-ProjectSchema.plugin(URLSlugs('title'));
+ProjectSchema.plugin(URLSlugs('title', {
+	indexUnique: false,
+}));
 
 
 /**

@@ -8,7 +8,7 @@ import { KeywordType, KeywordInputType} from '../types/keyword';
 import RemoveType from '../types/remove';
 
 // logic
-import KeywordService from '../logic/Keywords/keywords';
+import KeywordService from '../logic/keywords/keywords';
 
 const keywordsMutationFields = {
 	keywordRemove: {

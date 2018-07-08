@@ -1,18 +1,18 @@
 /**
  * Queries for keywords
  */
-
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
 import { KeywordType } from '../types/keyword';
 
 // logic
-import KeywordService from '../logic/Keywords/keywords';
+import KeywordService from '../logic/keywords/keywords';
+
 
 const keywordQueryFields = {
 	keyword: {
-		type: new GraphQLList(KeywordType),
+		type: KeywordType,
 		description: 'Get a keyword (tag) by id',
 		args: {
 			tenantId: {
@@ -21,17 +21,14 @@ const keywordQueryFields = {
 			id: {
 				type: GraphQLString,
 			},
-			queryParam: {
-				type: GraphQLString
-			},
 			slug: {
 				type: GraphQLString
 			}
 		},
-		async resolve (parent, { tenantId, id, slug, queryParam}, { token }) {
+		async resolve (parent, { tenantId, id, slug }, { token }) {
 			const keywordService = new KeywordService(token);
-			const keywords = await keywordService.getKeyword(id, tenantId, slug, queryParam);
-			return keywords;
+			const keyword = await keywordService.getKeyword(id, slug, tenantId);
+			return keyword;
 		},
 	},
 	keywords: {
@@ -45,7 +42,7 @@ const keywordQueryFields = {
 				type: GraphQLString
 			},
 		},
-		async resolve (parent, { tenantId, queryParam}, { token }) {
+		async resolve (parent, { tenantId, queryParam }, { token }) {
 			const keywordService = new KeywordService(token);
 			const keywords = await keywordService.getKeywords(tenantId, queryParam);
 			return keywords;

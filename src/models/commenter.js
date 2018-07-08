@@ -112,4 +112,4 @@ const CommentersModel = new mongoose.Schema({
 const Commenters = mongoose.model('Commenters', CommentersModel);
 
 export default Commenters;
-export { CommentersModel};
+export { CommentersModel };

@@ -1,79 +1,159 @@
-import Pages from '../../models/pages';
+import _s from 'underscore.string';
+
+// services
 import PermissionsService from './PermissionsService';
-import { AuthenticationError } from '../errors/index';
+
+// models
+import Page from '../../models/page';
+import Project from '../../models/project';
+
+// errors
+import { AuthenticationError, PermissionError, ArgumentError } from '../errors';
+
 
 /**
  * Logic-layer service for dealing with pages
  */
+
 export default class PageService extends PermissionsService {
+	/**
+	 * Count pages
+	 * @returns {number} count of pages
+	 */
+	async count({ projectId }) {
+		return await Page.count({ projectId });
+	}
 
 	/**
-	 * Get pages
-	 * @param {string} _id - id of page
-	 * @param {string} tenantId - id of current tenant
-	 * @returns {object} promise
+	 * Get a list of pages
+	 * @param {string} projectId
+	 * @param {string} textsearch
+	 * @param {number} offset
+	 * @param {number} limit
+	 * @returns {Object[]} array of pages
 	 */
-	pagesGet(_id, tenantId) {
-		const args = {};
-		if (tenantId) {
-			args.tenantId = tenantId;
+	async getPages({ projectId, textsearch, offset, limit }) {
+		const args = { projectId };
+
+		if (textsearch) {
+			args.title = /.*${textsearch}.*/;
 		}
+
+		return await Page.find(args)
+			.sort({ slug: 1})
+			.skip(offset)
+			.limit(limit);
+	}
+
+	/**
+	 * Get page
+	 * @param {string} projectId - id of the parent project for the page
+	 * @param {number} _id - id of page
+	 * @param {string} slug - slug of page
+	 * @returns {Object[]} array of pages
+	 */
+	async getPage({ projectId, _id, slug, }) {
+		const where = { projectId };
+
+		if (!_id && !slug) {
+			return null;
+		}
+
 		if (_id) {
-			args._id = _id;
+			where._id = _id;
 		}
-		return Pages.find(args).exec();
-	}
 
-	/**
-	 * Update a page
-	 * @param {string} _id - id of page
-	 * @param {Object} page - page params to update
-	 * @returns {object} promise
-	 */
-	pageUpdate(_id, page) {
-		if (this.userIsAdmin) {
-			return new Promise(function(resolve, rejected) {
-				Pages.update({_id: _id}, page, function(err, updated) {
-					if (err) {
-						console.log(err);
-						rejected(1);
-					}
-					resolve(updated);
-				});
-			});
+		if (slug) {
+			where.slug = slug;
 		}
-		throw new AuthenticationError();
-	}
 
-	/**
-	 * Remove a page
-	 * @param {string} pageId - id of page to remove
-	 * @returns {object} promise
-	 */
-	pageRemove(pageId) {
-		if (this.userIsAdmin) {
-			return Pages.find({_id: pageId}).remove().exec();
-		}
-		throw new AuthenticationError();
+		return await Page.findOne(where);
 	}
 
 	/**
 	 * Create a new page
-	 * @param {Object} page - new page candidate
-	 * @returns {object} promise
+	 * @param {string} hostname - hostname of the page for the project
+	 * @param {Object} page - page candidate
+	 * @returns {Object} created page
 	 */
-	pageCreate(page) {
-		if (this.userIsAdmin) {
-			return new Promise(function(resolve, rejection) {
-				Pages.create(page, function(err, inserted) {
-					if (err) {
-						console.log(err);
-						rejected(1);
-					}
-					resolve(inserted);
-				});
-			});
-		}
-		throw new AuthenticationError();
+	async create(hostname, page) {
+		// if user is not logged in
+		if (!this.userId) throw new AuthenticationError();
+
+		const pageProject = await Project.findOne({ hostname });
+
+		// Initiate project
+		if (!pageProject) throw new ArgumentError({ data: { field: 'project._id' } });
+
+		// validate permissions
+		const userIsAdmin = this.userIsProjectAdmin(pageProject);
+		if (!userIsAdmin) throw new PermissionError();
+
+		// set page projectid and slug
+		page.projectId = pageProject._id;
+		page.slug = _s.slugify(page.title);
+
+		// Initiate new page
+		const newPage = new Page(page);
+
+		// save new page and return result
+		return await newPage.save();
 	}
+
+	/**
+	 * Update a page
+	 * @param {Object} page - page candidate
+	 * @returns {Object} updated page
+	 */
+	async update(page) {
+		// if user is not logged in
+		if (!this.userId) throw new AuthenticationError();
+
+		// get project
+		const project = await Project.findOne({ _id: page.projectId });
+		if (!project) throw new ArgumentError({ data: { field: 'page.projectId' } });
+
+		// validate permissions
+		const userIsAdmin = this.userIsProjectAdmin(project);
+		if (!userIsAdmin) throw new PermissionError();
+
+		// perform action
+		const result = await Page.update({ _id: page._id }, { $set: page });
+
+		// TODO
+		// error handling
+
+		// return updated page
+		return await Page.findById(page._id);
+	}
+
+	/**
+	 * Remove a page
+	 * @param {string} _id - id of page to Remove
+	 * @returns {boolean} remove result
+	 */
+	async remove(_id) {
+		// if user is not logged in
+		if (!this.userId) throw new AuthenticationError();
+
+		// get project
+		const project = await Project.findById(page.projectId);
+		if (!project) throw new ArgumentError({ data: { field: 'page.projectId' } });
+
+		// validate permissions
+		const userIsAdmin = this.userIsProjectAdmin(project);
+		if (!userIsAdmin) throw new PermissionError();
+
+		// perform action
+		const result = await Page.remove({ _id });
+
+		// TODO
+		// error handling
+
+		// respond with result
+		return {
+			result,
+		};
+	}
+
 }

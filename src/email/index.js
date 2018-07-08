@@ -38,10 +38,10 @@ class OrpheusEmailClass {
 		// verify connection configuration
 		transporter.verify((error, success) => {
 			if (error) {
-				console.log('Failed to connect to SMTP server!!!');
-				console.log(error);
+				winston.error('Failed to connect to SMTP server');
+				winston.error(error);
 			} else {
-				console.log('Connection to SMTP server SUCCESSFUL.');
+				winston.info('Connection to SMTP server successful.');
 			}
 		});
 
@@ -63,7 +63,7 @@ class OrpheusEmailClass {
 			email.to = process.env.EMAIL_TO_TEST || 'test@archimedes.digital';
 		}
 		this.transporter.sendMail(email, (error, info) => {
-			if (error) { winston.error(e); }
+			if (error) { winston.error(error); }
 			winston.info('Email Info: ', info);
 			if (process.env.EMAIL_SMTP_HOST === 'smtp.ethereal.email') {
 				winston.info('Email Preview URL: %s', nodemailer.getTestMessageUrl(info));
@@ -88,22 +88,22 @@ class OrpheusEmailClass {
 			});
 	}
 
-	sendPasswordResetEmail(username, passwordResetToken) {
+	async sendPasswordResetEmail(username, passwordResetToken) {
 		const templateDir = path.resolve(__dirname, 'templates', 'passwordReset');
 		const template = new EmailTemplate(templateDir);
 
-		template.render({
+		const results = await template.render({
 			passwordResetLink: generatePasswordResetLink(passwordResetToken),
-		}).then((results) => {
-			const email = {
-				from: this.from,
-				to: username,
-				subject: results.subject,
-				html: results.html,
-				text: results.text,
-			};
-			this.sendMail(email);
 		});
+
+		const email = {
+			from: this.from,
+			to: username,
+			subject: results.subject,
+			html: results.html,
+			text: results.text,
+		};
+		await this.sendMail(email);
 	}
 }
 

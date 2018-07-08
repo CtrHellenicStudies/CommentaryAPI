@@ -5,14 +5,14 @@
 import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 
 // types
-import { PageType } from '../types/page';
+import PageType from '../types/page';
 
 // logic
 import PageService from '../logic/pages';
 
 const pagesQueryFields = {
 	page: {
-		type: new GraphQLList(PageType),
+		type: PageType,
 		description: 'Get list of all pages',
 		args: {
 			_id: {

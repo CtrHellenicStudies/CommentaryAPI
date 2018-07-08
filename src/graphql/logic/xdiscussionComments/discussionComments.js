@@ -1,8 +1,8 @@
-import DiscussionComments from '../../../models/discussionComments';
-import Comments from '../../../models/comments';
+import DiscussionComments from '../../../models/discussionComment';
+import Comments from '../../../models/comment';
 
 // errors
-import { AuthenticationError } from '../../errors/index';
+import { AuthenticationError } from '../../errors';
 
 import PermissionsService from '../PermissionsService';
 
@@ -33,6 +33,7 @@ export default class DiscussionCommentService extends PermissionsService {
 
 		return DiscussionComments.find(args).exec();
 	}
+
 	/**
 	 * Update the status of a given discussion comment
 	 * @param {string} discussionCommentId - id of dicussion comment to update
@@ -54,6 +55,7 @@ export default class DiscussionCommentService extends PermissionsService {
 		});
 		return DiscussionComments.findOne(discussionCommentId);
 	}
+
 	/**
 	 * Remove a discussion comment
 	 * @param {string} discussionCommentId - id of dicussion comment to remove
@@ -66,6 +68,7 @@ export default class DiscussionCommentService extends PermissionsService {
 		}
 		throw AuthenticationError();
 	}
+
 	/**
 	 * Update discussion comment content
 	 * @param {string} discussionCommentId - id of discussion comment to update
@@ -88,6 +91,7 @@ export default class DiscussionCommentService extends PermissionsService {
 			throw e;
 		}
 	}
+
 	/**
 	 * Report selected discussionComment
 	 * @param {string} discussionCommentId - id of the comment to report
@@ -132,6 +136,7 @@ export default class DiscussionCommentService extends PermissionsService {
 		// TODO notifications
 		// sendReportMessage(comment, discussionComment);
 	}
+
 	/**
 	 * Undo report on selected discussionComment
 	 * @param {string} discussionCommentId - id of the comment to udno report
@@ -157,6 +162,7 @@ export default class DiscussionCommentService extends PermissionsService {
 			throw err;
 		}
 	}
+
 	/**
 	 * Upvote on selected discussionComment
 	 * @param {string} discussionCommentId - id of the comment to upvote
@@ -180,6 +186,7 @@ export default class DiscussionCommentService extends PermissionsService {
 			throw err;
 		}
 	}
+
 	/**
 	 * Insert new discussionComment
 	 * @param {string} discussionContent - content of disscusion comment, which will be inserted

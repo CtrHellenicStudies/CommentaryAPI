@@ -76,7 +76,7 @@ export default class CollectionService extends PermissionsService {
 	 * Create a new collection
 	 * @param {string} hostname - hostname of the collection for the project
 	 * @param {Object} collection - collection candidate
-	 * @param {[string]} items - list of item ids to add to collection
+	 * @param {string[]} items - list of item ids to add to collection
 	 * @returns {Object} created collection
 	 */
 	async create(hostname, collection, items) {
@@ -119,7 +119,7 @@ export default class CollectionService extends PermissionsService {
 	/**
 	 * Update a collection
 	 * @param {Object} collection - collection candidate
-	 * @param {[string]} items - list of item ids to add to collection
+	 * @param {string[]} items - list of item ids to add to collection
 	 * @returns {Object} updated collection
 	 */
 	async update(collection, items) {

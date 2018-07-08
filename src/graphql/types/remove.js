@@ -1,14 +1,10 @@
-import { GraphQLObjectType, GraphQLID } from 'graphql';
+import { GraphQLObjectType, GraphQLBoolean } from 'graphql';
 
-
-const RemoveType = new GraphQLObjectType({
+export default new GraphQLObjectType({
 	name: 'RemoveType',
 	fields: {
-		_id: {
-			type: GraphQLID,
+		result: {
+			type: GraphQLBoolean,
 		},
 	},
 });
-
-
-export default RemoveType;

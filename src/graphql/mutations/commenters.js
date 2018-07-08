@@ -9,7 +9,7 @@ import { CommenterType, CommenterInputType } from '../types/commenter';
 import RemoveType from '../types/remove';
 
 // logic
-import CommenterService from '../logic/Commenters/commenters';
+import CommenterService from '../logic/commenters/commenters';
 
 const commenterMutationFields = {
 

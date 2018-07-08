@@ -1,8 +1,9 @@
-import Comments from '../../../models/comments';
-import Commenters from '../../../models/commenters';
-import ReferenceWorks from '../../../models/referenceWorks';
+import Comments from '../../../models/comment';
+import Commenters from '../../../models/commenter';
+import ReferenceWorks from '../../../models/referenceWork';
+
 // errors
-import { AuthenticationError } from '../../errors/index';
+import { AuthenticationError } from '../../errors';
 
 import PermissionsService from '../PermissionsService';
 
@@ -77,6 +78,7 @@ export default class CommentService extends PermissionsService {
 
 		return comments;
 	}
+
 	/**
 	 *
 	 * @param {array} urns - array of urns

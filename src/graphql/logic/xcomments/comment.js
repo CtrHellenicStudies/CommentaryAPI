@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 
-import Comments from '../../../models/comments';
-import Commenters from '../../../models/commenters';
+import Comments from '../../../models/comment';
+import Commenters from '../../../models/commenter';
 
 // errors
-import { AuthenticationError } from '../../errors/index';
+import { AuthenticationError } from '../../errors';
 
 import PermissionsService from '../PermissionsService';
 
@@ -26,6 +26,7 @@ export default class CommentService extends PermissionsService {
 		}
 		throw AuthenticationError();
 	}
+
 	/**
 	 * Add a comment
 	 * @param {object} comment - comment to insert
@@ -50,12 +51,13 @@ export default class CommentService extends PermissionsService {
 						console.log('problem');
 						rejected(1);
 					}
-					
+
 					resolve(inserted);
 				});
 			});
 		});
 	}
+
 	/**
 	 * Update comment
 	 * @param {String} id - id of updating comment
@@ -76,6 +78,7 @@ export default class CommentService extends PermissionsService {
 		}
 		throw AuthenticationError();
 	}
+
 	/**
 	 * Add revision to comment
 	 * @param {String} commentId - id of comment of revision
@@ -104,6 +107,7 @@ export default class CommentService extends PermissionsService {
 			});
 		});
 	}
+
 	/**
 	 * Remove revision
 	 * @param {String} commentId - id of comment of revision

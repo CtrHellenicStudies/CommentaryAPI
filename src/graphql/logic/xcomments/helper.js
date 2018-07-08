@@ -1,8 +1,7 @@
-import Comments from '../../../models/comments';
-import Commenters from '../../../models/commenters';
-import Works from '../../../models/works';
-import Tenants from '../../../models/tenants';
-import Books from '../../../models/books';
+import Comments from '../../../models/comment';
+import Commenters from '../../../models/commenter';
+import Tenants from '../../../models/tenant';
+import Books from '../../../models/book';
 
 /**
  * Prepare options to comment query
@@ -41,6 +40,7 @@ function prepareGetCommentsOptions(limit, skip, sortRecent) {
 	}
 	return options;
 }
+
 const _getCommentURN = comment => new Promise(function(resolve, rejected) {
 	Tenants.findOne({_id: comment.tenantId}).then(function(tenant) {
 		const urnPrefixV1 = 'urn:cts:CHS.Commentary';
@@ -75,15 +75,15 @@ const _getAnnotationURN = comment => new Promise(function(resolve, rejected) {
 		});
 	});
 });
-function getURN(comment) {
+
+const getURN = (comment) => {
 	if (comment.isAnnotation) {
 		return _getAnnotationURN(comment);
 	}
-
 	return _getCommentURN(comment);
-}
-function prepareNotification(comment) {
+};
 
+const prepareNotification = (comment) => {
 	const commenterId = comment.commenters[0]._id;
 	const userAvatar = Commenters.findOne({_id: commenterId}, {'avatar.src': 1});
 
@@ -100,11 +100,11 @@ function prepareNotification(comment) {
 		_id: new ObjectID().toString(),
 		slug: commentId
 	};
+
 	return notification;
+};
 
-}
-function prepareEmailList(comment) {
-
+const prepareEmailList = (comment) => {
 	const notification = prepareNotification(comment);
 	const updateUser = { $push: {'subscriptions.notifications': notification} };
 
@@ -153,12 +153,11 @@ function prepareEmailList(comment) {
 		]
 	};
 
-	const emailList = Meteor.users.find(emailListQuery);
+	// TODO: replace Meteor query here with graphql query
+	// const emailList = Meteor.users.find(emailListQuery);
+};
 
-}
-function sendUpdateNotification(comment) {
-
-
+const sendUpdateNotification = (comment) => {
 	// add notification
 	const emailList = prepareEmailList(comment);
 	emailList.forEach((subscribedUser) => {
@@ -184,10 +183,9 @@ function sendUpdateNotification(comment) {
 		`;
 
 		Email.send({ from, to, subject, text });
-
 	});
+};
 
-}
 export {
 	prepareGetCommentsOptions,
 	getURN,

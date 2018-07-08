@@ -1,30 +1,52 @@
-import ReferenceWorks from '../../../models/referenceWorks';
+import ReferenceWorks from '../../../models/referenceWork';
 import PermissionsService from '../PermissionsService';
-import { AuthenticationError } from '../../errors/index';
+import { AuthenticationError } from '../../errors';
 
 /**
  * Logic-layer service for dealing with reference works
  */
 export default class ReferenceWorksService extends PermissionsService {
-
 	/**
-	 * Get reference works
+	 * Get reference work
 	 * @param {string} id - id of reference work
 	 * @param {string} tenantId - id of current tenant
-	 * @returns {Object} promise
+	 * @returns {Object}
 	 */
-	referenceWorksGet(id, tenantId) {
-
+	async getReferenceWork(id, slug, tenantId) {
 		const args = {};
 
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
+
 		if (id) {
 			args._id = id;
 		}
-		return ReferenceWorks.find(args).sort({slug: 1}).exec();
+
+		if (slug) {
+			args.slug = slug;
+		}
+
+		const referenceWork = await ReferenceWorks.findOne(args);
+		return referenceWork;
 	}
+
+	/**
+	 * Get reference works
+	 * @param {string} tenantId - id of current tenant
+	 * @returns {Object[]} array of reference work documents
+	 */
+	async getReferenceWorks(tenantId) {
+		const args = {};
+
+		if (tenantId) {
+			args.tenantId = tenantId;
+		}
+
+		const referenceWorks = await ReferenceWorks.find(args).sort({ slug: 1 });
+		return referenceWorks;
+	}
+
 	/**
 	 * Remove a reference work
 	 * @param {string} referenceWorkId - id of reference work

@@ -8,7 +8,7 @@ import { ReferenceWorkType, ReferenceWorkInputType} from '../types/referenceWork
 import RemoveType from '../types/remove';
 
 // logic
-import ReferenceWorkService from '../logic/ReferenceWorks/referenceWorks';
+import ReferenceWorkService from '../logic/referenceWorks/referenceWorks';
 
 const referenceWorksMutationFields = {
 	referenceWorkRemove: {

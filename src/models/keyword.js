@@ -1,16 +1,11 @@
 import mongoose from 'mongoose';
 
-import { WorksModel } from './works';
-import { SubworksModel } from './subworks';
+import LemmaCitation from './lemmaCitation';
+
 
 const KeywordsModel = new mongoose.Schema({
 	_id: {
 		type: String,
-		optional: true,
-	},
-
-	wordpressId: {
-		type: Number,
 		optional: true,
 	},
 
@@ -49,38 +44,18 @@ const KeywordsModel = new mongoose.Schema({
 		optional: true,
 	},
 
-	work: {
-		type: WorksModel,
-		optional: true,
-	},
-
-	subwork: {
-		type: SubworksModel,
-		optional: true,
-	},
-
-	lineFrom: {
-		type: Number,
-		optional: true,
-	},
-
-	lineTo: {
-		type: Number,
-		optional: true,
-	},
-
-	lineLetter: {
-		type: String,
-		optional: true,
-	},
-
 	nLines: {
 		type: Number,
 		optional: true,
 	},
+
 	tenantId: {
 		type: String,
 		optional: true,
+	},
+
+	lemmaCitation: {
+		type: LemmaCitation,
 	},
 });
 

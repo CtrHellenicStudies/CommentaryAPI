@@ -3,7 +3,10 @@ import createType from 'mongoose-schema-to-graphql';
 
 // models
 import Collection from '../../models/collection';
-import Item from '../../models/item';
+
+// logic
+import CollectionService from '../logic/collections';
+import ItemService from '../logic/items';
 
 // types
 import ItemType, { ItemInputType } from './item';
@@ -16,31 +19,49 @@ const config = {
 	schema: Collection.schema,
 	exclude: [],
 	extend: {
-		items: {
-			type: new GraphQLList(ItemType),
-			args: {
-				skip: {
-					type: GraphQLInt,
-				},
-				limit: {
-					type: GraphQLInt,
-				}
-			},
-			resolve(collection, { skip = 0, limit = 10 }) {
-				return Item.find({}).skip(skip).limit(limit);
+		itemsCount: {
+			type: GraphQLInt,
+			description: 'Get count of items in collection',
+			resolve(parent, _, { token }) {
+				const itemService = new ItemService(token);
+				return itemService.count({ collectionId: parent._id });
 			}
 		},
 		item: {
 			type: ItemType,
+			description: 'Get item document',
 			args: {
 				_id: {
-					type: GraphQLID,
+					type: GraphQLString,
+				},
+				slug: {
+					type: GraphQLString,
 				},
 			},
-			resolve(collection, { _id }) {
-				return Item.findById(_id);
+			resolve(parent, { _id, slug }, { token }) {
+				const itemService = new ItemService(token);
+				return itemService.getItem({ collectionId: parent._id, _id, slug, hostname });
 			}
-		}
+		},
+		items: {
+			type: new GraphQLList(ItemType),
+			description: 'Get list of items',
+			args: {
+				textsearch: {
+					type: GraphQLString,
+				},
+				limit: {
+					type: GraphQLInt,
+				},
+				offset: {
+					type: GraphQLInt,
+				},
+			},
+			resolve(parent, { textsearch, limit, offset }, { token }) {
+				const itemService = new ItemService(token);
+				return itemService.getItems({ collectionId: parent._id, textsearch, limit, offset });
+			}
+		},
 	}
 };
 
@@ -49,7 +70,7 @@ const configInput = {
 	description: 'Collection Schema base create input type',
 	class: 'GraphQLInputObjectType',
 	schema: Collection.schema,
-	exclude: ['_id', 'slug', 'createdAt', 'updatedAt'],
+	exclude: [],
 	extend: {
 		items: {
 			type: new GraphQLList(ItemInputType),
