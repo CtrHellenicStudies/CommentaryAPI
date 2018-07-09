@@ -41,7 +41,7 @@ const commenterQueryFields = {
 		},
 		async resolve (parent, { tenantId }, { token }) {
 			const commenterService = new CommenterService(token);
-			const commenters = await commenterService.commentersQuery(tenantId);
+			const commenters = await commenterService.getCommenters(tenantId);
 			return commenters;
 		}
 	},
