@@ -2,7 +2,7 @@
  * Queries for pages
  */
 
-import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLInt, GraphQLList, GraphQLString } from 'graphql';
 
 // types
 import PageType from '../types/page';
@@ -13,19 +13,19 @@ import PageService from '../logic/pages';
 const pagesQueryFields = {
 	page: {
 		type: PageType,
-		description: 'Get list of all pages',
+		description: 'Get a page',
 		args: {
 			_id: {
-				type: GraphQLString
+				type: GraphQLString,
 			},
 			slug: {
-				type: GraphQLString
+				type: GraphQLString,
 			},
 		},
 		async resolve (parent, { _id, slug }, { token }) {
 			const pageService = new PageService(token);
-			const pages = await pageService.getPage(_id, slug);
-			return pages;
+			const page = await pageService.getPage({ _id, slug });
+			return page;
 		},
 	},
 	pages: {
@@ -35,13 +35,19 @@ const pagesQueryFields = {
 			tenantId: {
 				type: GraphQLID,
 			},
-			_id: {
-				type: GraphQLString
-			}
+			textsearch: {
+				type: GraphQLID,
+			},
+			offset: {
+				type: GraphQLInt,
+			},
+			limit: {
+				type: GraphQLInt,
+			},
 		},
-		async resolve (parent, { _id, tenantId }, { token }) {
+		async resolve (parent, { tenantId, textsearch, offset, limit }, { token }) {
 			const pageService = new PageService(token);
-			const pages = await pageService.getPages(_id, tenantId);
+			const pages = await pageService.getPages({ tenantId, textsearch, offset, limit });
 			return pages;
 		},
 	},

@@ -20,20 +20,20 @@ export default class PageService extends PermissionsService {
 	 * Count pages
 	 * @returns {number} count of pages
 	 */
-	async count({ projectId }) {
-		return await Page.count({ projectId });
+	async count({ tenantId }) {
+		return await Page.count({ tenantId });
 	}
 
 	/**
 	 * Get a list of pages
-	 * @param {string} projectId
+	 * @param {string} tenantId
 	 * @param {string} textsearch
 	 * @param {number} offset
 	 * @param {number} limit
 	 * @returns {Object[]} array of pages
 	 */
-	async getPages({ projectId, textsearch, offset, limit }) {
-		const args = { projectId };
+	async getPages({ tenantId, textsearch, offset, limit }) {
+		const args = { tenantId };
 
 		if (textsearch) {
 			args.title = /.*${textsearch}.*/;
@@ -47,13 +47,12 @@ export default class PageService extends PermissionsService {
 
 	/**
 	 * Get page
-	 * @param {string} projectId - id of the parent project for the page
 	 * @param {number} _id - id of page
 	 * @param {string} slug - slug of page
 	 * @returns {Object[]} array of pages
 	 */
-	async getPage({ projectId, _id, slug, }) {
-		const where = { projectId };
+	async getPage({ _id, slug, }) {
+		const where = {};
 
 		if (!_id && !slug) {
 			return null;
@@ -90,7 +89,7 @@ export default class PageService extends PermissionsService {
 		if (!userIsAdmin) throw new PermissionError();
 
 		// set page projectid and slug
-		page.projectId = pageProject._id;
+		page.tenantId = pageProject._id;
 		page.slug = _s.slugify(page.title);
 
 		// Initiate new page
@@ -110,8 +109,8 @@ export default class PageService extends PermissionsService {
 		if (!this.userId) throw new AuthenticationError();
 
 		// get project
-		const project = await Project.findOne({ _id: page.projectId });
-		if (!project) throw new ArgumentError({ data: { field: 'page.projectId' } });
+		const project = await Project.findOne({ _id: page.tenantId });
+		if (!project) throw new ArgumentError({ data: { field: 'page.tenantId' } });
 
 		// validate permissions
 		const userIsAdmin = this.userIsProjectAdmin(project);
@@ -137,8 +136,8 @@ export default class PageService extends PermissionsService {
 		if (!this.userId) throw new AuthenticationError();
 
 		// get project
-		const project = await Project.findById(page.projectId);
-		if (!project) throw new ArgumentError({ data: { field: 'page.projectId' } });
+		const project = await Project.findById(page.tenantId);
+		if (!project) throw new ArgumentError({ data: { field: 'page.tenantId' } });
 
 		// validate permissions
 		const userIsAdmin = this.userIsProjectAdmin(project);
