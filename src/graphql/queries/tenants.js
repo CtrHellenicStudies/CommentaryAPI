@@ -7,7 +7,7 @@ import { GraphQLString, GraphQLList } from 'graphql';
 import { TenantType } from '../types/tenants';
 
 // logicd
-import TenantService from '../logic/Tenants/tenants';
+import TenantService from '../logic/tenants/tenants';
 
 
 const tenantsQueryFields = {

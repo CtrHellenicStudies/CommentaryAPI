@@ -11,7 +11,7 @@ import CommentType from '../types/comment';
 // import CtsUrnType from '../../modules/cts/graphql/types/CtsUrn';
 
 // logic
-import CommentService from '../logic/Comments/comments';
+import CommentService from '../logic/comments/comments';
 
 
 const commentQueryFields = {

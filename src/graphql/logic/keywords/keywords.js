@@ -13,10 +13,11 @@ export default class KeywordsService extends PermissionsService {
 	/**
 	 * Get tags (keywords) for tenant
 	 * @param {string} id - id of a tag
+	 * @param {string} slug - slug of a tag
 	 * @param {string} tenantId - id of tenant
 	 * @returns {boolean} result promise
 	 */
-	async getKeyword(id, tenantId, slug) {
+	async getKeyword(id, slug, tenantId) {
 		const args = {};
 		if (tenantId) {
 			args.tenantId = tenantId;

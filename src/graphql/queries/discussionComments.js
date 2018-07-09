@@ -8,7 +8,7 @@ import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
 import { DiscussionCommentType } from '../types/discussionComment';
 
 // logic
-import DiscussionCommentService from '../logic/DiscussionComments/discussionComments';
+import DiscussionCommentService from '../logic/discussionComments/discussionComments';
 
 const discussionCommentQueryFields = {
 	discussionComments: {
