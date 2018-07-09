@@ -12,7 +12,7 @@ import { GraphQLDateTime } from 'graphql-iso-date';
 import { SettingsType } from '../types/settings';
 
 // logic
-import SettingService from '../logic/Settings/settings';
+import SettingService from '../logic/settings/settings';
 
 
 /**
