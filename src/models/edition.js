@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const EditionsModel = new mongoose.Schema({
 	_id: {
-		type: String
+		type: String,
+		default: shortid.generate,
 	},
 	title: {
 		type: String

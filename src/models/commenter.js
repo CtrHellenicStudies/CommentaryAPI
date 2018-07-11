@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const CommentersModel = new mongoose.Schema({
 	_id: {
 		type: String,
+		default: shortid.generate,
 	},
 
 	wordpressId: {

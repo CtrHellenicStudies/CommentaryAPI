@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 import LemmaCitation from './lemmaCitation';
 
@@ -6,7 +7,7 @@ import LemmaCitation from './lemmaCitation';
 const KeywordsModel = new mongoose.Schema({
 	_id: {
 		type: String,
-		optional: true,
+		default: shortid.generate,
 	},
 
 	title: {

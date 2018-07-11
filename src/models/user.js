@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import mongoose from 'mongoose';
 import timestamp from 'mongoose-timestamp';
 import passportLocalMongoose from 'passport-local-mongoose';
+import shortid from 'shortid';
 
 const Schema = mongoose.Schema;
 
@@ -10,7 +11,10 @@ const Schema = mongoose.Schema;
  * @type {Schema}
  */
 const UserSchema = new Schema({
-	_id: String, // has to be String to be backward compatible on records created before using `passport-local-mongoose`
+	_id: {
+		type: String,
+		default: shortid.generate,
+	},
 	username: String,
 	name: String,
 	email: String,
@@ -66,8 +70,8 @@ UserSchema.statics.generatePasswordResetToken = async function generatePasswordR
 		const buf = await crypto.randomBytes(48);
 		const token = buf.toString('hex');
 		return User.findOneAndUpdate(// eslint-disable-line
-			{ username }, 
-			{ 
+			{ username },
+			{
 				resetPasswordToken: token,
 				resetPasswordExpires: Date.now() + 3600000, // 1 hour
 			},

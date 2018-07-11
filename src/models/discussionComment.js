@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 const DiscussionCommentsModel = new mongoose.Schema({
+	_id: {
+		type: String,
+		default: shortid.generate,
+	},
 	userId: {
 		type: String,
 		optional: true,

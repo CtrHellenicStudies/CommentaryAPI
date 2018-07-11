@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import mongoose from 'mongoose';
+import shortid from 'shortid';
 
 import Books from './book';
 import Tenants from './tenant';
@@ -23,7 +24,8 @@ const PassageModel = new mongoose.Schema({
 
 const CommentsModel = new mongoose.Schema({
 	_id: {
-		type: String
+		type: String,
+		default: shortid.generate
 	},
 
 	urn: {
