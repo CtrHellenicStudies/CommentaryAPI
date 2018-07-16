@@ -105,7 +105,7 @@
     "db:clear": "babel-node scripts/run-db-clear.js",
     "db:setup": "npm run db:clear && npm run db:seed",
     "build": "babel src -d build",
-    "execute": "yarn pm2 start build/index.js --name express",
+    "execute": "yarn pm2 start build/index.js --name ahcip-api-express",
     "build-and-execute": "concurrently \"yarn execute\" \"yarn build\"",
     "jsdoc": "jsdoc src -r -c .jsdoc.json -d docs"
   },
