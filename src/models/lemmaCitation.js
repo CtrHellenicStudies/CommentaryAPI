@@ -11,6 +11,12 @@ const LemmaCitation = new mongoose.Schema({
 	work: {
 		type: String
 	},
+	passageIndex: {
+		type: Number,
+	},
+	passageLength: {
+		type: Number,
+	},
 	passageFrom: {
 		type: [Number],
 	},

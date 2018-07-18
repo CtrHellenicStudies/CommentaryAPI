@@ -1,4 +1,4 @@
-const serializeUrn = (value) => {
+const serializeUrn = (value, type) => {
 
 	if (!value) {
 		return '';
@@ -21,9 +21,20 @@ const serializeUrn = (value) => {
 		return result;
 	}
 
+	// TODO: determine better architecture for class of CTS URN getting only textgroup
+	if (type === 'textGroup') {
+		return result;
+	}
+
+
 	if ('work' in value && value.work && value.work.length) {
 		result = `${result}.${value.work}`;
 	} else {
+		return result;
+	}
+
+	// TODO: determine better architecture for class of CTS URN getting only work
+	if (type === 'work') {
 		return result;
 	}
 
@@ -38,15 +49,40 @@ const serializeUrn = (value) => {
 		}
 	}
 
-
 	if ('passage' in value && value.passage && value.passage.length) {
 		result = `${result}:`;
 		value.passage.forEach((passage, i) => {
 			if (i !== 0) {
 				result = `${result}-`;
+				if (value.passage[0].join('.') === passage.join('.')) {
+					return;
+				}
 			}
 			result = `${result}${passage.join('.')}`;
 		});
+	} else if ('passageFrom' in value && value.passageFrom && value.passageFrom.length) {
+		result = `${result}:`;
+		if (typeof value.passageFrom[0] === 'number') {
+			result = `${result}${value.passageFrom.join('.')}`;
+			if (
+				'passageTo' in value
+				&& value.passageTo
+				&& value.passageTo.length
+				&& value.passageFrom.join('.') !== value.passageTo.join('.')
+			) {
+				result = `${result}-${value.passageTo.join('.')}`;
+			}
+		} else {
+			result = `${result}${value.passageFrom[0].join('.')}`;
+			if (
+				'passageTo' in value
+				&& value.passageTo
+				&& value.passageTo.length
+				&& value.passageFrom[0].join('.') !== value.passageTo[0].join('.')
+			) {
+				result = `${result}-${value.passageTo[0].join('.')}`;
+			}
+		}
 	}
 
 	return result;
