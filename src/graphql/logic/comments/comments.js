@@ -39,6 +39,7 @@ export default class CommentService extends PermissionsService {
 
 		// only query comments that are not annotations
 		query.isAnnotation = { $ne: true };
+		query['lemmaCitation.passageIndex'] = { $exists: true };
 
 		// query comments
 		const comments = await Comments.find(query)
@@ -146,6 +147,7 @@ export default class CommentService extends PermissionsService {
 		if (parsedUrn.passage.length > 1) {
 			args['lemmaCitation.passageTo'] = parsedUrn.passage[1];
 		}
+		args['lemmaCitation.passageIndex'] = { $exists: true };
 
 		// parse query options (sort, etc)
 		const options = prepareGetCommentsOptions(skip, limit);
@@ -164,9 +166,7 @@ export default class CommentService extends PermissionsService {
 	 */
 	async commentsGetCommentedOnBy(urn, commenterIds, limit = 20, skip = 0) {
 		// parse input urn
-		console.log(urn);
 		const parsedUrn = parseValueUrn(urn);
-		console.log(parsedUrn);
 
 		// set comment query args
 		const args = {
@@ -180,6 +180,7 @@ export default class CommentService extends PermissionsService {
 		if (parsedUrn.passage.length > 1) {
 			args['lemmaCitation.passageTo'] = parsedUrn.passage[1];
 		}
+		args['lemmaCitation.passageIndex'] = { $exists: true };
 
 		// set the commenter id of input commenterIds
 		args['commenters._id'] = commenterIds;

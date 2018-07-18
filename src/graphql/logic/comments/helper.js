@@ -10,14 +10,14 @@ import Books from '../../../models/book';
  */
 
 const COMMENT_ID_LENGTH = 7;
-function prepareGetCommentsOptions(limit, skip, sortRecent) {
+const prepareGetCommentsOptions = (limit, skip, sortRecent) => {
 
 	const options = {
 		sort: {
 			'lemmaCitation.ctsNamespace': 1,
 			'lemmaCitation.textGroup': 1,
 			'lemmaCitation.work': 1,
-			'lemmaCitation.passageFrom': 1, // TODO: test sorting on array value or if not need to store index from textserver
+			'lemmaCitation.passageIndex': 1, // TODO: test sorting on array value or if not need to store index from textserver
 			nLines: -1,
 		}
 	};
@@ -39,7 +39,7 @@ function prepareGetCommentsOptions(limit, skip, sortRecent) {
 		options.sort = { updated: -1 };
 	}
 	return options;
-}
+};
 
 const _getCommentURN = comment => new Promise(function(resolve, rejected) {
 	Tenants.findOne({_id: comment.tenantId}).then(function(tenant) {

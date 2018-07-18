@@ -16,6 +16,54 @@ const uri = 'http://api.chs.local:3002/graphql';
 const apolloFetch = createApolloFetch({ uri });
 
 
+const groupTextNodesByEdition = (textNodes) => {
+	const editions = [];
+	let isInEdition = true;
+
+	textNodes.forEach((textNode) => {
+		isInEdition = false;
+
+		editions.forEach((edition) => {
+			if (
+        (
+            textNode.version
+          && textNode.version.slug === edition.slug
+        )
+        || (
+            textNode.translation
+          && textNode.translation.slug === edition.slug
+        )
+      ) {
+				edition.textNodes.push(textNode);
+				isInEdition = true;
+			}
+		});
+
+		if (!isInEdition) {
+			let slug = '';
+			if (textNode.version) {
+				slug = textNode.version.slug;
+			} else if (textNode.translation) {
+				slug = textNode.translation.slug;
+			}
+
+			editions.push({
+				slug,
+				textNodes: [textNode],
+			});
+		}
+	});
+
+  // sort edition by textNodes returned
+	editions.sort((a, b) => {
+		if (a.textNodes.length < b.textNodes.length)			{ return -1; }
+		if (a.textNodes.length > b.textNodes.length)			{ return 1; }
+		return 0;
+	});
+
+	return editions;
+};
+
 
 const lookupTextNodeIndexByUrn = async (textNodesUrn) => {
 	const res = await apolloFetch({
@@ -53,88 +101,37 @@ const lookupTextNodeIndexByUrn = async (textNodesUrn) => {
 		},
 	});
 
-  return groupTextNodesByEdition(res.data.textNodes);
-};
-
-
-const groupTextNodesByEdition = (textNodes) => {
-  const editions = [];
-  let isInEdition = true;
-
-  textNodes.forEach(textNode => {
-    isInEdition = false;
-
-    editions.forEach(edition => {
-      if (
-        (
-            textNode.version
-          && textNode.version.slug === edition.slug
-        )
-        || (
-            textNode.translation
-          && textNode.translation.slug === edition.slug
-        )
-      ) {
-        edition.textNodes.push(textNode);
-        isInEdition = true;
-      }
-    });
-
-    if (!isInEdition) {
-      let slug = '';
-      if (textNode.version) {
-        slug = textNode.version.slug;
-      } else if (textNode.translation) {
-        slug = textNode.translation.slug;
-      }
-
-      editions.push({
-        slug,
-        textNodes: [textNode],
-      });
-    }
-  });
-
-  // sort edition by textNodes returned
-  editions.sort((a, b) => {
-    if (a.textNodes.length < b.textNodes.length)
-      return -1;
-    if (a.textNodes.length > b.textNodes.length)
-      return 1;
-    return 0;
-  });
-
-  return editions;
+	return groupTextNodesByEdition(res.data.textNodes);
 };
 
 
 const addPassageIndexToLemmaCitationInComments = async () => {
 
-  const comments = await Comment.find();
-  let comment;
+	const comments = await Comment.find();
+	let comment;
 
 	for (let i = 0; i < comments.length; i += 1) {
-    comment = comments[i];
+		comment = comments[i];
 
-    if (!comment.lemmaCitation) {
-      continue;
-    }
+		if (!comment.lemmaCitation) {
+			continue; // eslint-disable-line
+		}
 
-    const textNodesUrn = serializeUrn(comment.lemmaCitation);
-    const editions = await lookupTextNodeIndexByUrn(textNodesUrn);
+		const textNodesUrn = serializeUrn(comment.lemmaCitation);
+		const editions = await lookupTextNodeIndexByUrn(textNodesUrn);
 
-    if (!editions || !editions.length || !editions[0].textNodes.length) {
-      continue;
-    }
+		if (!editions || !editions.length || !editions[0].textNodes.length) {
+			continue; // eslint-disable-line
+		}
 
-    comment.lemmaCitation.passageIndex = editions[0].textNodes[0].index;
-    comment.lemmaCitation.passageLength = editions[0].textNodes.length;
-    await Comment.update({ _id: comment._id }, {
-      $set: {
-        lemmaCitation: comment.lemmaCitation,
-      },
-    });
-  }
+		comment.lemmaCitation.passageIndex = editions[0].textNodes[0].index;
+		comment.lemmaCitation.passageLength = editions[0].textNodes.length;
+		await Comment.update({ _id: comment._id }, {
+			$set: {
+				lemmaCitation: comment.lemmaCitation,
+			},
+		});
+	}
 
 };
 
@@ -147,7 +144,7 @@ db.on('error', winston.error)
 
 		try {
       // Add passage index to lemma citation to sort on for all comments
-      await addPassageIndexToLemmaCitationInComments();
+			await addPassageIndexToLemmaCitationInComments();
 		} catch (err) {
 			winston.error(err);
 		}
