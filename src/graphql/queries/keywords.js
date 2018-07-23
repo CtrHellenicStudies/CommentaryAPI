@@ -1,7 +1,7 @@
 /**
  * Queries for keywords
  */
-import { GraphQLID, GraphQLList, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLString, GraphQLInt } from 'graphql';
 
 // types
 import { KeywordType } from '../types/keyword';
@@ -41,10 +41,16 @@ const keywordQueryFields = {
 			queryParam: {
 				type: GraphQLString
 			},
+			skip: {
+				type: GraphQLInt
+			},
+			limit: {
+				type: GraphQLInt
+			},
 		},
-		async resolve (parent, { tenantId, queryParam }, { token }) {
+		async resolve (parent, { tenantId, queryParam, skip, limit }, { token }) {
 			const keywordService = new KeywordService(token);
-			const keywords = await keywordService.getKeywords(tenantId, queryParam);
+			const keywords = await keywordService.getKeywords(tenantId, queryParam, skip, limit);
 			return keywords;
 		},
 	},

@@ -38,7 +38,7 @@ export default class KeywordsService extends PermissionsService {
 	 * @param {string} tenantId - id of tenant
 	 * @returns {boolean} result promise
 	 */
-	async getKeywords(tenantId, queryParam) {
+	async getKeywords(tenantId, queryParam, skip = 0, limit = 100) {
 		let args = {};
 		if (queryParam) {
 			args = JSON.parse(queryParam);
@@ -46,7 +46,10 @@ export default class KeywordsService extends PermissionsService {
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
-		const keywords = await Keywords.find(args).sort({title: 1});
+		const keywords = await Keywords.find(args)
+																		.limit(limit)
+																		.skip(skip)
+																		.sort({ title: 1 });
 		return keywords;
 	}
 
