@@ -10,12 +10,17 @@ import GraphQLJSON from 'graphql-type-json';
 import { GraphQLDateTime } from 'graphql-iso-date';
 import _ from 'underscore';
 
+// types
 import { CommenterType, CommenterInputType } from './commenter';
 import { ReferenceWorkType, ReferenceWorkInputType } from './referenceWork';
 import { KeywordType, KeywordInputType } from './keyword';
 import { DiscussionCommentType, DiscussionCommentInputType } from './discussionComment';
 import { RevisionType, RevisionInputType } from './revision';
 import LemmaCitationType, { LemmaCitationInputType } from './lemmaCitation';
+
+// logic
+import CommenterService from '../logic/commenters/commenters';
+
 
 const PassageType = new GraphQLObjectType({
 	name: 'PassageType',
@@ -252,6 +257,7 @@ const CommentType = new GraphQLObjectType({
 			description: 'Get commenters for comment',
 			resolve(parent, a, { token }) {
 				const commenterService = new CommenterService(token);
+				console.log(parent);
 				return commenterService.getCommenters(parent.tenantId, parent.commenters);
 			},
 		},
