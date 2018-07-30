@@ -257,7 +257,6 @@ const CommentType = new GraphQLObjectType({
 			description: 'Get commenters for comment',
 			resolve(parent, a, { token }) {
 				const commenterService = new CommenterService(token);
-				console.log(parent);
 				return commenterService.getCommenters(parent.tenantId, parent.commenters);
 			},
 		},
