@@ -37,11 +37,17 @@ export default class CommentService extends PermissionsService {
 	 * @param {string} tenantId - id for current tenant
 	 * @returns {Object[]} array of commenters
 	 */
-	async getCommenters(tenantId) {
+	async getCommenters(tenantId, _ids) {
 		const args = {};
+
 		if (tenantId) {
 			args.tenantId = tenantId;
 		}
+
+		if (_ids) {
+			args._id = _ids;
+		}
+
 		const commenters = await Commenters.find(args).sort({slug: 1});
 		return commenters;
 	}

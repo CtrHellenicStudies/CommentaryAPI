@@ -10,11 +10,16 @@ import GraphQLJSON from 'graphql-type-json';
 import { GraphQLDateTime } from 'graphql-iso-date';
 import _ from 'underscore';
 
+// types
 import { CommenterType, CommenterInputType } from './commenter';
 import { ReferenceWorkType, ReferenceWorkInputType } from './referenceWork';
 import { KeywordType, KeywordInputType } from './keyword';
 import { DiscussionCommentType, DiscussionCommentInputType } from './discussionComment';
 import { RevisionType, RevisionInputType } from './revision';
+import LemmaCitationType, { LemmaCitationInputType } from './lemmaCitation';
+
+// logic
+import CommenterService from '../logic/commenters/commenters';
 
 
 const PassageType = new GraphQLObjectType({
@@ -133,33 +138,8 @@ const CommentInputType = new GraphQLInputObjectType({
 			type: GraphQLDateTime,
 		},
 		lemmaCitation: {
-			type: new GraphQLInputObjectType({
-				name: 'LemmaCitationInputType',
-				fields: {
-					ctsNamespace: {
-						type: GraphQLString
-					},
-					textGroup: {
-						type: GraphQLString
-					},
-					work: {
-						type: GraphQLString
-					},
-					passageFrom: {
-						type: new GraphQLList(GraphQLInt)
-					},
-					passageTo: {
-						type: new GraphQLList(GraphQLInt)
-					},
-					subreferenceIndexFrom: {
-						type: GraphQLInt,
-					},
-					subreferenceIndexTo: {
-						type: GraphQLInt,
-					},
-				},
-			}),
-		}
+			type: LemmaCitationInputType,
+		},
 	},
 });
 /**
@@ -195,9 +175,6 @@ const CommentType = new GraphQLObjectType({
 		},
 		tenantId: {
 			type: GraphQLString,
-		},
-		commenters: {
-			type: new GraphQLList(CommenterType),
 		},
 		users: {
 			type: new GraphQLList(GraphQLString),
@@ -273,32 +250,16 @@ const CommentType = new GraphQLObjectType({
 			type: GraphQLDateTime,
 		},
 		lemmaCitation: {
-			type: new GraphQLObjectType({
-				name: 'LemmaCitationType',
-				fields: {
-					ctsNamespace: {
-						type: GraphQLString
-					},
-					textGroup: {
-						type: GraphQLString
-					},
-					work: {
-						type: GraphQLString
-					},
-					passageFrom: {
-						type: new GraphQLList(GraphQLInt),
-					},
-					passageTo: {
-						type: new GraphQLList(GraphQLInt),
-					},
-					subreferenceIndexFrom: {
-						type: GraphQLInt,
-					},
-					subreferenceIndexTo: {
-						type: GraphQLInt,
-					},
-				},
-			}),
+			type: LemmaCitationType,
+		},
+		commenters: {
+			type: new GraphQLList(CommenterType),
+			description: 'Get commenters for comment',
+			resolve(parent, a, { token }) {
+				const commenterService = new CommenterService(token);
+				console.log(parent);
+				return commenterService.getCommenters(parent.tenantId, parent.commenters);
+			},
 		},
 	},
 });
