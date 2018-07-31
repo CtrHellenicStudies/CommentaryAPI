@@ -37,6 +37,8 @@ const CollectionSchema = new Schema({
 		index: true,
 		required: true,
 	},
+}, { 
+	versionKey: process.env.DEFAULT_VERSIONKEY,
 });
 
 

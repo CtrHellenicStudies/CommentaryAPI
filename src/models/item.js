@@ -70,6 +70,8 @@ const ItemSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
+}, { 
+	versionKey: process.env.DEFAULT_VERSIONKEY,
 });
 
 
