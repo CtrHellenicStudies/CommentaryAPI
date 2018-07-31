@@ -33,6 +33,8 @@ const PagesModel = new mongoose.Schema({
 		type: String,
 		optional: true,
 	},
+}, { 
+	versionKey: process.env.DEFAULT_VERSIONKEY,
 });
 
 const Pages = mongoose.model('Pages', PagesModel);

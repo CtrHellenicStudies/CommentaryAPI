@@ -41,6 +41,8 @@ const ManifestSchema = new Schema({
 		ref: 'Item',
 		index: true
 	},
+}, { 
+	versionKey: process.env.DEFAULT_VERSIONKEY,
 });
 
 

@@ -66,6 +66,8 @@ const ProjectSchema = new Schema({
 			enum: ['private', 'public', 'pending'],
 		},
 	}],
+}, { 
+	versionKey: process.env.DEFAULT_VERSIONKEY,
 });
 
 
