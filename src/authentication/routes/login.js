@@ -10,6 +10,11 @@ import { validateTokenOAuth1, validateTokenOAuth2 } from '../../authentication';
 // email
 import EmailManager from '../../email';
 
+// lib
+import getUserEmail from '../../lib/getUserEmail';
+
+
+
 /**
  * Login user with password and username
  * @param  {Object} res      Express response object
@@ -37,15 +42,15 @@ export const loginPWD = async (res, username, password) => {
 				if (userWithResetToken && userWithResetToken.resetPasswordToken) {
 					// send password reset email
 					// For development purposes, don't send orpheus email
-					EmailManager.sendPasswordResetEmail(username, userWithResetToken.resetPasswordToken);
-					return res.json({ passwordResetTokenGenerated: true});
+					await EmailManager.sendPasswordResetEmail(getUserEmail(userWithResetToken), userWithResetToken.resetPasswordToken);
+					return res.json({ redirectTo: '/auth/update-for-v2' });
 				}
-				return res.json({ passwordResetTokenGenerated: false});
+				return res.json({ passwordResetTokenGenerated: false });
 			}
 
 			return res.status(401).send(message);
 		});
-		
+
 	} else {
 		return res.status(401).send({error: 'User not found'});
 	}

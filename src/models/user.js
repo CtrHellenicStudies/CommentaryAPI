@@ -65,24 +65,34 @@ UserSchema.statics.createOAuth = async function createOAuth({ id, network }, cb)
 	return User.create({ oauthIds: [{ id, network }] }, cb); // eslint-disable-line
 };
 
-UserSchema.statics.generatePasswordResetToken = async function generatePasswordResetToken(username) {
+UserSchema.statics.generatePasswordResetToken = async (username) => {
 	try {
 		const buf = await crypto.randomBytes(48);
 		const token = buf.toString('hex');
-		return User.findOneAndUpdate(// eslint-disable-line
-			{ username },
-			{
+		const user = await User.findOneAndUpdate({ // eslint-disable-line
+			$or: [{
+				username
+			}, {
+				'emails.address': username,
+			}, {
+				email: username,
+			}],
+		}, {
+			$set: {
 				resetPasswordToken: token,
 				resetPasswordExpires: Date.now() + 3600000, // 1 hour
 			},
-			{new: true}
-		);
+		},
+			{
+				new: true,
+			});
+		return user;
 	} catch (err) {
 		throw err;
 	}
 };
 
-UserSchema.statics.resetPassword = async function resetPassword(resetPasswordToken, newPassword) {
+UserSchema.statics.resetPassword = async (resetPasswordToken, newPassword) => {
 	try {
 		const user = await User.findOne({ // eslint-disable-line
 			resetPasswordToken,
