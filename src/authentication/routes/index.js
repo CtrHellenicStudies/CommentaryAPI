@@ -50,7 +50,7 @@ router.post('/generate-reset-token', (req, res) => {
 		return generateResetPassword(res, username);
 	}
 
-	return res.status(400).send('Username is required');
+	return res.status(401).send('Username is required');
 });
 
 router.post('/reset-password', async (req, res) => {
@@ -61,7 +61,7 @@ router.post('/reset-password', async (req, res) => {
 		return resetPassword(res, resetPasswordToken, newPassword);
 	}
 
-	return res.status(400).send('Reset password token and new password is required');
+	return res.status(401).send('Reset password token and new password is required');
 
 });
 
