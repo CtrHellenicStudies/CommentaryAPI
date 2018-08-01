@@ -118,7 +118,7 @@ describe('Authentication routes ...', () => {
 
 		// CHECK
 		expect(response.status).toEqual(200);
-		expect(response.body.passwordResetTokenGenerated).toBeTruthy();
+		expect(response.body.error).toBeFalsy();
 	});
 
 });
