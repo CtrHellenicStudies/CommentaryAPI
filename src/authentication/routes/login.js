@@ -12,7 +12,7 @@ import EmailManager from '../../email';
 
 // lib
 import getUserEmail from '../../lib/getUserEmail';
-
+import logger from '../../lib/logger';
 
 
 /**
@@ -46,6 +46,7 @@ export const loginPWD = async (res, username, password) => {
 					return res.json({ redirectTo: '/auth/update-for-v2' });
 				}
 				// TODO: add logger here
+				logger.error('Generate Password Reset Token Failed for user', user);
 				return res.json({ error: 'Generate Password Reset Token Failed.' });
 			}
 

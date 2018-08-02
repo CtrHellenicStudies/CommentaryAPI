@@ -15,7 +15,8 @@ import { maskErrors } from 'graphql-errors';
 import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import jwt from 'jsonwebtoken';
-import winston from 'winston';
+
+import logger from './lib/logger';
 
 // authentication
 import { jwtAuthenticate } from './authentication';
@@ -54,8 +55,8 @@ const createRemoteSchemas = async () => {
 	const textserverURI = process.env.TEXTSERVER_URL || 'http://text.chs.orphe.us/graphql';
 	const chsTextserverSchema = await createRemoteSchema(textserverURI)
 		.catch((e) => {
-			winston.error(`Could not link remote schema ${textserverURI}`);
-			winston.error(e);
+			logger.error(`Could not link remote schema ${textserverURI}`);
+			logger.error(e);
 			return false;
 		});
 	remoteSchemaList.push(chsTextserverSchema);
@@ -64,8 +65,8 @@ const createRemoteSchemas = async () => {
 	const chswebAPIURI = process.env.CHSWEBAPI_URL || 'http://chsweb-api.chs.orphe.us/graphql';
 	const chswebAPISchema = await createRemoteSchema(chswebAPIURI)
 		.catch((e) => {
-			winston.error(`Could not link remote schema ${chswebAPIURI}`);
-			winston.error(e);
+			logger.error(`Could not link remote schema ${chswebAPIURI}`);
+			logger.error(e);
 			return false;
 		});
 	if (chswebAPISchema) {

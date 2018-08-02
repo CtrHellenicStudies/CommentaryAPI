@@ -1,5 +1,5 @@
 import {tester} from 'graphql-tester';
-import {create as createExpressWrapper} from '../../testUtils';
+import {create as createExpressWrapper} from '../../lib/testUtils';
 import {app} from '../../app';
 import {closeDB} from '../../mongoose';
 import Model from '../../models/user'; 

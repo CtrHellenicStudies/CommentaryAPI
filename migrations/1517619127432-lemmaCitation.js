@@ -1,7 +1,7 @@
 import _ from 'underscore';
-import winston from 'winston';
 
-import Comments from '../src/models/comments';
+import logger from '../src/lib/logger';
+// import Comments from '../src/models/comments'; // not used
 
 
 /**
@@ -49,7 +49,7 @@ const tlgMappingForWorks = [{
  * Change all work, subwork, lineFrom, and lineTo to lemmaCitation object
  */
 export async function up () {
-	winston.info('Starting comment lemmaCitation migration');
+	logger.info('Starting comment lemmaCitation migration');
 	// update all comments except annotations
 	const comments = await this('Comments').find();
 	comments.forEach(async (comment) => {
@@ -113,7 +113,7 @@ export async function up () {
 		});
 	});
 
-	winston.info('Migration completed successfully');
+	logger.info('Migration completed successfully');
 	return true;
 }
 
@@ -121,7 +121,7 @@ export async function up () {
  * Change all lemmaCitation to work, subwork, lineFrom, and lineTo
  */
 export async function down () {
-	winston.info('Reverting comment lemmaCitation migration');
+	logger.info('Reverting comment lemmaCitation migration');
 	const comments = await this('Comments').find();
 
 	// update all comments
@@ -164,6 +164,6 @@ export async function down () {
 		});
 	});
 
-	winston.info('Migration reverted successfully');
+	logger.info('Migration reverted successfully');
 	return true;
 }

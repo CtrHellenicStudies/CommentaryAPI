@@ -1,10 +1,11 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
-import winston from 'winston';
 import { EmailTemplate } from 'email-templates';
 
 // import hbs from 'nodemailer-express-handlebars';
 import { generatePasswordResetLink } from '../authentication';
+
+import logger from '../lib/logger';
 
 class OrpheusEmailClass {
 
@@ -38,10 +39,10 @@ class OrpheusEmailClass {
 		// verify connection configuration
 		transporter.verify((error, success) => {
 			if (error) {
-				winston.error('Failed to connect to SMTP server');
-				winston.error(error);
+				logger.error('Failed to connect to SMTP server');
+				logger.error(error);
 			} else {
-				winston.info('Connection to SMTP server successful.');
+				logger.info('Connection to SMTP server successful.');
 			}
 		});
 
@@ -63,10 +64,10 @@ class OrpheusEmailClass {
 			email.to = process.env.EMAIL_TO_TEST || 'test@archimedes.digital';
 		}
 		this.transporter.sendMail(email, (error, info) => {
-			if (error) { winston.error(error); }
-			winston.info('Email Info: ', info);
+			if (error) { logger.error(error); }
+			logger.info(`Email Info: ${info}`);
 			if (process.env.EMAIL_SMTP_HOST === 'smtp.ethereal.email') {
-				winston.info('Email Preview URL: %s', nodemailer.getTestMessageUrl(info));
+				logger.info(`Email Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 			}
 		});
 	}

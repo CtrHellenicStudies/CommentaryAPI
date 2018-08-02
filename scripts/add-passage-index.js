@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import winston from 'winston';
 import axios from 'axios';
 import { createApolloFetch } from 'apollo-fetch';
 
+import logger from '../src/lib/logger';
 import dbSetup, { closeDB } from '../src/mongoose';
 import Comment from '../src/models/comment';
 import serializeUrn from '../src/modules/cts/lib/serializeUrn';
@@ -137,20 +137,20 @@ const addPassageIndexToLemmaCitationInComments = async () => {
 
 
 
-db.on('error', winston.error)
+db.on('error', logger.error)
 	.on('disconnected', dbSetup)
 	.once('open', async () => {
-		console.info(`Connected to mongodb ( host: ${db.host}, port: ${db.port}, name: ${db.name} )`);
+		logger.info(`Connected to mongodb ( host: ${db.host}, port: ${db.port}, name: ${db.name} )`);
 
 		try {
       // Add passage index to lemma citation to sort on for all comments
 			await addPassageIndexToLemmaCitationInComments();
 		} catch (err) {
-			winston.error(err);
+			logger.error(err);
 		}
 
 		db.close(() => {
-			winston.info('Connection closed');
+			logger.info('Connection closed');
 			process.exit(0);
 		});
 	});

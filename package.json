@@ -63,7 +63,7 @@
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
     "uuid": "^3.1.0",
-    "winston": "^2.4.0",
+    "winston": "^3.0.0",
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
@@ -89,7 +89,7 @@
     "faker": "^4.1.0",
     "faucet": "^0.0.1",
     "flow-bin": "^0.51.0",
-    "jest": "^22.4.3",
+    "jest": "^23.4.2",
     "mockingoose": "^2.9.1",
     "nodemon": "^1.11.0",
     "regenerator-runtime": "^0.10.5",
@@ -99,7 +99,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:staged": "lint-staged",
-    "test": "jest src/__tests__/db.test.js && jest --verbose --coverage --forceExit",
+    "test": "jest src/__tests__/db.test.js && jest --verbose --coverage --detectOpenHandles",
     "server": "NODE_ENV=development nodemon ./src/index.js --exec babel-node",
     "start": "npm run server",
     "db:seed": "babel-node scripts/run-db-seed",
