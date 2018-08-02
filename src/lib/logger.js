@@ -1,14 +1,12 @@
 // a winston logger
 import { createLogger, format, transports } from 'winston';
 
-const { combine, printf, colorize, align } = format;
-
 const logger = createLogger({
-	format: combine(
-		colorize(),
-		timestamp(),
-		align(),
-		printf((info) => {
+	format: format.combine(
+		format.colorize(),
+		format.timestamp(),
+		format.align(),
+		format.printf((info) => {
 			const {
         timestamp, level, message, ...args
       } = info;

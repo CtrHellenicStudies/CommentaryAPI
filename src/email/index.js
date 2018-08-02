@@ -65,7 +65,7 @@ class OrpheusEmailClass {
 		}
 		this.transporter.sendMail(email, (error, info) => {
 			if (error) { logger.error(error); }
-			logger.info(`Email Info: ${info}`);
+			logger.info('Email Info:', info);
 			if (process.env.EMAIL_SMTP_HOST === 'smtp.ethereal.email') {
 				logger.info(`Email Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 			}
