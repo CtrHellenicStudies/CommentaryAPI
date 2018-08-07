@@ -1,14 +1,16 @@
-import dotenv from 'dotenv';
 import faker from 'faker';
 
+import dotenvSetup from '../src/dotenv';
 import setupDB, { closeDB } from '../src/mongoose';
 
 import generateUsers from '../src/__seeds__/user';
 import generateProjects from '../src/__seeds__/project';
 import generateCollection from '../src/__seeds__/collection';
 import generateItem from '../src/__seeds__/item';
+import generateTenant from '../src/__seeds__/tenant';
+import generateCommenter from '../src/__seeds__/commenter';
 
-dotenv.config();
+dotenvSetup();
 
 const db = setupDB();
 
@@ -43,6 +45,20 @@ db.on('error', console.error)
 		// generate items
 		try {
 			ids.itemIds = await generateItem(100, ids.collectionIds);
+		} catch (err) {
+			console.error(err);
+		}
+
+		// generate tenants
+		try {
+			ids.tenantIds = await generateTenant(1);
+		} catch (err) {
+			console.error(err);
+		}
+
+		// generate commenters
+		try {
+			ids.commenterIds = await generateCommenter(1);
 		} catch (err) {
 			console.error(err);
 		}

@@ -16,6 +16,7 @@ const generateMetadata = () => {
 		metadata.push({
 			value,
 			label,
+			type: 'text',
 		});
 	}
 	return metadata;

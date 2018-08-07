@@ -1,8 +1,7 @@
-import dotenv from 'dotenv';
-
 import setupDB, { closeDB } from '../src/mongoose';
+import dotenvSetup from '../src/dotenv';
 
-dotenv.config();
+dotenvSetup();
 
 const db = setupDB();
 

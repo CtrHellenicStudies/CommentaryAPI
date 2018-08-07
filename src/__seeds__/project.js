@@ -18,6 +18,7 @@ const generateProjects = async (count, userIds) => {
 				userId: getRandom(userIds),
 				role: 'admin',
 			}],
+			status: 'public',
 		}));
 
 		try {
