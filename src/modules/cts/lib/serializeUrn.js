@@ -38,6 +38,11 @@ const serializeUrn = (value, type) => {
 		return result;
 	}
 
+	// edition includes version, exemplar and translation, aka. workType
+	if ('edition' in value && value.edition && value.edition.length) {
+		result = `${result}.${value.edition}`;
+	}
+
 	/** version, exemplar, and translation are optional but must be in order */
 	if ('version' in value && value.version && value.version.length) {
 		result = `${result}.${value.version}`;

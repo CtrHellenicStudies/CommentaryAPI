@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import logger from '../../../lib/logger';
+
 import Comments from '../../../models/comment';
 import Commenters from '../../../models/commenter';
 
@@ -8,7 +10,7 @@ import { AuthenticationError } from '../../errors';
 
 import PermissionsService from '../PermissionsService';
 
-import { prepareGetCommentsOptions, getURN } from './helper';
+import { prepareGetCommentsOptions, getURN, calculateNumberOfCoveredPassages } from './helper';
 
 /**
  * Logic-layer service for dealing with comments
@@ -32,13 +34,16 @@ export default class CommentService extends PermissionsService {
 	 * @param {object} comment - comment to insert
 	 * @returns {object} promise
 	 */
-	commentInsert(comment) {
+	async commentInsert(comment) {
 		if (this.userIsNobody) {
 			throw AuthenticationError();
 		}
 		let commentId;
 		let ret;
 		comment._id = new mongoose.mongo.ObjectId();
+
+		comment = await calculateNumberOfCoveredPassages(comment);
+
 		return new Promise(function(resolve, rejection) {
 			getURN(comment).then(function(urns) {
 				comment.urn = urns;
@@ -63,7 +68,11 @@ export default class CommentService extends PermissionsService {
 	 * @returns {object} promise
 	 */
 	commentUpdate(id, comment) {
+
 		if (this.userIsAdmin) {
+
+			comment = calculateNumberOfCoveredPassages(comment);
+
 			return new Promise(function(resolve, rejected) {
 				Comments.update({_id: id}, comment, function(err, updated) {
 					if (err) {

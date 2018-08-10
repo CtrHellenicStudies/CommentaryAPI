@@ -188,6 +188,9 @@ const CommentType = new GraphQLObjectType({
 		nLines: {
 			type: GraphQLInt,
 		},
+		nCoveredPassages: {
+			type: GraphQLInt,
+		},
 		commentOrder: {
 			type: GraphQLInt,
 		},

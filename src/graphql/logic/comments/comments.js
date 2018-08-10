@@ -7,7 +7,7 @@ import { AuthenticationError } from '../../errors';
 
 import PermissionsService from '../PermissionsService';
 
-import { prepareGetCommentsOptions, getURN } from './helper';
+import { prepareGetCommentsOptions, getURN, prepareRangeMatcherArgs } from './helper';
 import { parseValueUrn } from '../../../modules/cts/lib/parseUrn';
 
 /**
@@ -39,7 +39,6 @@ export default class CommentService extends PermissionsService {
 
 		// only query comments that are not annotations
 		query.isAnnotation = { $ne: true };
-		query['lemmaCitation.passageIndex'] = { $exists: true };
 
 		// query comments
 		const comments = await Comments.find(query)
@@ -142,15 +141,16 @@ export default class CommentService extends PermissionsService {
 			'lemmaCitation.work': parsedUrn.work,
 		};
 
-		// set comment query passage range
-		args['lemmaCitation.passageFrom'] = parsedUrn.passage[0];
-		if (parsedUrn.passage.length > 1) {
-			args['lemmaCitation.passageTo'] = parsedUrn.passage[1];
-		}
-		args['lemmaCitation.passageIndex'] = { $exists: true };
-
 		// parse query options (sort, etc)
 		const options = prepareGetCommentsOptions(skip, limit);
+
+		// set comment query passage range
+		if (parsedUrn.passage.length === 1) { // single passage
+			parsedUrn.passage[1] = parsedUrn.passage[0];
+		}
+
+		// prepare range matcher
+		args.$or = prepareRangeMatcherArgs(parsedUrn.passage[0], parsedUrn.passage[1]);
 
 		// return comments
 		return Comments.find(args).limit(options.limit).sort(options.sort).exec();
@@ -176,14 +176,15 @@ export default class CommentService extends PermissionsService {
 		};
 
 		// set comment query passage range
-		args['lemmaCitation.passageFrom'] = parsedUrn.passage[0];
-		if (parsedUrn.passage.length > 1) {
-			args['lemmaCitation.passageTo'] = parsedUrn.passage[1];
+		if (parsedUrn.passage.length === 1) { // single passage
+			parsedUrn.passage[1] = parsedUrn.passage[0];
 		}
-		args['lemmaCitation.passageIndex'] = { $exists: true };
 
 		// set the commenter id of input commenterIds
 		args['commenters._id'] = commenterIds;
+
+		// prepare range matcher
+		args.$or = prepareRangeMatcherArgs(parsedUrn.passage[0], parsedUrn.passage[1]);
 
 		// parse query options (sort, etc)
 		const options = prepareGetCommentsOptions(skip, limit);

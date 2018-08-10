@@ -90,6 +90,16 @@ const CommentsModel = new mongoose.Schema({
 		optional: true,
 	},
 
+	nCoveredPassages: {
+		type: Number,
+		optional: true,
+	},
+
+	nCoveredPassagesEstimated: {
+		type: Boolean,
+		optional: true,
+	},
+
 	commentOrder: {
 		type: Number,
 		optional: true,
