@@ -1,7 +1,17 @@
+import { createApolloFetch } from 'apollo-fetch';
+
 import Comments from '../../../models/comment';
 import Commenters from '../../../models/commenter';
 import Tenants from '../../../models/tenant';
 import Books from '../../../models/book';
+
+import dotenvSetup from '../../../dotenv';
+import serializeUrn from '../../../modules/cts/lib/serializeUrn';
+import logger from '../../../lib/logger';
+
+// TODO: find a better way to query from server
+dotenvSetup();
+const apolloFetch = createApolloFetch({ uri: process.env.TEXTSERVER_URL || 'http://text.chs.orphe.us/graphql' });
 
 /**
  * Prepare options to comment query
@@ -17,7 +27,9 @@ const prepareGetCommentsOptions = (limit, skip, sortRecent) => {
 			'lemmaCitation.ctsNamespace': 1,
 			'lemmaCitation.textGroup': 1,
 			'lemmaCitation.work': 1,
-			'lemmaCitation.passageIndex': 1, // TODO: test sorting on array value or if not need to store index from textserver
+			'lemmaCitation.passageFrom.0': 1,
+			'lemmaCitation.passageFrom.1': 1,
+			nCoveredPassages: -1,
 			nLines: -1,
 		}
 	};
@@ -186,8 +198,189 @@ const sendUpdateNotification = (comment) => {
 	});
 };
 
+const prepareRangeMatcherArgs = (queryPassageFrom, queryPassageTo) => {
+
+	// queryFrom is after commentFrom, 1.7 >= 1.5
+	const argsQueryFromAfterCommentFrom = {
+		$or: [
+			// different chapter
+			{
+				'lemmaCitation.passageFrom.0': {
+					$lt: queryPassageFrom[0],
+				}
+			},
+			// same chapter
+			{$and: [
+				// commentFrom.chapter <= queryFrom.chapter, 1 <= 1
+				{
+					'lemmaCitation.passageFrom.0': {
+						$lte: queryPassageFrom[0],
+					}
+				},
+				// AND
+				// commnetFrom.passage <= queryFrom.passage, 5 <= 7
+				{
+					'lemmaCitation.passageFrom.1': {
+						$lte: queryPassageFrom[1],
+					}
+				},
+			]},
+		]
+	};
+
+	// queryFrom is before commentTo, 1.7 <= 2.5
+	const argsQueryFromBeforeCommentTo = {
+		$or: [
+			// different chapter
+			{
+				'lemmaCitation.passageTo.0': {
+					$gt: queryPassageFrom[0],
+				}
+			},
+			// same chapter
+			{$and: [
+				// commentTo.chapter >= queryFrom.chapter, 2 >= 1
+				{
+					'lemmaCitation.passageTo.0': {
+						$gte: queryPassageFrom[0],
+					}
+				},
+				// AND 
+				// commnetTo.passage >= queryFrom.passage
+				{
+					'lemmaCitation.passageTo.1': {
+						$gte: queryPassageFrom[1],
+					}
+				},
+			]},
+		]
+	};
+
+	// queryFrom within commentFrom and To, 1.7 <= 1.5-2.5
+	const argsQueryFromWithinCommentFromAndTo = {
+		$and: [argsQueryFromAfterCommentFrom, argsQueryFromBeforeCommentTo]
+	};
+
+	// queryTo is after commentFrom
+	const argsQueryToAfterCommentFrom = {
+		$or: [
+			// different chapter
+			{
+				'lemmaCitation.passageFrom.0': {
+					$lt: queryPassageTo[0],
+				}
+			},
+			// same chapter
+			{$and: [
+				// commentFrom.chapter <= queryTo.chapter
+				{
+					'lemmaCitation.passageFrom.0': {
+						$lte: queryPassageTo[0],
+					}
+				},
+				// AND
+				// commnetFrom.passage <= queryTo.passage
+				{
+					'lemmaCitation.passageFrom.1': {
+						$lte: queryPassageTo[1],
+					}
+				},
+			]}
+		]
+	};
+
+	// queryTo is before commentTo
+	const argsQueryToBeforeCommentTo = {
+		$or: [
+			// different chapter
+			{
+				'lemmaCitation.passageTo.0': {
+					$gt: queryPassageTo[0],
+				}
+			},
+			// same chapter
+			{$and: [
+				// commentTo.chapter >= queryTo.chapter 
+				{
+					'lemmaCitation.passageTo.0': {
+						$gte: queryPassageTo[0],
+					}
+				},
+				// AND 
+				// commnetTo.passage >= queryTo.passage
+				{
+					'lemmaCitation.passageTo.1': {
+						$gte: queryPassageTo[1],
+					}
+				},
+			]}
+		]
+	};
+
+	// queryTo within commentFrom and To
+	const argsQueryToWithinCommentFromAndTo = {
+		$and: [argsQueryToAfterCommentFrom, argsQueryToBeforeCommentTo]
+	};
+
+	// either queryFrom or queryTo lies within commentFrom and To range
+	return [argsQueryFromWithinCommentFromAndTo, argsQueryToWithinCommentFromAndTo];
+
+};
+
+const fetchPassagesByURN = async (textNodesUrn) => {
+
+	const res = await apolloFetch({
+		query: `
+			query textNodesQuery($textNodesUrn: CtsUrn!) {
+				textNodes(
+				urn: $textNodesUrn
+				) {
+					id
+					text
+					location
+					urn
+					index
+				}
+			}
+			`,
+		variables: {
+			textNodesUrn,
+		},
+	});
+
+	return res.data.textNodes;
+};
+
+const calculateNumberOfCoveredPassages = async (comment) => {
+	let nCoveredPassages = 1; // default 
+	// passageFrom and To are within same chapter
+	if (comment.lemmaCitation.passageTo && comment.lemmaCitation.passageTo[0] === comment.lemmaCitation.passageFrom[0]) {
+		nCoveredPassages += comment.lemmaCitation.passageTo[1] - comment.lemmaCitation.passageFrom[1];
+	} else { // passageFrom and To spans over chapters
+		try { // try to get covered text nodes from textserver
+			const textNodesUrn = serializeUrn(comment.lemmaCitation);
+			const coveredTextNodes = await fetchPassagesByURN(textNodesUrn);
+			nCoveredPassages = coveredTextNodes.length;
+			comment.nCoveredPassagesEstimated = false;
+		} catch (e) {
+			// fallback to a default
+			const averagePassagePerChapter = 300;
+			nCoveredPassages = 
+				Math.max(0, (averagePassagePerChapter - comment.lemmaCitation.passageFrom[1]))
+				+ ((comment.lemmaCitation.passageTo[0] - comment.lemmaCitation.passageFrom[0]) * averagePassagePerChapter)
+				+ comment.lemmaCitation.passageTo[1];
+			comment.nCoveredPassagesEstimated = true; // do db migration to correct nCoveredPassage on comments with this
+			logger.error('Failed to fetch textNodes from Textserver', e);
+		}
+	}
+	comment.nCoveredPassages = nCoveredPassages;
+	return comment;
+};
+
 export {
 	prepareGetCommentsOptions,
 	getURN,
-	prepareEmailList
+	prepareEmailList,
+	prepareRangeMatcherArgs,
+	calculateNumberOfCoveredPassages
 };

@@ -20,6 +20,9 @@ const LemmaCitationType = new GraphQLObjectType({
 		work: {
 			type: GraphQLString
 		},
+		edition: {
+			type: GraphQLString
+		},
 		passageFrom: {
 			type: new GraphQLList(GraphQLInt),
 		},
@@ -45,6 +48,9 @@ const LemmaCitationInputType = new GraphQLInputObjectType({
 			type: GraphQLString
 		},
 		work: {
+			type: GraphQLString
+		},
+		edition: {
 			type: GraphQLString
 		},
 		passageFrom: {

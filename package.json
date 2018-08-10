@@ -108,6 +108,7 @@
     "db:clear": "babel-node scripts/run-db-clear",
     "db:clear:test": "NODE_ENV=test babel-node scripts/run-db-clear",
     "db:add-passage-index": "babel-node scripts/add-passage-index",
+    "db:calculate-comment-number-covered-passages": "babel-node scripts/calculate-comment-number-covered-passages",
     "db:setup": "npm run db:clear && npm run db:seed",
     "build": "babel src -d build",
     "execute": "yarn pm2 start build/index.js --name ahcip-api-express",
