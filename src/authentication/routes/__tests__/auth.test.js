@@ -4,7 +4,7 @@ import request from 'supertest';
 import { app } from '../../../app';
 import { getURL } from '../../../mongoose';
 import User from '../../../models/user';
-import { loginPWD } from '../login';
+import { generateResetPassword } from '../resetPassword';
 
 describe('Authentication routes ...', () => {
 	// SETUP & TEARDOWN
@@ -55,6 +55,22 @@ describe('Authentication routes ...', () => {
 		expect(oneUser).toBeInstanceOf(User);
 		expect(oneUser.toObject()).toHaveProperty('_id');
 		expect(oneUser.toObject()).toHaveProperty('username');
+	});
+
+	it('generateResetPassword route should send email with correct token.', async () => {
+		// SETUP
+		const username = 'testUserResetPasswordTokenEmail';
+		const userCreated = await new User({
+			username: username,
+		}).save();
+
+		// RUN
+		const generateResetPasswordResult = await generateResetPassword({json: res => res}, username);
+		const userAfterReset = await User.findOne();
+
+		// CHECK
+		expect(generateResetPasswordResult.ok).toBeTruthy();
+		expect(generateResetPasswordResult.emailRes.text).toContain(userAfterReset.resetPasswordToken);
 	});
 
 	it('generateResetPassword should generate resetPasswordToken and resetPasswordExpires for a User instance.', async () => {

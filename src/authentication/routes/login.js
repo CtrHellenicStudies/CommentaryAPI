@@ -45,7 +45,6 @@ export const loginPWD = async (res, username, password) => {
 					await EmailManager.sendPasswordResetEmail(getUserEmail(userWithResetToken), userWithResetToken.resetPasswordToken);
 					return res.json({ redirectTo: '/auth/update-for-v2' });
 				}
-				// TODO: add logger here
 				logger.error('Generate Password Reset Token Failed for user', user);
 				return res.json({ error: 'Generate Password Reset Token Failed.' });
 			}

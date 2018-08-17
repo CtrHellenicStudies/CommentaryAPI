@@ -70,6 +70,7 @@ class OrpheusEmailClass {
 				logger.info(`Email Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
 			}
 		});
+		return email;
 	}
 
 	sendVerificationEmail(username) {
@@ -104,7 +105,7 @@ class OrpheusEmailClass {
 			html: results.html,
 			text: results.text,
 		};
-		await this.sendMail(email);
+		return await this.sendMail(email);
 	}
 }
 
