@@ -66,7 +66,7 @@ describe('Authentication routes ...', () => {
 
 		// RUN
 		const generateResetPasswordResult = await generateResetPassword({json: res => res}, username);
-		const userAfterReset = await User.findOne();
+		const userAfterReset = await User.findOne({username});
 
 		// CHECK
 		expect(generateResetPasswordResult.ok).toBeTruthy();
